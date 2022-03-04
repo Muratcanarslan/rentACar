@@ -9,17 +9,18 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.rentACar.rentACar.business.abstracts.BrandService;
 import com.rentACar.rentACar.business.abstracts.CarService;
-import com.rentACar.rentACar.business.dtos.CarListDto;
-import com.rentACar.rentACar.business.dtos.CarListLessThanDto;
-import com.rentACar.rentACar.business.dtos.CarListSortByDailyPrice;
-import com.rentACar.rentACar.business.dtos.GetCarDto;
-import com.rentACar.rentACar.business.requests.CreateCarRequest;
-import com.rentACar.rentACar.business.requests.UpdateCarRequest;
+import com.rentACar.rentACar.business.abstracts.ColorService;
+import com.rentACar.rentACar.business.dtos.carDtos.CarListDto;
+import com.rentACar.rentACar.business.dtos.carDtos.CarListLessThanDto;
+import com.rentACar.rentACar.business.dtos.carDtos.CarListSortByDailyPrice;
+import com.rentACar.rentACar.business.dtos.carDtos.GetCarDto;
+import com.rentACar.rentACar.business.requests.carRequests.CreateCarRequest;
+import com.rentACar.rentACar.business.requests.carRequests.UpdateCarRequest;
+import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.mapping.ModelMapperService;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
-import com.rentACar.rentACar.core.utilities.results.ErrorDataResult;
-import com.rentACar.rentACar.core.utilities.results.ErrorResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
 import com.rentACar.rentACar.core.utilities.results.SuccessDataResult;
 import com.rentACar.rentACar.core.utilities.results.SuccessResult;
@@ -31,126 +32,127 @@ public class CarManager implements CarService {
 
 	private CarDao carDao;
 	private ModelMapperService modelMapperService;
+	private ColorService colorService;
+	private BrandService brandService;
 
-	public CarManager(CarDao carDao, ModelMapperService modelMapperService) {
+	public CarManager(CarDao carDao, ModelMapperService modelMapperService,ColorService colorService,BrandService brandService) {
 		super();
 		this.carDao = carDao;
 		this.modelMapperService = modelMapperService;
+		this.brandService = brandService;
+		this.colorService = colorService;
 	}
 
 	@Override
-	public DataResult<List<CarListDto>> getAll(int pageNo,int pageSize) {
-		
-		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
-		
+	public DataResult<List<CarListDto>> getAll(int pageNo, int pageSize) throws BusinessException {
+
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+
 		List<Car> cars = carDao.findAll(pageable).getContent();
-		
-		if(cars.isEmpty()) {
-			return new ErrorDataResult<List<CarListDto>>("No cars found");
-		}
+
+		checkIfCarListIsEmpty(cars);
 
 		List<CarListDto> carListDto = cars.stream()
-				.map(car -> this.modelMapperService.forDto().map(car, CarListDto.class))
-				.collect(Collectors.toList());
+				.map(car -> this.modelMapperService.forDto().map(car, CarListDto.class)).collect(Collectors.toList());
 
-		return  new SuccessDataResult<List<CarListDto>>(carListDto,"car list");
+		return new SuccessDataResult<List<CarListDto>>(carListDto, "car list");
 	}
 
 	@Override
-	public Result add(CreateCarRequest createCarRequest) {
-		Car car = this.modelMapperService.forRequest().map(createCarRequest, Car.class);
+	public Result add(CreateCarRequest createCarRequest) throws BusinessException {
 		
+		this.brandService.checkIfIsExistsByBrandId(createCarRequest.getBrandId());
+		
+		this.colorService.checkIfExistsByColorId(createCarRequest.getColorId());
+		
+		Car car = this.modelMapperService.forRequest().map(createCarRequest, Car.class);
+
 		this.carDao.save(car);
 		
+
 		return new SuccessResult("cars added");
 	}
 
 	@Override
-	public Result update(UpdateCarRequest updateCarRequest) {
-         
-		if(!isExistByCarId(updateCarRequest.getCarId())) {
-			return new ErrorResult("No cars found for this id");
-		}
+	public Result update(UpdateCarRequest updateCarRequest) throws BusinessException {
+
+		checkIfExistByCarId(updateCarRequest.getCarId());
 		
+        this.brandService.checkIfIsExistsByBrandId(updateCarRequest.getBrandId());
+ 		
+		this.colorService.checkIfExistsByColorId(updateCarRequest.getColorId());
+
 		Car car = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
-			
+
 		this.carDao.save(car);
-			
+
 		return new SuccessResult("car updated");
 
+	}
+
+	@Override
+	public Result delete(int carId) throws BusinessException {
+
+		checkIfExistByCarId(carId);
+		this.carDao.deleteById(carId);
+		return new SuccessResult("car deleted");
 
 	}
 
 	@Override
-	public Result delete(int carId) {
-		
-		if(isExistByCarId(carId)) {
-			this.carDao.deleteById(carId);
-			return new SuccessResult("car deleted");
-		}
+	public DataResult<GetCarDto> getById(int carId) throws BusinessException {
 
-		return new ErrorResult("No cars found for this id");
+		checkIfExistByCarId(carId);
 
+		Car car = this.carDao.getById(carId);
+
+		GetCarDto getCarDto = this.modelMapperService.forDto().map(car, GetCarDto.class);
+
+		return new SuccessDataResult<GetCarDto>(getCarDto, "car get by id");
 	}
 
 	@Override
-	public DataResult<GetCarDto> getById(int carId) {
-			
-			if(!isExistByCarId(carId)) {
-				return new ErrorDataResult<GetCarDto>("No car found");
-			}
-			
-			Car car = this.carDao.getById(carId);
+	public DataResult<List<CarListLessThanDto>> findByDailyPriceLessThanEqual(double dailyPrice)
+			throws BusinessException {
 
-			GetCarDto getCarDto = this.modelMapperService.forDto().map(car, GetCarDto.class);
+		List<Car> cars = this.carDao.getByDailyPriceLessThanEqual(dailyPrice);
 
-			return new SuccessDataResult<GetCarDto>(getCarDto,"car get by id");
-	}
-	
-	@Override
-	public DataResult<List<CarListLessThanDto>> findByDailyPriceLessThanEqual(double dailyPrice) {
-		
-		List<Car> cars = this.carDao.findByDailyPriceLessThanEqual(dailyPrice);
-		
-		if(cars.isEmpty()) {
-			return new ErrorDataResult<List<CarListLessThanDto>>("No car found");
-		}
-		
+		checkIfCarListIsEmpty(cars);
+
 		List<CarListLessThanDto> carListLessThanDto = cars.stream()
-				.map(car -> this.modelMapperService.forDto().map(car,CarListLessThanDto.class))
+				.map(car -> this.modelMapperService.forDto().map(car, CarListLessThanDto.class))
 				.collect(Collectors.toList());
-		
-		return new SuccessDataResult<List<CarListLessThanDto>>(carListLessThanDto,"Car List");
-		
+
+		return new SuccessDataResult<List<CarListLessThanDto>>(carListLessThanDto, "Car List");
+
 	}
-	
+
 	@Override
-	public DataResult<List<CarListSortByDailyPrice>> getCarListSortByDailyPrice(Direction sortDirection) {
-		Sort sort = Sort.by(sortDirection,"dailyPrice");
-		
+	public DataResult<List<CarListSortByDailyPrice>> getCarListSortByDailyPrice(Direction sortDirection)
+			throws BusinessException {
+		Sort sort = Sort.by(sortDirection, "dailyPrice");
+
 		List<Car> cars = this.carDao.findAll(sort);
-		
-		if(cars.isEmpty()) {
-			return new ErrorDataResult<List<CarListSortByDailyPrice>>("no cars found");
-		}
-		
+
+		checkIfCarListIsEmpty(cars);
+
 		List<CarListSortByDailyPrice> carListSortByDailyPrice = cars.stream()
-				.map(car-> this.modelMapperService.forDto().map(car,CarListSortByDailyPrice.class))
+				.map(car -> this.modelMapperService.forDto().map(car, CarListSortByDailyPrice.class))
 				.collect(Collectors.toList());
-		
-		return new SuccessDataResult<List<CarListSortByDailyPrice>>(carListSortByDailyPrice,"sorted car list");
+
+		return new SuccessDataResult<List<CarListSortByDailyPrice>>(carListSortByDailyPrice, "sorted car list");
 	}
 
-	
-
-	public boolean isExistByCarId(int id)  {
-		if (this.carDao.existsById(id)) {
-			return true;
+	public void checkIfCarListIsEmpty(List<Car> cars) throws BusinessException {
+		if (cars.isEmpty()) {
+			throw new BusinessException("no cars found");
 		}
-		return false;
 	}
 
-	
-	
+	public void checkIfExistByCarId(int id) throws BusinessException {
+		if (!this.carDao.existsById(id)) {
+			throw new BusinessException("Car Not Found");
+		}
+	}
 
 }

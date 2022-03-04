@@ -1,4 +1,4 @@
-package com.rentACar.rentACar.business.dtos;
+package com.rentACar.rentACar.business.dtos.brandDtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

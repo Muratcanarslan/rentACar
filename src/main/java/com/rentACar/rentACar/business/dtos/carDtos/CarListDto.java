@@ -1,4 +1,4 @@
-package com.rentACar.rentACar.business.dtos;
+package com.rentACar.rentACar.business.dtos.carDtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ColorListDto {
+public class CarListDto {
 	
-    private int colorId;
+	private String brandName;
 	
 	private String colorName;
+
+
 }

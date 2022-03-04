@@ -7,13 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.business.abstracts.ColorService;
-import com.rentACar.rentACar.business.dtos.ColorListDto;
-import com.rentACar.rentACar.business.dtos.GetColorDto;
-import com.rentACar.rentACar.business.requests.CreateColorRequest;
+import com.rentACar.rentACar.business.dtos.colorDtos.ColorListDto;
+import com.rentACar.rentACar.business.dtos.colorDtos.GetColorDto;
+import com.rentACar.rentACar.business.requests.colorRequests.CreateColorRequest;
+import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.mapping.ModelMapperService;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
-import com.rentACar.rentACar.core.utilities.results.ErrorDataResult;
-import com.rentACar.rentACar.core.utilities.results.ErrorResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
 import com.rentACar.rentACar.core.utilities.results.SuccessDataResult;
 import com.rentACar.rentACar.core.utilities.results.SuccessResult;
@@ -32,12 +31,10 @@ public class ColorManager implements ColorService{
 	}
 
 	@Override
-	public DataResult<List<ColorListDto>> getAll() {
+	public DataResult<List<ColorListDto>> getAll() throws BusinessException {
 		List<Color> colors = this.colorDao.findAll();
 		
-		if(colors.isEmpty()) {
-			return new ErrorDataResult<List<ColorListDto>>("No colors found");
-		}
+		checkIfColorListIsEmpty(colors);
 		
 		List<ColorListDto> result = colors.stream().map(color -> this.modelMapperService.forDto().map(color, ColorListDto.class))
 		.collect(Collectors.toList());
@@ -47,34 +44,47 @@ public class ColorManager implements ColorService{
  }
 
 	@Override
-	public Result add(CreateColorRequest createColorRequest) {
+	public Result add(CreateColorRequest createColorRequest) throws BusinessException {
+		
+		checkIfExistsByColorName(createColorRequest.getColorName());
+		
 		Color color = this.modelMapperService.forRequest().map(createColorRequest, Color.class);
 		
-		if(!existByColorName(color.getColorName())) {
-			this.colorDao.save(color);
-			return new SuccessResult("color added");
-		}
+		this.colorDao.save(color);
 		
-		return new ErrorResult("color is exist");
-		
+		return new SuccessResult("color added");
 	}
 	
 	@Override
-	public DataResult<GetColorDto> getById(int id) {
+	public DataResult<GetColorDto> getById(int id) throws BusinessException {
+		
+		
+		checkIfExistsByColorId(id);
 		
 		Color color = this.colorDao.getById(id);
-		if(color == null) {
-			return new ErrorDataResult<GetColorDto>("No colors found");
-
-		}
+		
 		GetColorDto getColorDto = this.modelMapperService.forDto().map(color, GetColorDto.class);
 		
 		return  new SuccessDataResult<GetColorDto>(getColorDto,"color get by id");
 
 	}
 	
-	public boolean existByColorName(String name) {
-		return this.colorDao.existsByColorName(name);
+	public void checkIfExistsByColorName(String name) throws BusinessException {
+		if(this.colorDao.existsByColorName(name)) {
+			throw new BusinessException("Color already exists");
+		}
+	}
+	 
+	public void checkIfColorListIsEmpty(List<Color> colors) throws BusinessException {
+		if(colors.isEmpty()) {
+			throw new BusinessException("Colors Not Found");
+		}
+	}
+	
+	public void checkIfExistsByColorId(int id) throws BusinessException {
+		if(!this.colorDao.existsById(id)) {
+			throw new BusinessException("Color Not Found");
+		}
 	}
 
 	

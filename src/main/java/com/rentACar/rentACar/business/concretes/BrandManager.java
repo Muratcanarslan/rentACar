@@ -6,13 +6,12 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.business.abstracts.BrandService;
-import com.rentACar.rentACar.business.dtos.BrandListDto;
-import com.rentACar.rentACar.business.dtos.GetBrandDto;
-import com.rentACar.rentACar.business.requests.CreateBrandRequest;
+import com.rentACar.rentACar.business.dtos.brandDtos.BrandListDto;
+import com.rentACar.rentACar.business.dtos.brandDtos.GetBrandDto;
+import com.rentACar.rentACar.business.requests.brandRequests.CreateBrandRequest;
+import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.mapping.ModelMapperService;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
-import com.rentACar.rentACar.core.utilities.results.ErrorDataResult;
-import com.rentACar.rentACar.core.utilities.results.ErrorResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
 import com.rentACar.rentACar.core.utilities.results.SuccessDataResult;
 import com.rentACar.rentACar.core.utilities.results.SuccessResult;
@@ -31,12 +30,10 @@ public class BrandManager implements BrandService {
 	}
 
 	@Override
-	public DataResult<List<BrandListDto>> getAll() {
+	public DataResult<List<BrandListDto>> getAll() throws BusinessException {
 		List<Brand> brands = this.brandDao.findAll();
 		
-		if(brands.isEmpty()) {
-			return new ErrorDataResult<List<BrandListDto>>("No brand finded");
-		}
+		checkIfBrandListIsEmpty(brands);
 
 		List<BrandListDto> result = brands.stream()
 				.map(brand -> this.modelMapperService.forDto().map(brand, BrandListDto.class))
@@ -46,25 +43,22 @@ public class BrandManager implements BrandService {
 	}
 
 	@Override
-	public Result add(CreateBrandRequest createBrandRequest) {
+	public Result add(CreateBrandRequest createBrandRequest) throws BusinessException {
 
 		Brand brand = this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);
-
-		if (!isExistByBrandName(brand.getBrandName())) {
-			this.brandDao.save(brand);
-			return new SuccessResult("Brand added");
-		}
 		
-		return new ErrorResult("Brand is exist");
+		checkIfIsExistByBrandName(brand.getBrandName());
+		
+		this.brandDao.save(brand);
+		
+		return new SuccessResult("Brand added");
 	}
 
 	
 	@Override
-	public DataResult<GetBrandDto> getById(int id) {
+	public DataResult<GetBrandDto> getById(int id) throws BusinessException {
 		
-		if(!isExistsByBrandId(id)) {
-			return new ErrorDataResult<GetBrandDto>("Brand is not exist");
-		}
+		checkIfIsExistsByBrandId(id);
 		
 		Brand brand = this.brandDao.getById(id);
 		
@@ -75,12 +69,22 @@ public class BrandManager implements BrandService {
 	}
 
 	
-	public boolean isExistByBrandName(String name) {
-		return this.brandDao.existsByBrandName(name);
+	public void checkIfIsExistByBrandName(String name) throws BusinessException {
+		 if(this.brandDao.existsByBrandName(name)) {
+			 throw new BusinessException("This brand already exists");
+		 }
 	}
 	
-	public boolean isExistsByBrandId(int id) {
-		return this.brandDao.existsById(id);
+	public void checkIfIsExistsByBrandId(int id) throws BusinessException {
+		if(!this.brandDao.existsById(id)) {
+		 throw new BusinessException("Brand is not found");	
+		}
+	}
+	
+	public void checkIfBrandListIsEmpty(List<Brand> brands) throws BusinessException {
+		if(brands.isEmpty()) {
+			throw new BusinessException("Brands not found");
+		}
 	}
 
 }

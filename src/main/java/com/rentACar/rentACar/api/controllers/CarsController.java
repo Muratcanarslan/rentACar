@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rentACar.rentACar.business.abstracts.CarService;
-import com.rentACar.rentACar.business.dtos.CarListDto;
-import com.rentACar.rentACar.business.dtos.CarListLessThanDto;
-import com.rentACar.rentACar.business.dtos.CarListSortByDailyPrice;
-import com.rentACar.rentACar.business.dtos.GetCarDto;
-import com.rentACar.rentACar.business.requests.CreateCarRequest;
-import com.rentACar.rentACar.business.requests.UpdateCarRequest;
+import com.rentACar.rentACar.business.dtos.carDtos.CarListDto;
+import com.rentACar.rentACar.business.dtos.carDtos.CarListLessThanDto;
+import com.rentACar.rentACar.business.dtos.carDtos.CarListSortByDailyPrice;
+import com.rentACar.rentACar.business.dtos.carDtos.GetCarDto;
+import com.rentACar.rentACar.business.requests.carRequests.CreateCarRequest;
+import com.rentACar.rentACar.business.requests.carRequests.UpdateCarRequest;
+import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
 
@@ -34,36 +35,36 @@ public class CarsController {
 	}
 	
 	@GetMapping("/getAll")
-	public DataResult<List<CarListDto>> getAll(int pageNo,int pageSize){
+	public DataResult<List<CarListDto>> getAll(int pageNo,int pageSize) throws BusinessException{
 		return this.carService.getAll(pageNo,pageSize);
 	}
 	
 	@GetMapping("/getById")
-	public DataResult<GetCarDto> getById(@RequestParam int carId){
+	public DataResult<GetCarDto> getById(@RequestParam int carId) throws BusinessException{
 		return this.carService.getById(carId);
 	}
 	
 	@GetMapping("/getByDailyPrice")
-	public DataResult<List<CarListLessThanDto>> findByDailyPriceLessThanEqual(@RequestParam double dailyPrice){
+	public DataResult<List<CarListLessThanDto>> findByDailyPriceLessThanEqual(@RequestParam double dailyPrice) throws BusinessException{
 		return this.carService.findByDailyPriceLessThanEqual(dailyPrice);
 	}
 	
 	@GetMapping("/getBySortedDailyPrice")
-	public DataResult<List<CarListSortByDailyPrice>> getCarListSortByDailyPrice(Sort.Direction sortDirection){
+	public DataResult<List<CarListSortByDailyPrice>> getCarListSortByDailyPrice(Sort.Direction sortDirection) throws BusinessException{
 		return this.carService.getCarListSortByDailyPrice(sortDirection);
 	}
 	
 	@PostMapping("/add")
-	public Result add(@RequestBody CreateCarRequest createCarRequest) {
+	public Result add(@RequestBody CreateCarRequest createCarRequest) throws BusinessException {
 		return this.carService.add(createCarRequest);
 	}
 	
 	@PutMapping("/update")
-	public Result update(@RequestBody UpdateCarRequest updateCarRequest) {
+	public Result update(@RequestBody UpdateCarRequest updateCarRequest) throws BusinessException {
 		return this.carService.update(updateCarRequest);
 	}
 	@DeleteMapping("/delete")
-	public Result delete(@RequestParam int carId) {
+	public Result delete(@RequestParam int carId) throws BusinessException {
 		return this.carService.delete(carId);
 	}
 	
