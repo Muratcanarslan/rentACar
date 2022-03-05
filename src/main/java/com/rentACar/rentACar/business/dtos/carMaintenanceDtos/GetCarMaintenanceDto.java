@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarMaintenanceDto {
+public class GetCarMaintenanceDto {
 	
 	private int carMaintenanceId;
 	

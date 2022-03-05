@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rentACar.rentACar.business.abstracts.CarMaintenanceService;
-import com.rentACar.rentACar.business.dtos.carMaintenanceDtos.CarMaintenanceDto;
+import com.rentACar.rentACar.business.dtos.carMaintenanceDtos.GetCarMaintenanceDto;
 import com.rentACar.rentACar.business.dtos.carMaintenanceDtos.CarMaintenanceListDto;
 import com.rentACar.rentACar.business.requests.carMaintenanceRequests.CreateCarMaintenanceRequest;
 import com.rentACar.rentACar.business.requests.carMaintenanceRequests.UpdateCarMaintenanceRequest;
@@ -49,7 +49,7 @@ public class CarMaintenanceController {
 	}
 	
 	@GetMapping("/getById")
-	public DataResult<CarMaintenanceDto> getCarMaintenanceById(@RequestParam int carMaintenanceId) throws BusinessException{
+	public DataResult<GetCarMaintenanceDto> getCarMaintenanceById(@RequestParam int carMaintenanceId) throws BusinessException{
 		return this.carMaintenanceService.getById(carMaintenanceId);
 	}
 	

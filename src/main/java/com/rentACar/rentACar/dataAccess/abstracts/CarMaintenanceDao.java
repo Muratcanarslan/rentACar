@@ -10,4 +10,6 @@ public interface CarMaintenanceDao extends JpaRepository<CarMaintenance, Integer
 	
 	boolean existsByCarMaintenanceId(int id);
 	
+	CarMaintenance getByCar_CarIdAndCarMaintenanceReturnDateIsNull(int id);
+	
 }
