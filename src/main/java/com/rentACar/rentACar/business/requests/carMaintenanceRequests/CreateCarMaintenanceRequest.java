@@ -1,6 +1,6 @@
 package com.rentACar.rentACar.business.requests.carMaintenanceRequests;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -19,7 +19,7 @@ public class CreateCarMaintenanceRequest {
 	@Size(min = 2,max = 255)
 	private String carMaintenanceDescription;
 	
-	private Date carMaintenanceReturnDate;
+	private LocalDate carMaintenanceReturnDate;
 	
 	@NotNull
 	@Min(0)

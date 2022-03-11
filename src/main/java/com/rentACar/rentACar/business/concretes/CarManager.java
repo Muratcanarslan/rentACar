@@ -44,13 +44,11 @@ public class CarManager implements CarService {
 	}
 
 	@Override
-	public DataResult<List<CarListDto>> getAll(int pageNo, int pageSize) throws BusinessException {
+	public DataResult<List<CarListDto>> getAll(int pageNo, int pageSize){
 
 		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
 
 		List<Car> cars = carDao.findAll(pageable).getContent();
-
-		checkIfCarListIsEmpty(cars);
 
 		List<CarListDto> carListDto = cars.stream()
 				.map(car -> this.modelMapperService.forDto().map(car, CarListDto.class)).collect(Collectors.toList());
@@ -117,8 +115,6 @@ public class CarManager implements CarService {
 
 		List<Car> cars = this.carDao.getByDailyPriceLessThanEqual(dailyPrice);
 
-		checkIfCarListIsEmpty(cars);
-
 		List<CarListLessThanDto> carListLessThanDto = cars.stream()
 				.map(car -> this.modelMapperService.forDto().map(car, CarListLessThanDto.class))
 				.collect(Collectors.toList());
@@ -134,8 +130,6 @@ public class CarManager implements CarService {
 
 		List<Car> cars = this.carDao.findAll(sort);
 
-		checkIfCarListIsEmpty(cars);
-
 		List<CarListSortByDailyPrice> carListSortByDailyPrice = cars.stream()
 				.map(car -> this.modelMapperService.forDto().map(car, CarListSortByDailyPrice.class))
 				.collect(Collectors.toList());
@@ -143,16 +137,22 @@ public class CarManager implements CarService {
 		return new SuccessDataResult<List<CarListSortByDailyPrice>>(carListSortByDailyPrice, "sorted car list");
 	}
 
-	public void checkIfCarListIsEmpty(List<Car> cars) throws BusinessException {
-		if (cars.isEmpty()) {
-			throw new BusinessException("no cars found");
-		}
-	}
 
 	public void checkIfExistByCarId(int id) throws BusinessException {
 		if (!this.carDao.existsById(id)) {
 			throw new BusinessException("Car Not Found");
 		}
+	}
+	
+	public double calculateRentPriceByCarIdAndRentDateValue(int carId,int rentDateValue) throws BusinessException {
+		
+		checkIfExistByCarId(carId);
+		
+		Car car = this.carDao.getById(carId);
+		
+		double finalPrice = car.getDailyPrice() * rentDateValue;
+		
+		return finalPrice;
 	}
 
 }

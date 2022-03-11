@@ -31,11 +31,9 @@ public class ColorManager implements ColorService{
 	}
 
 	@Override
-	public DataResult<List<ColorListDto>> getAll() throws BusinessException {
+	public DataResult<List<ColorListDto>> getAll() {
 		List<Color> colors = this.colorDao.findAll();
-		
-		checkIfColorListIsEmpty(colors);
-		
+				
 		List<ColorListDto> result = colors.stream().map(color -> this.modelMapperService.forDto().map(color, ColorListDto.class))
 		.collect(Collectors.toList());
 		
@@ -74,12 +72,7 @@ public class ColorManager implements ColorService{
 			throw new BusinessException("Color already exists");
 		}
 	}
-	 
-	public void checkIfColorListIsEmpty(List<Color> colors) throws BusinessException {
-		if(colors.isEmpty()) {
-			throw new BusinessException("Colors Not Found");
-		}
-	}
+
 	
 	public void checkIfExistsByColorId(int id) throws BusinessException {
 		if(!this.colorDao.existsById(id)) {

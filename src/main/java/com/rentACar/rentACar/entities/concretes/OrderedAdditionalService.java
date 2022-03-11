@@ -1,33 +1,35 @@
 package com.rentACar.rentACar.entities.concretes;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "brands")
-public class Brand {
+@Table(name = "ordered_additional_services")
+public class OrderedAdditionalService {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "brand_id")
-	private int brandId;
-
-	@Column(name = "brand_name")
-	private String brandName;
-
-
+	@Column(name = "ordered_additional_service_id")
+	private int orderedAdditonalServiceId;
+	
+	@ManyToOne
+	@JoinColumn(name = "rented_car_id")
+	private RentedCar rentedCar;
+	
+	@ManyToOne
+	@JoinColumn(name = "additional_service_id")
+	private AdditionalService additionalService;
 }

@@ -1,6 +1,7 @@
 package com.rentACar.rentACar.business.dtos.rentedCarDtos;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,9 +14,15 @@ public class GetRentedCarDto {
 
 	private int rentedCarId;
 
-	private Date rentDate;
+	private LocalDate rentDate;
 
-	private Date returnDate;
+	private LocalDate returnDate;
+	
+	private LocalDate confirmedPaidedDate;
 
 	private int carId;
+	
+    private int rentCity;
+	
+	private int returnCity;
 }

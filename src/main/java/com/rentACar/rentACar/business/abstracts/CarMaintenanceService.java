@@ -21,7 +21,7 @@ public interface CarMaintenanceService {
 	
 	DataResult<GetCarMaintenanceDto> getById(int carMaintenanceId) throws BusinessException;
 	
-	DataResult<List<CarMaintenanceListDto>> getAll() throws BusinessException;
+	DataResult<List<CarMaintenanceListDto>> getAll();
 	
 	void checkIfCarMaintenanceIsExistsByCarId(int carId) throws BusinessException;
 	

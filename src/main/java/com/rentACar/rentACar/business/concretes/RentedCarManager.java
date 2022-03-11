@@ -1,13 +1,20 @@
 package com.rentACar.rentACar.business.concretes;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.rentACar.rentACar.business.abstracts.AdditionalServiceService;
 import com.rentACar.rentACar.business.abstracts.CarMaintenanceService;
 import com.rentACar.rentACar.business.abstracts.CarService;
+import com.rentACar.rentACar.business.abstracts.OrderedAdditionalServiceService;
+import com.rentACar.rentACar.business.abstracts.RentDetailsService;
 import com.rentACar.rentACar.business.abstracts.RentedCarService;
 import com.rentACar.rentACar.business.dtos.rentedCarDtos.GetRentedCarDto;
 import com.rentACar.rentACar.business.dtos.rentedCarDtos.RentedCarListDto;
@@ -23,20 +30,31 @@ import com.rentACar.rentACar.dataAccess.abstracts.RentedCarDao;
 import com.rentACar.rentACar.entities.concretes.RentedCar;
 
 @Service
+@Transactional
 public class RentedCarManager implements RentedCarService {
 
 	private RentedCarDao rentedCarDao;
 	private ModelMapperService modelMapperService;
 	private CarService carService;
 	private CarMaintenanceService carMaintenanceService;
-
+	private OrderedAdditionalServiceService orderedAdditionalServiceService;
+	private AdditionalServiceService additionalServiceService;
+	private RentDetailsService rentDetailsService;
+	
 	@Autowired
 	public RentedCarManager(RentedCarDao rentedCarDao, ModelMapperService modelMapperService, CarService carService,
-			CarMaintenanceService carMaintenanceService) {
+			CarMaintenanceService carMaintenanceService,
+			OrderedAdditionalServiceService orderedAdditionalServiceService,
+			AdditionalServiceService additionalServiceService,
+			RentDetailsService rentDetailsService
+			) {
 		this.rentedCarDao = rentedCarDao;
 		this.modelMapperService = modelMapperService;
 		this.carService = carService;
 		this.carMaintenanceService = carMaintenanceService;
+		this.orderedAdditionalServiceService = orderedAdditionalServiceService;
+		this.additionalServiceService = additionalServiceService;
+		this.rentDetailsService = rentDetailsService;
 	}
 
 	@Override
@@ -46,19 +64,47 @@ public class RentedCarManager implements RentedCarService {
 		this.carMaintenanceService.checkIfCarMaintenanceIsExistsByCarId(createRentedCarRequest.getCarId());
 		checkIfCarIsAlreadyRentedByCarId(createRentedCarRequest.getCarId());
 		
+		double totalPrice = calculateTotalPrice(createRentedCarRequest.getRentDate(),
+				createRentedCarRequest.getConfirmedPaidedDate(),
+				createRentedCarRequest.getAdditionalServiceIds(),
+				createRentedCarRequest.getCarId(),
+				createRentedCarRequest.getHireCityId(),
+				createRentedCarRequest.getReturnCityId()
+				);
+		
 		RentedCar rentedCar = this.modelMapperService.forRequest().map(createRentedCarRequest, RentedCar.class);
 		
-		this.rentedCarDao.save(rentedCar);
+		rentedCar.setTotalPrice(totalPrice);
+		
+		RentedCar savedRentedCar = this.rentedCarDao.save(rentedCar);
+		
+		this.orderedAdditionalServiceService.addOrderedAdditionalServicesByAdditionalIdListAndRentedCarId(createRentedCarRequest.getAdditionalServiceIds(), savedRentedCar.getRentedCarId());
 		
 		return new SuccessResult("rented car added");
 	}
 
 	@Override
 	public Result update(UpdateRentedCarRequest updateRentedCarRequest) throws BusinessException {
+		
 		this.carService.checkIfExistByCarId(updateRentedCarRequest.getCarId());
+		
 		checkIfRentedCarIsExistsByRentedCarId(updateRentedCarRequest.getRentedCarId());
 		
+		this.orderedAdditionalServiceService.deleteOrderedAdditionalServicesByRentedCarId(updateRentedCarRequest.getRentedCarId());
+	
+		this.orderedAdditionalServiceService.addOrderedAdditionalServicesByAdditionalIdListAndRentedCarId(updateRentedCarRequest.getAdditionalServiceIds(), updateRentedCarRequest.getRentedCarId());
+		
 		RentedCar rentedCar = this.modelMapperService.forRequest().map(updateRentedCarRequest, RentedCar.class);
+		
+		double totalPrice = calculateTotalPrice(updateRentedCarRequest.getRentDate(),
+				updateRentedCarRequest.getConfirmedPaidedDate()
+				,updateRentedCarRequest.getAdditionalServiceIds()
+				,updateRentedCarRequest.getCarId(),
+				updateRentedCarRequest.getHireCityId(),
+				updateRentedCarRequest.getReturnCityId()
+				);
+		
+		rentedCar.setTotalPrice(totalPrice);
 		
 		this.rentedCarDao.save(rentedCar);
 		
@@ -68,7 +114,10 @@ public class RentedCarManager implements RentedCarService {
 
 	@Override
 	public Result delete(int rentedCarId) throws BusinessException {
+		
 		checkIfRentedCarIsExistsByRentedCarId(rentedCarId);
+		
+		this.orderedAdditionalServiceService.deleteOrderedAdditionalServicesByRentedCarId(rentedCarId);
 		
 		this.rentedCarDao.deleteById(rentedCarId);
 		
@@ -77,6 +126,7 @@ public class RentedCarManager implements RentedCarService {
 
 	@Override
 	public DataResult<GetRentedCarDto> getById(int rentedCarId) throws BusinessException {
+		
 		checkIfRentedCarIsExistsByRentedCarId(rentedCarId);
 		
 		RentedCar rentedCar = this.rentedCarDao.getById(rentedCarId);
@@ -87,11 +137,9 @@ public class RentedCarManager implements RentedCarService {
 	}
 
 	@Override
-	public DataResult<List<RentedCarListDto>> getAll() throws BusinessException {
+	public DataResult<List<RentedCarListDto>> getAll(){
         
 		List<RentedCar> rentedCars = this.rentedCarDao.findAll();
-		
-		checkIfRentedCarListIsEmpty(rentedCars);
 		
 		List<RentedCarListDto> rentedCarListDtos = rentedCars.stream().map(rentedCar -> this.modelMapperService.forDto().map(rentedCar, RentedCarListDto.class)).collect(Collectors.toList());
 		
@@ -110,10 +158,30 @@ public class RentedCarManager implements RentedCarService {
 		}
 	}
 	
-	public void checkIfRentedCarListIsEmpty(List<RentedCar> rentedCars) throws BusinessException {
-		if(rentedCars.isEmpty()) {
-			throw new BusinessException("No Rented Car Found");
-		}
+	
+	private double calculateTotalPrice(LocalDate rentDate,LocalDate confirmedPaidDate,List<Integer> additionalServiceIds,int carId,int hireCityId,int returnCityId) throws BusinessException {
+		
+		int rentedDayValue = (int) ChronoUnit.DAYS.between(rentDate,confirmedPaidDate);
+		
+		double carRentedPrice = this.carService.calculateRentPriceByCarIdAndRentDateValue(carId, rentedDayValue);
+		
+		double additionalServicePrice = this.additionalServiceService.calculateAdditionalServicePriceByAdditionalServiceIdListAndRentDateValue(additionalServiceIds, rentedDayValue);
+		
+		double deliveryPrice = calculateDeliveryPrice(hireCityId, returnCityId);
+		
+		return carRentedPrice + additionalServicePrice + deliveryPrice;
+		
 	}
+	
+	private double calculateDeliveryPrice(int hireCityId,int returnCityId) throws BusinessException {
+		double price = 0;
+		
+		if(hireCityId != returnCityId) {
+			price = this.rentDetailsService.getDifferentCityDeliveryPrice();
+		}
+		
+		return price;
+	}
+	
 
 }

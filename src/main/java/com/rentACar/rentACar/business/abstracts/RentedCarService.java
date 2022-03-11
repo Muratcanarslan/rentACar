@@ -21,7 +21,9 @@ public interface RentedCarService {
 	
 	DataResult<GetRentedCarDto> getById(int rentedCarId) throws BusinessException;
 	
-	DataResult<List<RentedCarListDto>> getAll() throws BusinessException;
+	DataResult<List<RentedCarListDto>> getAll();
 	
 	void checkIfCarIsAlreadyRentedByCarId(int carId) throws BusinessException;
+	
+	void checkIfRentedCarIsExistsByRentedCarId(int rentedCarId) throws BusinessException;
 }

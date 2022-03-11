@@ -84,11 +84,9 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	}
 
 	@Override
-	public DataResult<List<CarMaintenanceListDto>> getAll() throws BusinessException {
+	public DataResult<List<CarMaintenanceListDto>> getAll(){
 
 		List<CarMaintenance> carMaintenances = this.carMaintenanceDao.findAll();
-
-		checkIfCarMaintenanceListIsEmpty(carMaintenances);
 
 		List<CarMaintenanceListDto> carMaintenanceListDtos = carMaintenances.stream().map(
 				carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, CarMaintenanceListDto.class))
@@ -104,11 +102,6 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 		}
 	}
 
-	private void checkIfCarMaintenanceListIsEmpty(List<CarMaintenance> carMaintenances) throws BusinessException {
-		if (carMaintenances.isEmpty()) {
-			throw new BusinessException("Cars Not Found");
-		}
-	}
 
 	@Override
 	public void checkIfCarMaintenanceIsExistsByCarId(int carId) throws BusinessException {

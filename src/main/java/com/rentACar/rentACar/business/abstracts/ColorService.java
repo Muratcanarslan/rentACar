@@ -11,7 +11,7 @@ import com.rentACar.rentACar.core.utilities.results.Result;
 
 public interface ColorService {
 	
-	DataResult<List<ColorListDto>> getAll() throws BusinessException;
+	DataResult<List<ColorListDto>> getAll();
 	
 	Result add(CreateColorRequest cleareColorRequest) throws BusinessException;
 	

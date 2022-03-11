@@ -30,6 +30,7 @@ public class RentACarApplication {
 		return new ModelMapper();
 	}
 	
+	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler
 	public ErrorDataResult<Object> handleValidationExceptions(MethodArgumentNotValidException methodArgumentNotValidException){

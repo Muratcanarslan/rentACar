@@ -16,7 +16,7 @@ import com.rentACar.rentACar.core.utilities.results.Result;
 
 public interface CarService {
 	
-	DataResult<List<CarListDto>> getAll(int pageNo,int pageSize) throws BusinessException;
+	DataResult<List<CarListDto>> getAll(int pageNo,int pageSize);
 	Result add(CreateCarRequest createCarRequest) throws BusinessException;
 	Result update(UpdateCarRequest updateCarRequest) throws BusinessException;
 	Result delete(int carId) throws BusinessException;
@@ -24,4 +24,5 @@ public interface CarService {
 	DataResult<List<CarListLessThanDto>> findByDailyPriceLessThanEqual(double dailyPrice) throws BusinessException;
 	DataResult<List<CarListSortByDailyPrice>> getCarListSortByDailyPrice(Sort.Direction sortDirection) throws BusinessException;
 	void checkIfExistByCarId(int id) throws BusinessException;
+	double calculateRentPriceByCarIdAndRentDateValue(int carId,int rentDateValue) throws BusinessException;
 }

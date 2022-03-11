@@ -1,6 +1,5 @@
 package com.rentACar.rentACar.entities.concretes;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,22 +11,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
 @Entity
-@Data
 @AllArgsConstructor
+@Data
 @NoArgsConstructor
-@Table(name = "brands")
-public class Brand {
+@Table(name = "rent_details")
+public class RentDetails {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "brand_id")
-	private int brandId;
-
-	@Column(name = "brand_name")
-	private String brandName;
-
+	@Column(name = "rent_details_id")
+	private int rentDetailsId;
+	
+	@Column(name = "different_city_delivery_price")
+	private double differentCityDeliveryPrice;
 
 }
