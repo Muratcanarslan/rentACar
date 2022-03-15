@@ -3,6 +3,7 @@ package com.rentACar.rentACar.business.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.business.abstracts.BrandService;
@@ -24,6 +25,7 @@ public class BrandManager implements BrandService {
 	private BrandDao brandDao;
 	private ModelMapperService modelMapperService;
 
+	@Autowired
 	public BrandManager(BrandDao brandDao, ModelMapperService modelMapperService) {
 		this.brandDao = brandDao;
 		this.modelMapperService = modelMapperService;

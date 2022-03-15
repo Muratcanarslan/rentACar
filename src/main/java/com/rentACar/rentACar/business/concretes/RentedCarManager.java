@@ -174,6 +174,7 @@ public class RentedCarManager implements RentedCarService {
 	}
 	
 	private double calculateDeliveryPrice(int hireCityId,int returnCityId) throws BusinessException {
+		
 		double price = 0;
 		
 		if(hireCityId != returnCityId) {

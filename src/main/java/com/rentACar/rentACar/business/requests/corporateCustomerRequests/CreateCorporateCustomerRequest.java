@@ -1,0 +1,31 @@
+package com.rentACar.rentACar.business.requests.corporateCustomerRequests;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class CreateCorporateCustomerRequest {
+	
+	@Email
+	@NotNull
+	private String email;
+	
+	@NotNull
+	@Size(min=6,max=255)
+	private String password;
+	
+	@NotNull
+	@Size(min=2,max=255)
+	private String companyName;
+	
+	@NotNull
+	@Size(min = 10,max=10)
+	private String taxNumber;
+}

@@ -1,11 +1,7 @@
 package com.rentACar.rentACar.core.utilities.exceptions;
 
-public class BusinessException extends Exception{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+@SuppressWarnings("serial")
+public class BusinessException extends Exception {
 
 	public BusinessException(String exceptionMessage) {
 		super(exceptionMessage);
