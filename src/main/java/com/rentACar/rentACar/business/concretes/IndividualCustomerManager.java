@@ -108,7 +108,7 @@ public class IndividualCustomerManager implements IndividualCustomerService{
 		}
 	}
 	
-	private void checkIfIndividualCustomerExistsById(int individualCustomerId) throws IndividualCustomerNotFoundException {
+	public void checkIfIndividualCustomerExistsById(int individualCustomerId) throws IndividualCustomerNotFoundException {
 		if(!this.individualCustomerDao.existsById(individualCustomerId)) {
 			throw new IndividualCustomerNotFoundException("individual customer not found for this id"+individualCustomerId);
 		}

@@ -30,21 +30,22 @@ public class RentedCar {
 	@Column(name = "rented_car_id")
 	private int rentedCarId;
 	
+	@Column(name = "return_date")
+	private LocalDate returnDate;
+		
 	@Column(name = "rent_date")
 	private LocalDate rentDate;
 	
-	@Column(name = "return_date")
-	private LocalDate returnDate;
-	
 	@Column(name = "confirmed_paid_date")
 	private LocalDate confirmedPaidedDate;
-	
-	@Column(name = "total_price")
-	private double totalPrice;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "car_id")
 	private Car car;
+	
+	@ManyToOne
+	@JoinColumn(name = "customer_id")
+	private Customer customer;
 	
 	@ManyToOne
 	@JoinColumn(name = "hire_city_id")
@@ -57,8 +58,7 @@ public class RentedCar {
 	@OneToMany(mappedBy = "rentedCar")
 	private List<OrderedAdditionalService> orderedAdditionalServices;
 	
-	@OneToOne
-	@JoinColumn(name = "invoice_id")
+	@OneToOne(mappedBy = "rentedCar")
 	private Invoice invoice;
 	
 	

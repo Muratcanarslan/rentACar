@@ -10,11 +10,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRentedCarRequest {
+public class CreateRentedCarRequestForCorporateCustomer {
 	
 	@NotNull
 	private LocalDate rentDate;
@@ -23,7 +22,10 @@ public class CreateRentedCarRequest {
 	
 	@NotNull
 	private LocalDate confirmedPaidedDate;
-
+	
+	@NotNull
+	@Min(0)
+	private int customerId;
 	
 	@NotNull
 	@Min(0)
@@ -39,5 +41,4 @@ public class CreateRentedCarRequest {
 	
 	@NotNull
 	private List<Integer> additionalServiceIds;
-
 }

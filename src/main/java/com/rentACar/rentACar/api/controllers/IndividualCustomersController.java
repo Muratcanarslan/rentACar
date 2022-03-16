@@ -2,6 +2,8 @@ package com.rentACar.rentACar.api.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +36,7 @@ public class IndividualCustomersController {
 	}
 
 	@PostMapping("/add")
-	public Result add(@RequestBody CreateIndividualCustomerRequest createIndividualCustomerRequest)
+	public Result add(@RequestBody @Valid CreateIndividualCustomerRequest createIndividualCustomerRequest)
 			throws UserAlreadyExistsException, IndividualCustomerAlreadyExistsByNationalIdentityException {
 		return this.individualCustomerService.add(createIndividualCustomerRequest);
 	}
@@ -45,7 +47,7 @@ public class IndividualCustomersController {
 	}
 
 	@PutMapping("/update")
-	public Result update(@RequestBody UpdateIndividualCustomerRequest updateIndividualCustomerRequest)
+	public Result update(@RequestBody @Valid UpdateIndividualCustomerRequest updateIndividualCustomerRequest)
 			throws IndividualCustomerNotFoundException, UserAlreadyExistsException,
 			IndividualCustomerAlreadyExistsByNationalIdentityException {
 		return this.individualCustomerService.update(updateIndividualCustomerRequest);

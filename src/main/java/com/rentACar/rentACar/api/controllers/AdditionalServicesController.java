@@ -2,6 +2,8 @@ package com.rentACar.rentACar.api.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +33,7 @@ public class AdditionalServicesController {
 	}
 	
 	@PostMapping("/add")
-	public Result add(@RequestBody CreateAdditionalServiceRequest createAdditionalServiceRequest) throws BusinessException {
+	public Result add(@RequestBody @Valid CreateAdditionalServiceRequest createAdditionalServiceRequest) throws BusinessException {
 		return this.additionalServiceService.add(createAdditionalServiceRequest);
 	}
 	
@@ -41,7 +43,7 @@ public class AdditionalServicesController {
 	}
 	
 	@PutMapping("/update")
-	public Result update(@RequestBody UpdateAdditionalServiceRequest updateAdditionalServiceRequest) throws BusinessException {
+	public Result update(@RequestBody @Valid UpdateAdditionalServiceRequest updateAdditionalServiceRequest) throws BusinessException {
 		return this.additionalServiceService.update(updateAdditionalServiceRequest);
 	}
 

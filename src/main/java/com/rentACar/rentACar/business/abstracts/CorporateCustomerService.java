@@ -23,6 +23,8 @@ public interface CorporateCustomerService {
 	DataResult<GetCorporateCustomerDto> getById(int corporateCustomerId) throws CorporateCustomerNotFoundException;
 	
 	DataResult<List<CorporateCustomerListDto>> getAll();
+	
+	void checkIfCorporateCustomerExists(int corporateCustomerId) throws CorporateCustomerNotFoundException;
 
 
 }

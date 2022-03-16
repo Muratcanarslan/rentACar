@@ -1,5 +1,6 @@
-package com.rentACar.rentACar.business.dtos.rentedCarDtos;
+package com.rentACar.rentACar.business.dtos.invoiceDtos;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
@@ -9,9 +10,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RentedCarListDto {
+public class InvoiceListDto {
+	
+	private int invoiceId;
 
-	private int rentedCarId;
+	private Date creationDate;
 
 	private LocalDate rentDate;
 
@@ -19,13 +22,11 @@ public class RentedCarListDto {
 
 	private LocalDate confirmedPaidedDate;
 
-	private int carId;
+	private int totalRentDays;
 
 	private double totalPrice;
 
-	private int hireCityId;
+	private int RentedCar_RentedCarId;
 
-	private int returnCityId;
-	
 	private int Customer_CustomerId;
 }

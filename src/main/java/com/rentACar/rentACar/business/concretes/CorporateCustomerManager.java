@@ -120,7 +120,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 		}
 	}
 
-	private void checkIfCorporateCustomerExists(int corporateCustomerId) throws CorporateCustomerNotFoundException {
+	public void checkIfCorporateCustomerExists(int corporateCustomerId) throws CorporateCustomerNotFoundException {
 		if (!this.corporateCustomerDao.existsById(corporateCustomerId)) {
 			throw new CorporateCustomerNotFoundException(
 					"corporate customer not found for this id" + corporateCustomerId);

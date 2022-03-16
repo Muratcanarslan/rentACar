@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rentACar.rentACar.business.abstracts.RentedCarService;
 import com.rentACar.rentACar.business.dtos.rentedCarDtos.GetRentedCarDto;
 import com.rentACar.rentACar.business.dtos.rentedCarDtos.RentedCarListDto;
-import com.rentACar.rentACar.business.requests.rentedCarRequests.CreateRentedCarRequest;
+import com.rentACar.rentACar.business.requests.rentedCarRequests.CreateRentedCarRequestForCorporateCustomer;
+import com.rentACar.rentACar.business.requests.rentedCarRequests.CreateRentedCarRequestForIndividualCustomer;
 import com.rentACar.rentACar.business.requests.rentedCarRequests.UpdateRentedCarRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
@@ -33,9 +34,14 @@ public class RentedCarsController {
 		this.rentedCarService = rentedCarService;
 	}
 	
-	@PostMapping("/add")
-	public Result add(@RequestBody @Valid CreateRentedCarRequest createRentedCarRequest) throws BusinessException {
-		return this.rentedCarService.add(createRentedCarRequest);
+	@PostMapping("/addForIndividualCustomer")
+	public Result addForIndividualCustomer(@RequestBody @Valid CreateRentedCarRequestForIndividualCustomer createRentedCarRequest) throws BusinessException {
+		return this.rentedCarService.addForIndividualCustomer(createRentedCarRequest);
+	}
+	
+	@PostMapping("/addForCorporateCustomer")
+	public Result addForCorporateCustomer(@RequestBody @Valid CreateRentedCarRequestForCorporateCustomer createRentedCarRequestForCorporateCustomer) throws BusinessException {
+		return this.rentedCarService.addForCorporateCustomer(createRentedCarRequestForCorporateCustomer);
 	}
 	
 	@PutMapping("/update")

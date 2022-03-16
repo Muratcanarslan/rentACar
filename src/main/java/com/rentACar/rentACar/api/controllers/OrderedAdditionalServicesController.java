@@ -2,6 +2,8 @@ package com.rentACar.rentACar.api.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +30,7 @@ public class OrderedAdditionalServicesController {
 	}
 	
 	@PutMapping("/update")
-	public Result update(@RequestBody UpdateOrderedAdditionalServiceRequest additionalServiceRequest) throws BusinessException {
+	public Result update(@RequestBody @Valid UpdateOrderedAdditionalServiceRequest additionalServiceRequest) throws BusinessException {
 		return this.additionalServiceService.update(additionalServiceRequest);
 	}
 	@GetMapping("/getAll")
