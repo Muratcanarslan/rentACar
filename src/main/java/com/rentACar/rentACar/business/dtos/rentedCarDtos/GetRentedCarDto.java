@@ -23,6 +23,10 @@ public class GetRentedCarDto {
 	private int carId;
 	
     private int rentCity;
+    
+    private double rentKilometre;
+    
+    private double returnKilometre;
 	
 	private int returnCity;
 }

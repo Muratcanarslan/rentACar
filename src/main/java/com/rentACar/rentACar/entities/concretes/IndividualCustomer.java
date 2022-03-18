@@ -2,6 +2,8 @@ package com.rentACar.rentACar.entities.concretes;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
@@ -14,6 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name = "individual_customer_id",referencedColumnName = "customer_id")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "individualCustomers")
 public class IndividualCustomer extends Customer {
 	

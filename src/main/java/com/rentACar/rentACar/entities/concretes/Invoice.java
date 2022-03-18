@@ -43,4 +43,5 @@ public class Invoice {
 	@JoinColumn(name = "rented_car_id", referencedColumnName = "rented_car_id")
 	private RentedCar rentedCar;
 
+	//TODO customer ekle.
 }

@@ -19,7 +19,7 @@ public class UserManager implements UserService{
 	@Override
 	public void checkIfUserAlreadyExistsByEmail(String email) throws UserAlreadyExistsException {
 		if(this.userDao.existsByEmail(email)) {
-			throw new UserAlreadyExistsException("user already exists by this email"+email);
+			throw new UserAlreadyExistsException("user already exists by this email" + email,"hata");
 		}
 		
 	}

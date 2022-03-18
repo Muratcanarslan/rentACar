@@ -29,6 +29,10 @@ public class UpdateRentedCarRequest {
 
 	@NotNull
 	@Min(0)
+	private double returnKilometre;
+
+	@NotNull
+	@Min(0)
 	private int customerId;
 
 	@NotNull

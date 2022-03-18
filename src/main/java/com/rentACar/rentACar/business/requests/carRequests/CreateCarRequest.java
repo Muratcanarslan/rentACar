@@ -32,5 +32,9 @@ public class CreateCarRequest {
 	
 	@NotNull
 	@Min(0)
+	private double kilometreInformation;
+	
+	@NotNull
+	@Min(0)
 	private int colorId;
 }

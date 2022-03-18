@@ -30,6 +30,7 @@ public interface InvoiceService {
 
 	DataResult<List<InvoiceListDto>> getAll();
 
+	//TODO:methot ismi yanlış.
 	void deleteAllByRentedCarId(int rentedCarId) throws BusinessException;
 
 	void updateInvoice(int rentedCarId, double totalPrice, int totalRentDays) throws BusinessException;

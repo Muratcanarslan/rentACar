@@ -1,5 +1,6 @@
 package com.rentACar.rentACar.business.dtos.carDtos;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,8 @@ public class GetCarDto {
 	private String description;
 	
 	private int brandId;
+	
+	private double kilometreInformation;
 	
 	private int colorId;
 }

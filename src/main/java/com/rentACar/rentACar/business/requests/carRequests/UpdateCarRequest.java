@@ -27,6 +27,10 @@ public class UpdateCarRequest {
 	@NotNull
 	@Size(min = 2, max = 255)
 	private String description;
+	
+	@NotNull
+	@Min(0)
+	private double kilometreInformation;
 
 	@NotNull
 	@Min(0)

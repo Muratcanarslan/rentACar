@@ -23,9 +23,13 @@ public class RentedCarListDto {
 
 	private double totalPrice;
 
+	private double rentKilometre;
+
+	private double returnKilometre;
+
 	private int hireCityId;
 
 	private int returnCityId;
-	
+
 	private int Customer_CustomerId;
 }

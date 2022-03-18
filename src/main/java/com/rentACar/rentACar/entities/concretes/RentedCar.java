@@ -38,10 +38,18 @@ public class RentedCar {
 	
 	@Column(name = "confirmed_paid_date")
 	private LocalDate confirmedPaidedDate;
+	
+	@Column(name = "rent_kilometre")
+	private double rentKilometre;
+	
+	@Column(name = "return_kilometre")
+	private double returnKilometre;
 
 	@ManyToOne
 	@JoinColumn(name = "car_id")
 	private Car car;
+	
+
 	
 	@ManyToOne
 	@JoinColumn(name = "customer_id")
