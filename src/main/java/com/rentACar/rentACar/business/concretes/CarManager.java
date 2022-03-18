@@ -35,7 +35,8 @@ public class CarManager implements CarService {
 	private ColorService colorService;
 	private BrandService brandService;
 
-	public CarManager(CarDao carDao, ModelMapperService modelMapperService,ColorService colorService,BrandService brandService) {
+	public CarManager(CarDao carDao, ModelMapperService modelMapperService, ColorService colorService,
+			BrandService brandService) {
 		super();
 		this.carDao = carDao;
 		this.modelMapperService = modelMapperService;
@@ -44,7 +45,20 @@ public class CarManager implements CarService {
 	}
 
 	@Override
-	public DataResult<List<CarListDto>> getAll(int pageNo, int pageSize){
+	public void updateKilometreInformation(int carId, double kilometreInformation) throws BusinessException {
+
+		checkIfExistByCarId(carId);
+
+		Car car = this.carDao.getById(carId);
+
+		car.setKilometreInformation(kilometreInformation);
+
+		this.carDao.save(car);
+
+	}
+
+	@Override
+	public DataResult<List<CarListDto>> getAll(int pageNo, int pageSize) {
 
 		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
 
@@ -58,15 +72,14 @@ public class CarManager implements CarService {
 
 	@Override
 	public Result add(CreateCarRequest createCarRequest) throws BusinessException {
-		
+
 		this.brandService.checkIfIsExistsByBrandId(createCarRequest.getBrandId());
-		
+
 		this.colorService.checkIfExistsByColorId(createCarRequest.getColorId());
-		
+
 		Car car = this.modelMapperService.forRequest().map(createCarRequest, Car.class);
 
 		this.carDao.save(car);
-		
 
 		return new SuccessResult("cars added");
 	}
@@ -75,9 +88,9 @@ public class CarManager implements CarService {
 	public Result update(UpdateCarRequest updateCarRequest) throws BusinessException {
 
 		checkIfExistByCarId(updateCarRequest.getCarId());
-		
-        this.brandService.checkIfIsExistsByBrandId(updateCarRequest.getBrandId());
- 		
+
+		this.brandService.checkIfIsExistsByBrandId(updateCarRequest.getBrandId());
+
 		this.colorService.checkIfExistsByColorId(updateCarRequest.getColorId());
 
 		Car car = this.modelMapperService.forRequest().map(updateCarRequest, Car.class);
@@ -137,21 +150,20 @@ public class CarManager implements CarService {
 		return new SuccessDataResult<List<CarListSortByDailyPrice>>(carListSortByDailyPrice, "sorted car list");
 	}
 
-
 	public void checkIfExistByCarId(int id) throws BusinessException {
 		if (!this.carDao.existsById(id)) {
 			throw new BusinessException("Car Not Found");
 		}
 	}
-	
-	public double calculateRentPriceByCarIdAndRentDateValue(int carId,int rentDateValue) throws BusinessException {
-		
+
+	public double calculateRentPriceByCarIdAndRentDateValue(int carId, int rentDateValue) throws BusinessException {
+
 		checkIfExistByCarId(carId);
-		
+
 		Car car = this.carDao.getById(carId);
-		
+
 		double finalPrice = car.getDailyPrice() * rentDateValue;
-		
+
 		return finalPrice;
 	}
 

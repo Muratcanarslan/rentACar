@@ -1,7 +1,5 @@
 package com.rentACar.rentACar.business.concretes;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,7 +8,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rentACar.rentACar.business.abstracts.AdditionalServiceService;
 import com.rentACar.rentACar.business.abstracts.CarMaintenanceService;
 import com.rentACar.rentACar.business.abstracts.CarService;
 import com.rentACar.rentACar.business.abstracts.CorporateCustomerService;
@@ -18,7 +15,6 @@ import com.rentACar.rentACar.business.abstracts.CustomerService;
 import com.rentACar.rentACar.business.abstracts.IndividualCustomerService;
 import com.rentACar.rentACar.business.abstracts.InvoiceService;
 import com.rentACar.rentACar.business.abstracts.OrderedAdditionalServiceService;
-import com.rentACar.rentACar.business.abstracts.RentDetailsService;
 import com.rentACar.rentACar.business.abstracts.RentedCarService;
 import com.rentACar.rentACar.business.dtos.rentedCarDtos.GetRentedCarDto;
 import com.rentACar.rentACar.business.dtos.rentedCarDtos.RentedCarListDto;
@@ -45,8 +41,6 @@ public class RentedCarManager implements RentedCarService {
 	private CarService carService;
 	private CarMaintenanceService carMaintenanceService;
 	private OrderedAdditionalServiceService orderedAdditionalServiceService;
-	private AdditionalServiceService additionalServiceService;
-	private RentDetailsService rentDetailsService;
 	private InvoiceService invoiceService;
 	private IndividualCustomerService individualCustomerService;
 	private CustomerService customerService;
@@ -55,17 +49,14 @@ public class RentedCarManager implements RentedCarService {
 	@Autowired
 	public RentedCarManager(RentedCarDao rentedCarDao, ModelMapperService modelMapperService, CarService carService,
 			CarMaintenanceService carMaintenanceService,
-			OrderedAdditionalServiceService orderedAdditionalServiceService,
-			AdditionalServiceService additionalServiceService, RentDetailsService rentDetailsService,
-			InvoiceService invoiceService, IndividualCustomerService individualCustomerService,
-			CustomerService customerService, CorporateCustomerService corporateCustomerService) {
+			OrderedAdditionalServiceService orderedAdditionalServiceService, InvoiceService invoiceService,
+			IndividualCustomerService individualCustomerService, CustomerService customerService,
+			CorporateCustomerService corporateCustomerService) {
 		this.rentedCarDao = rentedCarDao;
 		this.modelMapperService = modelMapperService;
 		this.carService = carService;
 		this.carMaintenanceService = carMaintenanceService;
 		this.orderedAdditionalServiceService = orderedAdditionalServiceService;
-		this.additionalServiceService = additionalServiceService;
-		this.rentDetailsService = rentDetailsService;
 		this.invoiceService = invoiceService;
 		this.individualCustomerService = individualCustomerService;
 		this.customerService = customerService;
@@ -81,24 +72,14 @@ public class RentedCarManager implements RentedCarService {
 		checkIfCarIsAlreadyRentedByCarId(createRentedCarRequest.getCarId());
 		this.individualCustomerService.checkIfIndividualCustomerExistsById(createRentedCarRequest.getCustomerId());
 
-		double totalPrice = calculateTotalPrice(createRentedCarRequest.getRentDate(),
-				createRentedCarRequest.getConfirmedPaidedDate(), createRentedCarRequest.getAdditionalServiceIds(),
-				createRentedCarRequest.getCarId(), createRentedCarRequest.getHireCityId(),
-				createRentedCarRequest.getReturnCityId());
-
 		RentedCar rentedCar = this.modelMapperService.forRequest().map(createRentedCarRequest, RentedCar.class);
 
 		rentedCar.setCustomer(getCustomerForMapping(createRentedCarRequest.getCustomerId()));
-		
-		rentedCar.setRentKilometre(this.carService.getById(rentedCar.getCar().getCarId()).getData().getKilometreInformation());
 
-		RentedCar savedRentedCar = this.rentedCarDao.save(rentedCar);
+		rentedCar.setRentKilometre(
+				this.carService.getById(rentedCar.getCar().getCarId()).getData().getKilometreInformation());
 
-		this.orderedAdditionalServiceService.addOrderedAdditionalServicesByAdditionalIdListAndRentedCarId(
-				createRentedCarRequest.getAdditionalServiceIds(), savedRentedCar.getRentedCarId());
-
-		this.invoiceService.addInvoice(savedRentedCar.getRentedCarId(), totalPrice, calculateTotalRentDays(
-			createRentedCarRequest.getRentDate(), createRentedCarRequest.getConfirmedPaidedDate()));
+		this.rentedCarDao.save(rentedCar);
 
 		return new SuccessResult("rented car added for individual customer");
 	}
@@ -115,26 +96,13 @@ public class RentedCarManager implements RentedCarService {
 				.checkIfCarMaintenanceIsExistsByCarId(createRentedCarRequestForCorporateCustomer.getCarId());
 		checkIfCarIsAlreadyRentedByCarId(createRentedCarRequestForCorporateCustomer.getCarId());
 
-		double totalPrice = calculateTotalPrice(createRentedCarRequestForCorporateCustomer.getRentDate(),
-				createRentedCarRequestForCorporateCustomer.getConfirmedPaidedDate(),
-				createRentedCarRequestForCorporateCustomer.getAdditionalServiceIds(),
-				createRentedCarRequestForCorporateCustomer.getCarId(),
-				createRentedCarRequestForCorporateCustomer.getHireCityId(),
-				createRentedCarRequestForCorporateCustomer.getReturnCityId());
-
 		RentedCar rentedCar = this.modelMapperService.forRequest().map(createRentedCarRequestForCorporateCustomer,
 				RentedCar.class);
 
-		rentedCar.setRentKilometre(this.carService.getById(rentedCar.getCar().getCarId()).getData().getKilometreInformation());
+		rentedCar.setRentKilometre(
+				this.carService.getById(rentedCar.getCar().getCarId()).getData().getKilometreInformation());
 
-		RentedCar savedRentedCar = this.rentedCarDao.save(rentedCar);
-
-		this.orderedAdditionalServiceService.addOrderedAdditionalServicesByAdditionalIdListAndRentedCarId(
-				createRentedCarRequestForCorporateCustomer.getAdditionalServiceIds(), savedRentedCar.getRentedCarId());
-
-		this.invoiceService.addInvoice(savedRentedCar.getRentedCarId(), totalPrice,
-				calculateTotalRentDays(createRentedCarRequestForCorporateCustomer.getRentDate(),
-						createRentedCarRequestForCorporateCustomer.getConfirmedPaidedDate()));
+		this.rentedCarDao.save(rentedCar);
 
 		return new SuccessResult("rented car added for corporate customer");
 	}
@@ -146,28 +114,16 @@ public class RentedCarManager implements RentedCarService {
 		checkIfRentedCarIsExistsByRentedCarId(updateRentedCarRequest.getRentedCarId());
 		this.customerService.checkIfCustomerExists(updateRentedCarRequest.getCustomerId());
 
-		this.orderedAdditionalServiceService
-				.deleteOrderedAdditionalServicesByRentedCarId(updateRentedCarRequest.getRentedCarId());
-
-		this.orderedAdditionalServiceService.addOrderedAdditionalServicesByAdditionalIdListAndRentedCarId(
-				updateRentedCarRequest.getAdditionalServiceIds(), updateRentedCarRequest.getRentedCarId());
-
 		RentedCar rentedCar = this.modelMapperService.forRequest().map(updateRentedCarRequest, RentedCar.class);
 
 		rentedCar.setCustomer(getCustomerForMapping(updateRentedCarRequest.getCustomerId()));
+
+		rentedCar.setRentKilometre(
+				this.carService.getById(rentedCar.getCar().getCarId()).getData().getKilometreInformation());
 		
-		rentedCar.setRentKilometre(this.carService.getById(rentedCar.getCar().getCarId()).getData().getKilometreInformation());
-		
+		this.carService.updateKilometreInformation(updateRentedCarRequest.getCarId(), updateRentedCarRequest.getReturnKilometre());
 		
 		this.rentedCarDao.save(rentedCar);
-
-		double totalPrice = calculateTotalPrice(updateRentedCarRequest.getRentDate(),
-				updateRentedCarRequest.getConfirmedPaidedDate(), updateRentedCarRequest.getAdditionalServiceIds(),
-				updateRentedCarRequest.getCarId(), updateRentedCarRequest.getHireCityId(),
-				updateRentedCarRequest.getReturnCityId());
-
-		this.invoiceService.updateInvoice(updateRentedCarRequest.getRentedCarId(), totalPrice, calculateTotalRentDays(
-				updateRentedCarRequest.getRentDate(), updateRentedCarRequest.getConfirmedPaidedDate()));
 
 		return new SuccessResult("Rented Car Updated");
 
@@ -211,6 +167,15 @@ public class RentedCarManager implements RentedCarService {
 		return new SuccessDataResult<List<RentedCarListDto>>(rentedCarListDtos, "rented cars");
 	}
 
+	@Override
+	public RentedCar getRentedCarForBusiness(int rentedCarId) throws BusinessException {
+		checkIfRentedCarIsExistsByRentedCarId(rentedCarId);
+
+		RentedCar rentedCar = this.rentedCarDao.getById(rentedCarId);
+
+		return rentedCar;
+	}
+
 	public void checkIfRentedCarIsExistsByRentedCarId(int rentedCarId) throws BusinessException {
 		if (!this.rentedCarDao.existsById(rentedCarId)) {
 			throw new BusinessException("Rent information is not founded");
@@ -221,38 +186,6 @@ public class RentedCarManager implements RentedCarService {
 		if (this.rentedCarDao.getByCar_CarIdAndReturnDateIsNull(carId) != null) {
 			throw new BusinessException("Car is Already Rented");
 		}
-	}
-
-	private double calculateTotalPrice(LocalDate rentDate, LocalDate confirmedPaidDate,
-			List<Integer> additionalServiceIds, int carId, int hireCityId, int returnCityId) throws BusinessException {
-
-		int rentedDayValue = calculateTotalRentDays(rentDate, confirmedPaidDate);
-
-		double carRentedPrice = this.carService.calculateRentPriceByCarIdAndRentDateValue(carId, rentedDayValue);
-
-		double additionalServicePrice = this.additionalServiceService
-				.calculateAdditionalServicePriceByAdditionalServiceIdListAndRentDateValue(additionalServiceIds,
-						rentedDayValue);
-
-		double deliveryPrice = calculateDeliveryPrice(hireCityId, returnCityId);
-
-		return carRentedPrice + additionalServicePrice + deliveryPrice;
-
-	}
-
-	private double calculateDeliveryPrice(int hireCityId, int returnCityId) throws BusinessException {
-
-		double price = 0;
-
-		if (hireCityId != returnCityId) {
-			price = this.rentDetailsService.getDifferentCityDeliveryPrice();
-		}
-
-		return price;
-	}
-
-	private int calculateTotalRentDays(LocalDate rentDate, LocalDate confirmedPaidDate) {
-		return (int) ChronoUnit.DAYS.between(rentDate, confirmedPaidDate);
 	}
 
 	private Customer getCustomerForMapping(int customerId) throws CustomerNotFoundException {

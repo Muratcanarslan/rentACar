@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +21,7 @@ import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceDateBetweenDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceListDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceCustomerListDto;
 import com.rentACar.rentACar.business.requests.invoiceRequests.CreateInvoiceRequest;
+import com.rentACar.rentACar.business.requests.invoiceRequests.UpdateInvoiceRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.exceptions.customerExceptions.CustomerNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.invoiceExceptions.InvoiceNotFoundException;
@@ -75,6 +77,11 @@ public class InvoicesController {
 	@PostMapping("/add")
 	public Result add(@RequestBody @Valid CreateInvoiceRequest createInvoiceRequest) throws BusinessException {
 		return this.invoiceService.add(createInvoiceRequest);
+	}
+	
+	@PutMapping("/update")
+	public Result update(@RequestBody @Valid UpdateInvoiceRequest invoiceRequest) throws InvoiceNotFoundException, BusinessException {
+		return this.invoiceService.update(invoiceRequest);
 	}
 
 }

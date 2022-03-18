@@ -8,6 +8,7 @@ import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceDateBetweenDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceListDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceCustomerListDto;
 import com.rentACar.rentACar.business.requests.invoiceRequests.CreateInvoiceRequest;
+import com.rentACar.rentACar.business.requests.invoiceRequests.UpdateInvoiceRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.exceptions.customerExceptions.CustomerNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.invoiceExceptions.InvoiceNotFoundException;
@@ -19,6 +20,8 @@ public interface InvoiceService {
 	Result add(CreateInvoiceRequest createInvoiceRequest) throws BusinessException;
 
 	Result delete(int invoiceId) throws InvoiceNotFoundException;
+	
+	Result update(UpdateInvoiceRequest updateInvoiceRequest) throws InvoiceNotFoundException, BusinessException;
 
 	DataResult<GetInvoiceDto> getById(int invoiceId) throws InvoiceNotFoundException;
 
@@ -32,9 +35,5 @@ public interface InvoiceService {
 
 	//TODO:methot ismi yanlış.
 	void deleteAllByRentedCarId(int rentedCarId) throws BusinessException;
-
-	void updateInvoice(int rentedCarId, double totalPrice, int totalRentDays) throws BusinessException;
-
-	void addInvoice(int rentedCarId, double totalPrice, int totalRentDays) throws BusinessException;
 
 }

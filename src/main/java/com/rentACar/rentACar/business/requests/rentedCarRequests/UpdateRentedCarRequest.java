@@ -1,7 +1,6 @@
 package com.rentACar.rentACar.business.requests.rentedCarRequests;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -46,7 +45,4 @@ public class UpdateRentedCarRequest {
 	@NotNull
 	@Min(0)
 	private int returnCityId;
-
-	@NotNull
-	private List<Integer> additionalServiceIds;
 }

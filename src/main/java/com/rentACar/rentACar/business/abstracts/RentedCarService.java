@@ -11,6 +11,7 @@ import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.exceptions.corporateCustomerExceptions.CorporateCustomerNotFoundException;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
+import com.rentACar.rentACar.entities.concretes.RentedCar;
 
 public interface RentedCarService {
 	
@@ -24,6 +25,8 @@ public interface RentedCarService {
 	Result delete(int rentedCarId) throws BusinessException;
 	
 	DataResult<GetRentedCarDto> getById(int rentedCarId) throws BusinessException;
+	
+	RentedCar getRentedCarForBusiness(int rentedCarId) throws BusinessException;
 	
 	DataResult<List<RentedCarListDto>> getAll();
 	
