@@ -10,6 +10,7 @@ import com.rentACar.rentACar.business.abstracts.AdditionalServiceService;
 import com.rentACar.rentACar.business.abstracts.OrderedAdditionalServiceService;
 import com.rentACar.rentACar.business.abstracts.RentedCarService;
 import com.rentACar.rentACar.business.constants.messages.BusinessMessages;
+import com.rentACar.rentACar.business.dtos.additionalServiceDtos.GetAdditionalServiceDto;
 import com.rentACar.rentACar.business.dtos.orderedAdditionalServiceDto.OrderedAdditionalServiceListDto;
 import com.rentACar.rentACar.business.requests.orderedAdditionalServiceRequests.CreateOrderedAdditionalServiceRequest;
 import com.rentACar.rentACar.business.requests.orderedAdditionalServiceRequests.UpdateOrderedAdditionalServiceRequest;
@@ -23,6 +24,7 @@ import com.rentACar.rentACar.core.utilities.results.Result;
 import com.rentACar.rentACar.core.utilities.results.SuccessDataResult;
 import com.rentACar.rentACar.core.utilities.results.SuccessResult;
 import com.rentACar.rentACar.dataAccess.abstracts.OrderedAdditionalServiceDao;
+import com.rentACar.rentACar.entities.concretes.AdditionalService;
 import com.rentACar.rentACar.entities.concretes.OrderedAdditionalService;
 
 @Service
@@ -44,12 +46,16 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	}
 
 	@Override
-	public Result add(CreateOrderedAdditionalServiceRequest orderedAdditionalServiceRequest) throws OrderedAdditionalServiceAlreadyExistsException, AdditionalServiceNotFoundException, RentedCarNotFoundException  {
+	public Result add(CreateOrderedAdditionalServiceRequest orderedAdditionalServiceRequest)
+			throws OrderedAdditionalServiceAlreadyExistsException, AdditionalServiceNotFoundException,
+			RentedCarNotFoundException {
 
 		this.additionalServiceService
 				.checkIfAdditionalServiceExists(orderedAdditionalServiceRequest.getAdditionalServiceId());
 		this.rentedCarService.checkIfRentedCarIsExistsByRentedCarId(orderedAdditionalServiceRequest.getRentedCarId());
-		checkIfOrderedAdditionalServiceAlreadyExistsForRentedCar(orderedAdditionalServiceRequest.getAdditionalServiceId(),orderedAdditionalServiceRequest.getRentedCarId());
+		checkIfOrderedAdditionalServiceAlreadyExistsForRentedCar(
+				orderedAdditionalServiceRequest.getAdditionalServiceId(),
+				orderedAdditionalServiceRequest.getRentedCarId());
 
 		OrderedAdditionalService orderedAdditionalService = this.modelMapperService.forRequest()
 				.map(orderedAdditionalServiceRequest, OrderedAdditionalService.class);
@@ -60,10 +66,12 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	}
 
 	@Override
-	public Result update(UpdateOrderedAdditionalServiceRequest updateOrderedAdditionalServiceRequest) throws OrderedAdditionalServiceNotFoundException, OrderedAdditionalServiceAlreadyExistsException
-			 {
+	public Result update(UpdateOrderedAdditionalServiceRequest updateOrderedAdditionalServiceRequest)
+			throws OrderedAdditionalServiceNotFoundException, OrderedAdditionalServiceAlreadyExistsException {
 		checkIfOrderedAdditionalServiceExists(updateOrderedAdditionalServiceRequest.getOrderedAdditionalServiceId());
-		checkIfOrderedAdditionalServiceAlreadyExistsForRentedCar(updateOrderedAdditionalServiceRequest.getAdditionalServiceId(),updateOrderedAdditionalServiceRequest.getRentedCarId());
+		checkIfOrderedAdditionalServiceAlreadyExistsForRentedCar(
+				updateOrderedAdditionalServiceRequest.getAdditionalServiceId(),
+				updateOrderedAdditionalServiceRequest.getRentedCarId());
 
 		OrderedAdditionalService orderedAdditionalService = this.modelMapperService.forRequest()
 				.map(updateOrderedAdditionalServiceRequest, OrderedAdditionalService.class);
@@ -74,8 +82,8 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	}
 
 	@Override
-	public DataResult<List<OrderedAdditionalServiceListDto>> getByRentedCarId(int rentedCarId) throws RentedCarNotFoundException
-			 {
+	public DataResult<List<OrderedAdditionalServiceListDto>> getByRentedCarId(int rentedCarId)
+			throws RentedCarNotFoundException {
 
 		this.rentedCarService.checkIfRentedCarIsExistsByRentedCarId(rentedCarId);
 
@@ -92,7 +100,8 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	}
 
 	@Override
-	public List<OrderedAdditionalService> getByRentedCarIdForBusiness(int rentedCarId) throws RentedCarNotFoundException {
+	public List<OrderedAdditionalService> getByRentedCarIdForBusiness(int rentedCarId)
+			throws RentedCarNotFoundException {
 
 		this.rentedCarService.checkIfRentedCarIsExistsByRentedCarId(rentedCarId);
 
@@ -101,38 +110,60 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 
 		return additionalServices;
 	}
-	
+
+	public void addOrderedAdditionalServiceForPayment(List<Integer> additionalServiceIds, int rentedCarId)
+			throws AdditionalServiceNotFoundException, OrderedAdditionalServiceAlreadyExistsException,
+			RentedCarNotFoundException {
+
+		this.additionalServiceService.checkIfAdditionalServicesExists(additionalServiceIds);
+
+		for (int id : additionalServiceIds) {
+
+			CreateOrderedAdditionalServiceRequest additionalServiceRequest = new CreateOrderedAdditionalServiceRequest();
+
+			additionalServiceRequest.setAdditionalServiceId(id);
+			
+			additionalServiceRequest.setRentedCarId(rentedCarId);
+
+			this.add(additionalServiceRequest);
+		}
+
+	}
+
 	@Override
-	public Result delete(int orderedAdditionalServiceId) throws OrderedAdditionalServiceNotFoundException  {
-		
+	public Result delete(int orderedAdditionalServiceId) throws OrderedAdditionalServiceNotFoundException {
+
 		checkIfOrderedAdditionalServiceExists(orderedAdditionalServiceId);
-		
+
 		this.orderedAdditionalServiceDao.deleteById(orderedAdditionalServiceId);
-		
+
 		return new SuccessResult("ordered additional service deleted");
 	}
 
 	public void deleteOrderedAdditionalServicesByRentedCarId(int rentedCarId) throws RentedCarNotFoundException {
-		
+
 		this.rentedCarService.checkIfRentedCarIsExistsByRentedCarId(rentedCarId);
-		
+
 		this.orderedAdditionalServiceDao.deleteAllByRentedCar_RentedCarId(rentedCarId);
 	}
 
-	public void checkIfOrderedAdditionalServiceExists(int orderedAdditionalServiceId) throws OrderedAdditionalServiceNotFoundException  {
+	public void checkIfOrderedAdditionalServiceExists(int orderedAdditionalServiceId)
+			throws OrderedAdditionalServiceNotFoundException {
 
 		if (!this.orderedAdditionalServiceDao.existsById(orderedAdditionalServiceId)) {
-			throw new OrderedAdditionalServiceNotFoundException(BusinessMessages.ORDERED_ADDITIONAL_SERVICE_NOT_FOUND + orderedAdditionalServiceId);
+			throw new OrderedAdditionalServiceNotFoundException(
+					BusinessMessages.ORDERED_ADDITIONAL_SERVICE_NOT_FOUND + orderedAdditionalServiceId);
 		}
 	}
 
-	private void checkIfOrderedAdditionalServiceAlreadyExistsForRentedCar(int additionalServiceId,int rentedCarId) throws OrderedAdditionalServiceAlreadyExistsException {
-		if(this.orderedAdditionalServiceDao.existsByAdditionalService_AdditionalServiceIdAndRentedCar_RentedCarId(additionalServiceId, rentedCarId)) {
-			throw new OrderedAdditionalServiceAlreadyExistsException(BusinessMessages.ORDERED_ADDITIONAL_SERVICE_ALREADY_EXISTS);
+	private void checkIfOrderedAdditionalServiceAlreadyExistsForRentedCar(int additionalServiceId, int rentedCarId)
+			throws OrderedAdditionalServiceAlreadyExistsException {
+		if (this.orderedAdditionalServiceDao.existsByAdditionalService_AdditionalServiceIdAndRentedCar_RentedCarId(
+				additionalServiceId, rentedCarId)) {
+			throw new OrderedAdditionalServiceAlreadyExistsException(
+					BusinessMessages.ORDERED_ADDITIONAL_SERVICE_ALREADY_EXISTS);
 		}
 
 	}
-
-	
 
 }

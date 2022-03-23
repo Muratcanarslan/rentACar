@@ -73,7 +73,7 @@ public class RentedCarManager implements RentedCarService {
 	}
 
 	@Override
-	public Result addForIndividualCustomer(CreateRentedCarRequestForIndividualCustomer createRentedCarRequest) throws CarNotFoundException, CarAlreadyInRentException, CarAlreadyInMaintenanceException, IndividualCustomerNotFoundException, CustomerNotFoundException
+	public int addForIndividualCustomer(CreateRentedCarRequestForIndividualCustomer createRentedCarRequest) throws CarNotFoundException, CarAlreadyInRentException, CarAlreadyInMaintenanceException, IndividualCustomerNotFoundException, CustomerNotFoundException
 			 {
 
 		this.carService.checkIfExistByCarId(createRentedCarRequest.getCarId());
@@ -88,9 +88,9 @@ public class RentedCarManager implements RentedCarService {
 		rentedCar.setRentKilometre(
 				this.carService.getById(rentedCar.getCar().getCarId()).getData().getKilometreInformation());
 
-		this.rentedCarDao.save(rentedCar);
+		RentedCar savedRentedCar = this.rentedCarDao.save(rentedCar);
 
-		return new SuccessResult("rented car added for individual customer");
+		return savedRentedCar.getRentedCarId();
 	}
 
 	@Override

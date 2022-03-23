@@ -22,7 +22,7 @@ import com.rentACar.rentACar.entities.concretes.RentedCar;
 
 public interface RentedCarService {
 
-	Result addForIndividualCustomer(CreateRentedCarRequestForIndividualCustomer createRentedCarRequest) throws CarNotFoundException, CarAlreadyInRentException, CarAlreadyInMaintenanceException, IndividualCustomerNotFoundException, CustomerNotFoundException;
+	int addForIndividualCustomer(CreateRentedCarRequestForIndividualCustomer createRentedCarRequest) throws CarNotFoundException, CarAlreadyInRentException, CarAlreadyInMaintenanceException, IndividualCustomerNotFoundException, CustomerNotFoundException;
 
 	Result addForCorporateCustomer(
 			CreateRentedCarRequestForCorporateCustomer createRentedCarRequestForCorporateCustomer) throws CarNotFoundException, CorporateCustomerNotFoundException, CarAlreadyInMaintenanceException, CarAlreadyInRentException;

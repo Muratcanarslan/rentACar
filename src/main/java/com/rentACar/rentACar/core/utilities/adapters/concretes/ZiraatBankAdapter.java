@@ -2,6 +2,7 @@ package com.rentACar.rentACar.core.utilities.adapters.concretes;
 
 import org.springframework.stereotype.Service;
 
+import com.rentACar.rentACar.business.constants.messages.BusinessMessages;
 import com.rentACar.rentACar.core.utilities.adapters.abstracts.BankService;
 import com.rentACar.rentACar.core.utilities.exceptions.bankServiceExceptions.PaymentNotSuccessfullException;
 import com.rentACar.rentACar.core.utilities.postServices.ZiraatBankPostService;
@@ -22,7 +23,7 @@ public class ZiraatBankAdapter implements BankService {
 	
 	private void checkIfPaymentIsSuccessfull(boolean isSuccessfull) throws PaymentNotSuccessfullException {
 		if(!isSuccessfull) {
-			throw new PaymentNotSuccessfullException("payment is not successfull");
+			throw new PaymentNotSuccessfullException(BusinessMessages.PAYMENT_IS_NOT_SUCCESSFULL);
 		}
 	}
 

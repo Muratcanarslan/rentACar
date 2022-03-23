@@ -26,4 +26,6 @@ public interface OrderedAdditionalServiceService {
 	List<OrderedAdditionalService> getByRentedCarIdForBusiness(int rentedCarId) throws RentedCarNotFoundException;
 
 	void deleteOrderedAdditionalServicesByRentedCarId(int rentedCarId) throws RentedCarNotFoundException;
+	
+	void addOrderedAdditionalServiceForPayment(List<Integer> additionalServiceIds,int rentedCarId) throws AdditionalServiceNotFoundException, OrderedAdditionalServiceAlreadyExistsException, RentedCarNotFoundException;
 }

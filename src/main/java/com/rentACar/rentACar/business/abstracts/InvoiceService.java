@@ -21,7 +21,7 @@ import com.rentACar.rentACar.core.utilities.results.Result;
 
 public interface InvoiceService {
 
-	Result add(CreateInvoiceRequest createInvoiceRequest) throws RentedCarNotFoundException, AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException ;
+	int add(CreateInvoiceRequest createInvoiceRequest) throws RentedCarNotFoundException, AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException ;
 
 	Result addForDelayedReturn(CreateInvoiceForDelayedReturnRequest createInvoiceForDelayedReturnRequest) throws RentedCarNotFoundException, AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException ;
 	

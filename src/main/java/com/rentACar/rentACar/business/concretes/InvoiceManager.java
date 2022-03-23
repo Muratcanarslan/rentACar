@@ -71,7 +71,8 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	@Override
-	public Result add(CreateInvoiceRequest createInvoiceRequest) throws RentedCarNotFoundException, AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException  {
+	public int add(CreateInvoiceRequest createInvoiceRequest) throws RentedCarNotFoundException,
+			AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException {
 
 		this.rentedCarService.checkIfRentedCarIsExistsByRentedCarId(createInvoiceRequest.getRentedCar_RentedCarId());
 
@@ -86,14 +87,18 @@ public class InvoiceManager implements InvoiceService {
 				rentedCar.getRentedCarId(), rentedCar.getCar().getCarId(), rentedCar.getHireCity().getCityId(),
 				rentedCar.getReturnCity().getCityId(), invoice.getTotalRentDays()));
 
-		this.invoiceDao.save(invoice);
+		Invoice savedInvoice = this.invoiceDao.save(invoice);
+		
+		return savedInvoice.getInvoiceId();
 
-		return new SuccessResult("invoice added by controller");
 	}
-	
+
 	@Override
-	public Result addForDelayedReturn(CreateInvoiceForDelayedReturnRequest createInvoiceForDelayedReturnRequest) throws RentedCarNotFoundException, AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException  {
-		this.rentedCarService.checkIfRentedCarIsExistsByRentedCarId(createInvoiceForDelayedReturnRequest.getRentedCar_RentedCarId());
+	public Result addForDelayedReturn(CreateInvoiceForDelayedReturnRequest createInvoiceForDelayedReturnRequest)
+			throws RentedCarNotFoundException, AdditionalServiceNotFoundException, CarNotFoundException,
+			RentDetailsNotFoundException {
+		this.rentedCarService
+				.checkIfRentedCarIsExistsByRentedCarId(createInvoiceForDelayedReturnRequest.getRentedCar_RentedCarId());
 
 		RentedCar rentedCar = this.rentedCarService
 				.getRentedCarForBusiness(createInvoiceForDelayedReturnRequest.getRentedCar_RentedCarId());
@@ -105,7 +110,7 @@ public class InvoiceManager implements InvoiceService {
 		invoice.setTotalPrice(calculateTotalPrice(rentedCar.getConfirmedPaidedDate(), rentedCar.getReturnDate(),
 				rentedCar.getRentedCarId(), rentedCar.getCar().getCarId(), rentedCar.getHireCity().getCityId(),
 				rentedCar.getReturnCity().getCityId(), invoice.getTotalRentDays()));
-		
+
 		invoice.setInvoiceId(0);
 		this.invoiceDao.save(invoice);
 
@@ -113,7 +118,9 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	@Override
-	public Result update(UpdateInvoiceRequest updateInvoiceRequest) throws InvoiceNotFoundException, RentedCarNotFoundException, AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException  {
+	public Result update(UpdateInvoiceRequest updateInvoiceRequest)
+			throws InvoiceNotFoundException, RentedCarNotFoundException, AdditionalServiceNotFoundException,
+			CarNotFoundException, RentDetailsNotFoundException {
 
 		this.rentedCarService.checkIfRentedCarIsExistsByRentedCarId(updateInvoiceRequest.getRentedCar_RentedCarId());
 		checkIfInvoiceExistsByRentedCarId(updateInvoiceRequest.getRentedCar_RentedCarId());
@@ -177,7 +184,8 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	@Override
-	public DataResult<GetInvoiceDto> getInvoiceByRentedCarId(int rentedCarId) throws RentedCarNotFoundException, InvoiceNotFoundException {
+	public DataResult<GetInvoiceDto> getInvoiceByRentedCarId(int rentedCarId)
+			throws RentedCarNotFoundException, InvoiceNotFoundException {
 
 		this.rentedCarService.checkIfRentedCarIsExistsByRentedCarId(rentedCarId);
 		checkIfInvoiceExistsByRentedCarId(rentedCarId);
@@ -203,7 +211,7 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	@Override
-	public Result delete(int invoiceId) throws InvoiceNotFoundException  {
+	public Result delete(int invoiceId) throws InvoiceNotFoundException {
 		checkIfInvoiceExists(invoiceId);
 
 		this.invoiceDao.deleteById(invoiceId);
@@ -212,7 +220,8 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	private double calculateTotalPrice(LocalDate rentDate, LocalDate confirmedPaidDate, int rentedCarId, int carId,
-			int hireCityId, int returnCityId, int totalRentDays) throws AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException, RentedCarNotFoundException  {
+			int hireCityId, int returnCityId, int totalRentDays) throws AdditionalServiceNotFoundException,
+			CarNotFoundException, RentDetailsNotFoundException, RentedCarNotFoundException {
 
 		double carDailyPrice = this.carService.getById(carId).getData().getDailyPrice();
 
@@ -228,7 +237,7 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	private double calculateOrderedAdditionalServicePrice(List<OrderedAdditionalService> orderedAdditionalServices,
-			int totalRentDays) throws AdditionalServiceNotFoundException  {
+			int totalRentDays) throws AdditionalServiceNotFoundException {
 
 		double price = 0;
 
@@ -256,7 +265,7 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	@Override
-	public void deleteAllByRentedCarId(int rentedCarId) throws RentedCarNotFoundException  {
+	public void deleteAllByRentedCarId(int rentedCarId) throws RentedCarNotFoundException {
 
 		this.rentedCarService.checkIfRentedCarIsExistsByRentedCarId(rentedCarId);
 
@@ -274,10 +283,5 @@ public class InvoiceManager implements InvoiceService {
 			throw new InvoiceNotFoundException(BusinessMessages.INVOICE_NOT_FOUND_FOR_RENTED_CAR + rentedCarId);
 		}
 	}
-
-	
-
-	
-	
 
 }

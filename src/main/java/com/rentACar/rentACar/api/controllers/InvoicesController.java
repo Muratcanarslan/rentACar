@@ -74,11 +74,6 @@ public class InvoicesController {
 	public Result deleteById(@RequestParam int invoiceId) throws InvoiceNotFoundException {
 		return this.invoiceService.delete(invoiceId);
 	}
-
-	@PostMapping("/add")
-	public Result add(@RequestBody @Valid CreateInvoiceRequest createInvoiceRequest) throws BusinessException {
-		return this.invoiceService.add(createInvoiceRequest);
-	}
 	
 	@PostMapping("/addForDelayedReturn")
 	public Result addForDelayedReturn(@RequestBody @Valid CreateInvoiceForDelayedReturnRequest createInvoiceForDelayedReturnRequest) throws BusinessException {
