@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.business.abstracts.IndividualCustomerService;
 import com.rentACar.rentACar.business.abstracts.UserService;
+import com.rentACar.rentACar.business.constants.messages.BusinessMessages;
 import com.rentACar.rentACar.business.dtos.individualCustomerDtos.GetIndividualCustomerDto;
 import com.rentACar.rentACar.business.dtos.individualCustomerDtos.IndividualCustomerListDto;
 import com.rentACar.rentACar.business.requests.individualCustomerDtos.CreateIndividualCustomerRequest;
@@ -104,13 +105,13 @@ public class IndividualCustomerManager implements IndividualCustomerService{
 	
 	private void checkIfIndividualCustomerAlreadyExistsByNationalIdentity(String nationalIdentity) throws IndividualCustomerAlreadyExistsByNationalIdentityException {
 		if(this.individualCustomerDao.existsByNationalIdentity(nationalIdentity)) {
-			throw new IndividualCustomerAlreadyExistsByNationalIdentityException("individual customer already exists by this national identity : "+nationalIdentity);
+			throw new IndividualCustomerAlreadyExistsByNationalIdentityException(BusinessMessages.INDIVIDUAL_CUSTOMER_EXISTS_BY_NATIONAL_IDENTITY+nationalIdentity);
 		}
 	}
 	
 	public void checkIfIndividualCustomerExistsById(int individualCustomerId) throws IndividualCustomerNotFoundException {
 		if(!this.individualCustomerDao.existsById(individualCustomerId)) {
-			throw new IndividualCustomerNotFoundException("individual customer not found for this id"+individualCustomerId);
+			throw new IndividualCustomerNotFoundException(BusinessMessages.INDIVIDUAL_CUSTOMER_NOT_FOUND+individualCustomerId);
 		}
 	}
 }

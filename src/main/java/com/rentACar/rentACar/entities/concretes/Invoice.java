@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -39,9 +40,10 @@ public class Invoice {
 	@Column(name = "total_price")
 	private double totalPrice;
 
-	@OneToOne()
-	@JoinColumn(name = "rented_car_id", referencedColumnName = "rented_car_id")
+	@ManyToOne
+	@JoinColumn(name = "rented_car_id")
 	private RentedCar rentedCar;
 
-	//TODO customer ekle.
+	@OneToOne(mappedBy = "invoice")
+	private Payment payment;
 }

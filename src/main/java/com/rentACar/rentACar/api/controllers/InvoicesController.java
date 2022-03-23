@@ -20,6 +20,7 @@ import com.rentACar.rentACar.business.dtos.invoiceDtos.GetInvoiceDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceDateBetweenDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceListDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceCustomerListDto;
+import com.rentACar.rentACar.business.requests.invoiceRequests.CreateInvoiceForDelayedReturnRequest;
 import com.rentACar.rentACar.business.requests.invoiceRequests.CreateInvoiceRequest;
 import com.rentACar.rentACar.business.requests.invoiceRequests.UpdateInvoiceRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
@@ -77,6 +78,11 @@ public class InvoicesController {
 	@PostMapping("/add")
 	public Result add(@RequestBody @Valid CreateInvoiceRequest createInvoiceRequest) throws BusinessException {
 		return this.invoiceService.add(createInvoiceRequest);
+	}
+	
+	@PostMapping("/addForDelayedReturn")
+	public Result addForDelayedReturn(@RequestBody @Valid CreateInvoiceForDelayedReturnRequest createInvoiceForDelayedReturnRequest) throws BusinessException {
+		return this.invoiceService.addForDelayedReturn(createInvoiceForDelayedReturnRequest);
 	}
 	
 	@PutMapping("/update")

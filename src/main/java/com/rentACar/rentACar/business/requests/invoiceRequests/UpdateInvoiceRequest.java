@@ -15,4 +15,5 @@ public class UpdateInvoiceRequest {
 	@Positive
 	@NotNull
 	private int RentedCar_RentedCarId;
+	
 }

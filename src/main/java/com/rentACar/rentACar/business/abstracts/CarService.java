@@ -11,6 +11,9 @@ import com.rentACar.rentACar.business.dtos.carDtos.GetCarDto;
 import com.rentACar.rentACar.business.requests.carRequests.CreateCarRequest;
 import com.rentACar.rentACar.business.requests.carRequests.UpdateCarRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
+import com.rentACar.rentACar.core.utilities.exceptions.brandExceptions.BrandNotFoundException;
+import com.rentACar.rentACar.core.utilities.exceptions.carExceptions.CarNotFoundException;
+import com.rentACar.rentACar.core.utilities.exceptions.colorExceptions.ColorNotFoundException;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
 
@@ -18,22 +21,22 @@ public interface CarService {
 
 	DataResult<List<CarListDto>> getAll(int pageNo, int pageSize);
 
-	Result add(CreateCarRequest createCarRequest) throws BusinessException;
+	Result add(CreateCarRequest createCarRequest) throws BrandNotFoundException, ColorNotFoundException;
 
-	Result update(UpdateCarRequest updateCarRequest) throws BusinessException;
+	Result update(UpdateCarRequest updateCarRequest) throws CarNotFoundException, BrandNotFoundException, ColorNotFoundException;
 
-	Result delete(int carId) throws BusinessException;
+	Result delete(int carId) throws CarNotFoundException;
 
-	DataResult<GetCarDto> getById(int carId) throws BusinessException;
+	DataResult<GetCarDto> getById(int carId) throws CarNotFoundException;
 
-	DataResult<List<CarListLessThanDto>> findByDailyPriceLessThanEqual(double dailyPrice) throws BusinessException;
+	DataResult<List<CarListLessThanDto>> findByDailyPriceLessThanEqual(double dailyPrice);
 
 	DataResult<List<CarListSortByDailyPrice>> getCarListSortByDailyPrice(Sort.Direction sortDirection)
 			throws BusinessException;
 
-	void checkIfExistByCarId(int id) throws BusinessException;
-	
-	void updateKilometreInformation(int carId,double kilometreInformation) throws BusinessException;
+	void checkIfExistByCarId(int id) throws CarNotFoundException ;
 
-	double calculateRentPriceByCarIdAndRentDateValue(int carId, int rentDateValue) throws BusinessException;
+	void updateKilometreInformation(int carId, double kilometreInformation) throws CarNotFoundException;
+
+	double calculateRentPriceByCarIdAndRentDateValue(int carId, int rentDateValue) throws CarNotFoundException;
 }

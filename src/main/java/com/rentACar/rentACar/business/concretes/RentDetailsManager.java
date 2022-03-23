@@ -3,9 +3,10 @@ package com.rentACar.rentACar.business.concretes;
 import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.business.abstracts.RentDetailsService;
+import com.rentACar.rentACar.business.constants.messages.BusinessMessages;
 import com.rentACar.rentACar.business.dtos.rentDetailsDtos.GetRentDetails;
 import com.rentACar.rentACar.business.requests.rentDetailsRequests.UpdateRentDetailsRequest;
-import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
+import com.rentACar.rentACar.core.utilities.exceptions.rentDetailsExceptions.RentDetailsNotFoundException;
 import com.rentACar.rentACar.core.utilities.mapping.ModelMapperService;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
@@ -27,7 +28,7 @@ public class RentDetailsManager implements RentDetailsService{
 	}
 
 	@Override
-	public Result update(UpdateRentDetailsRequest updateRentDetailsService) throws BusinessException {
+	public Result update(UpdateRentDetailsRequest updateRentDetailsService) throws RentDetailsNotFoundException  {
 		
 		checkIfRentDetailsExists();
 		RentDetails rentDetails = this.modelMapperService.forRequest().map(updateRentDetailsService, RentDetails.class);
@@ -40,7 +41,7 @@ public class RentDetailsManager implements RentDetailsService{
 	}
 
 	@Override
-	public DataResult<GetRentDetails> getRentDetails() throws BusinessException {
+	public DataResult<GetRentDetails> getRentDetails() throws RentDetailsNotFoundException  {
 		
 		checkIfRentDetailsExists();
 		
@@ -52,13 +53,13 @@ public class RentDetailsManager implements RentDetailsService{
 		
 	}
 	
-	public void checkIfRentDetailsExists() throws BusinessException {
+	public void checkIfRentDetailsExists() throws RentDetailsNotFoundException  {
 		if(!this.rentDetailsDao.existsById(1)) {
-		 throw new BusinessException("rent details not found");
+		 throw new RentDetailsNotFoundException(BusinessMessages.RENT_DETAILS_NOT_FOUND);
 		}
 	}
 	
-	public double getDifferentCityDeliveryPrice() throws BusinessException {
+	public double getDifferentCityDeliveryPrice() throws RentDetailsNotFoundException {
 		checkIfRentDetailsExists();
 		return this.rentDetailsDao.getById(1).getDifferentCityDeliveryPrice();
 	}

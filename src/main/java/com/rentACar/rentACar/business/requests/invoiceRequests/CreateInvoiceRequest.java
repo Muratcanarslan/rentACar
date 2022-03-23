@@ -16,5 +16,7 @@ public class CreateInvoiceRequest {
 	@NotNull
 	@Min(0)
 	private int RentedCar_RentedCarId;
+	
+
 
 }

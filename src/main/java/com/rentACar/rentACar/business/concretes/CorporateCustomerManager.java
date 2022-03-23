@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.business.abstracts.CorporateCustomerService;
 import com.rentACar.rentACar.business.abstracts.UserService;
+import com.rentACar.rentACar.business.constants.messages.BusinessMessages;
 import com.rentACar.rentACar.business.dtos.corporateCustomerDtos.CorporateCustomerListDto;
 import com.rentACar.rentACar.business.dtos.corporateCustomerDtos.GetCorporateCustomerDto;
 import com.rentACar.rentACar.business.requests.corporateCustomerRequests.CreateCorporateCustomerRequest;
@@ -116,14 +117,14 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 			throws CorporateCustomerAlreadyExistsByTaxNumberException {
 		if (this.corporateCustomerDao.existsByTaxNumber(taxNumber)) {
 			throw new CorporateCustomerAlreadyExistsByTaxNumberException(
-					"this corporate customer tax number already exists : " + taxNumber);
+					BusinessMessages.CORPORATE_CUSTOMER_ALREADY_EXISTS_BY_TAX_NUMBER + taxNumber);
 		}
 	}
 
 	public void checkIfCorporateCustomerExists(int corporateCustomerId) throws CorporateCustomerNotFoundException {
 		if (!this.corporateCustomerDao.existsById(corporateCustomerId)) {
 			throw new CorporateCustomerNotFoundException(
-					"corporate customer not found for this id : " + corporateCustomerId);
+					BusinessMessages.CORPORATE_CUSTOMER_NOT_FOUND + corporateCustomerId);
 		}
 	}
 

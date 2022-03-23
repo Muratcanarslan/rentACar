@@ -10,11 +10,15 @@ import org.springframework.stereotype.Service;
 import com.rentACar.rentACar.business.abstracts.CarMaintenanceService;
 import com.rentACar.rentACar.business.abstracts.CarService;
 import com.rentACar.rentACar.business.abstracts.RentedCarService;
+import com.rentACar.rentACar.business.constants.messages.BusinessMessages;
 import com.rentACar.rentACar.business.dtos.carMaintenanceDtos.GetCarMaintenanceDto;
 import com.rentACar.rentACar.business.dtos.carMaintenanceDtos.CarMaintenanceListDto;
 import com.rentACar.rentACar.business.requests.carMaintenanceRequests.CreateCarMaintenanceRequest;
 import com.rentACar.rentACar.business.requests.carMaintenanceRequests.UpdateCarMaintenanceRequest;
-import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
+import com.rentACar.rentACar.core.utilities.exceptions.carExceptions.CarNotFoundException;
+import com.rentACar.rentACar.core.utilities.exceptions.carMaintenanceExceptions.CarAlreadyInMaintenanceException;
+import com.rentACar.rentACar.core.utilities.exceptions.carMaintenanceExceptions.CarMaintenanceNotFoundException;
+import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.CarAlreadyInRentException;
 import com.rentACar.rentACar.core.utilities.mapping.ModelMapperService;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
@@ -42,7 +46,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	}
 
 	@Override
-	public Result add(CreateCarMaintenanceRequest createCarMaintenanceRequest) throws BusinessException {
+	public Result add(CreateCarMaintenanceRequest createCarMaintenanceRequest) throws CarNotFoundException, CarAlreadyInMaintenanceException, CarAlreadyInRentException  {
 		
 		this.carService.checkIfExistByCarId(createCarMaintenanceRequest.getCarId());
 		this.rentedCarService.checkIfCarIsAlreadyRentedByCarId(createCarMaintenanceRequest.getCarId());
@@ -55,7 +59,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	}
 
 	@Override
-	public Result delete(int carMaintenanceId) throws BusinessException {
+	public Result delete(int carMaintenanceId) throws CarMaintenanceNotFoundException  {
 		checkIfExistsByCarMaintenanceId(carMaintenanceId);
 
 		this.carMaintenanceDao.deleteById(carMaintenanceId);
@@ -64,7 +68,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	}
 
 	@Override
-	public Result update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest) throws BusinessException {
+	public Result update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest) throws CarMaintenanceNotFoundException, CarNotFoundException  {
 		CarMaintenance carMaintenance = this.modelMapperService.forRequest().map(updateCarMaintenanceRequest,
 				CarMaintenance.class);
 		checkIfExistsByCarMaintenanceId(carMaintenance.getCarMaintenanceId());
@@ -74,7 +78,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	}
 
 	@Override
-	public DataResult<GetCarMaintenanceDto> getById(int carMaintenanceId) throws BusinessException {
+	public DataResult<GetCarMaintenanceDto> getById(int carMaintenanceId) throws CarMaintenanceNotFoundException  {
 		checkIfExistsByCarMaintenanceId(carMaintenanceId);
 		CarMaintenance carMaintenance = this.carMaintenanceDao.getById(carMaintenanceId);
 		GetCarMaintenanceDto carMaintenanceDto = this.modelMapperService.forDto().map(carMaintenance,
@@ -96,17 +100,17 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
 	}
 
-	private void checkIfExistsByCarMaintenanceId(int id) throws BusinessException {
+	private void checkIfExistsByCarMaintenanceId(int id) throws CarMaintenanceNotFoundException  {
 		if (!this.carMaintenanceDao.existsByCarMaintenanceId(id)) {
-			throw new BusinessException("CarMaintenance Not Found");
+			throw new CarMaintenanceNotFoundException(BusinessMessages.CAR_MAINTENANCE_NOT_FOUND + id);
 		}
 	}
 
 
 	@Override
-	public void checkIfCarMaintenanceIsExistsByCarId(int carId) throws BusinessException {
+	public void checkIfCarMaintenanceIsExistsByCarId(int carId) throws CarAlreadyInMaintenanceException  {
 		if (this.carMaintenanceDao.getByCar_CarIdAndCarMaintenanceReturnDateIsNull(carId) != null) {
-			throw new BusinessException("Car is already in maintenance");
+			throw new CarAlreadyInMaintenanceException(BusinessMessages.CAR_ALREADY_IN_MAINTENANCE);
 		}
 	}
 

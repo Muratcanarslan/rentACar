@@ -8,13 +8,14 @@ import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.business.abstracts.CarCrashInformationService;
 import com.rentACar.rentACar.business.abstracts.CarService;
+import com.rentACar.rentACar.business.constants.messages.BusinessMessages;
 import com.rentACar.rentACar.business.dtos.carCrashInfomationDtos.CarCrashInformationListByCarDto;
 import com.rentACar.rentACar.business.dtos.carCrashInfomationDtos.CarCrashInformationListDto;
 import com.rentACar.rentACar.business.dtos.carCrashInfomationDtos.GetCarCrashInformationDto;
 import com.rentACar.rentACar.business.requests.carCrashRequests.CreateCarCrashInformationRequest;
 import com.rentACar.rentACar.business.requests.carCrashRequests.UpdateCarCrashInformationRequest;
-import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.exceptions.carCrashExceptions.CarCrashInformationNotFoundException;
+import com.rentACar.rentACar.core.utilities.exceptions.carExceptions.CarNotFoundException;
 import com.rentACar.rentACar.core.utilities.mapping.ModelMapperService;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
@@ -29,7 +30,7 @@ public class CarCrashInformationManager implements CarCrashInformationService {
 	private CarCrashInformationDao carCrashInformationDao;
 	private ModelMapperService modelMapperService;
 	private CarService carService;
-	
+
 	@Autowired
 	public CarCrashInformationManager(CarCrashInformationDao carCrashInformationDao,
 			ModelMapperService modelMapperService, CarService carService) {
@@ -39,9 +40,8 @@ public class CarCrashInformationManager implements CarCrashInformationService {
 		this.carService = carService;
 	}
 
-
 	@Override
-	public Result add(CreateCarCrashInformationRequest createCarCrashInformationRequest) throws BusinessException {
+	public Result add(CreateCarCrashInformationRequest createCarCrashInformationRequest) throws CarNotFoundException {
 
 		this.carService.checkIfExistByCarId(createCarCrashInformationRequest.getCarId());
 
@@ -54,7 +54,7 @@ public class CarCrashInformationManager implements CarCrashInformationService {
 	}
 
 	@Override
-	public Result update(UpdateCarCrashInformationRequest updateCarCrashInformationRequest) throws BusinessException {
+	public Result update(UpdateCarCrashInformationRequest updateCarCrashInformationRequest) throws CarNotFoundException, CarCrashInformationNotFoundException {
 
 		checkIfCarCrashInformationExists(updateCarCrashInformationRequest.getCarCrashInformationId());
 		this.carService.checkIfExistByCarId(updateCarCrashInformationRequest.getCarId());
@@ -78,8 +78,7 @@ public class CarCrashInformationManager implements CarCrashInformationService {
 	}
 
 	@Override
-	public DataResult<GetCarCrashInformationDto> getById(int carCrashInformationId)
-			throws CarCrashInformationNotFoundException {
+	public DataResult<GetCarCrashInformationDto> getById(int carCrashInformationId) throws CarCrashInformationNotFoundException {
 
 		checkIfCarCrashInformationExists(carCrashInformationId);
 
@@ -92,7 +91,7 @@ public class CarCrashInformationManager implements CarCrashInformationService {
 	}
 
 	@Override
-	public DataResult<List<CarCrashInformationListByCarDto>> getByCarId(int carId) throws BusinessException {
+	public DataResult<List<CarCrashInformationListByCarDto>> getByCarId(int carId) throws CarNotFoundException {
 
 		this.carService.checkIfExistByCarId(carId);
 
@@ -120,12 +119,11 @@ public class CarCrashInformationManager implements CarCrashInformationService {
 		return new SuccessDataResult<List<CarCrashInformationListDto>>(carCrashInformationListDtos, "get all");
 	}
 
-
 	private void checkIfCarCrashInformationExists(int carCrashInformationId)
 			throws CarCrashInformationNotFoundException {
 		if (!this.carCrashInformationDao.existsById(carCrashInformationId)) {
 			throw new CarCrashInformationNotFoundException(
-					"car crash information not found for this id : " + carCrashInformationId);
+					BusinessMessages.CAR_CRASH_INFORMATION_NOT_FOUND + carCrashInformationId);
 		}
 	}
 
