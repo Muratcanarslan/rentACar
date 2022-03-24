@@ -1,6 +1,7 @@
 package com.rentACar.rentACar.api.models;
 
 import com.rentACar.rentACar.business.requests.bankServiceRequests.CreateBankServiceRequest;
+import com.rentACar.rentACar.business.requests.orderedAdditionalServiceRequests.CreateOrderedAdditionalServiceListRequest;
 import com.rentACar.rentACar.business.requests.rentedCarRequests.CreateRentedCarRequestForCorporateCustomer;
 
 import lombok.AllArgsConstructor;
@@ -10,10 +11,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRentedCarForCorporateCustomerAndBankServiceModel {
+public class MakePaymentForCorporateCustomerModel {
 	
 	private CreateRentedCarRequestForCorporateCustomer createRentedCarRequestForCorporateCustomer;
 	
-	private CreateBankServiceRequest createBankServiceRequest;
+	private CreateBankServiceRequest bankServiceRequest;
+	
+	private CreateOrderedAdditionalServiceListRequest createOrderedAdditionalServiceListRequests;
 
 }

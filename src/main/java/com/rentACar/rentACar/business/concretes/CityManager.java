@@ -52,7 +52,7 @@ public class CityManager implements CityService{
 	public Result update(UpdateCityRequest updateCityRequest) throws CityNotFoundException, CityAlreadyExistsException  {
 		
 		checkIfCityExistsByCityName(updateCityRequest.getCityName());
-		checkIfCityExistsByCityId(updateCityRequest.getCityId());
+		checkIfCityExists(updateCityRequest.getCityId());
 		
 		City city = this.modelMapperService.forRequest().map(updateCityRequest, City.class);
 		
@@ -62,7 +62,7 @@ public class CityManager implements CityService{
 	}
 	@Override
 	public Result delete(int cityId) throws BusinessException {
-		checkIfCityExistsByCityId(cityId);
+		checkIfCityExists(cityId);
 		
 		this.cityDao.deleteById(cityId);
 		
@@ -70,7 +70,7 @@ public class CityManager implements CityService{
 	}
 	@Override
 	public DataResult<GetCityDto> getById(int cityId) throws CityNotFoundException  {
-		checkIfCityExistsByCityId(cityId);
+		checkIfCityExists(cityId);
 
 		City city = this.cityDao.getById(cityId);
 		
@@ -94,9 +94,10 @@ public class CityManager implements CityService{
 		}
 	}
 	
-	private void checkIfCityExistsByCityId(int cityId) throws CityNotFoundException  {
+	public void checkIfCityExists(int cityId) throws CityNotFoundException  {
 		if(!this.cityDao.existsById(cityId)) {
 			throw new CityNotFoundException(BusinessMessages.CITY_NOT_FOUND + cityId);
 		}
 	}
+
 }

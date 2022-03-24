@@ -21,28 +21,35 @@ import com.rentACar.rentACar.core.utilities.results.Result;
 
 public interface InvoiceService {
 
-	int add(CreateInvoiceRequest createInvoiceRequest) throws RentedCarNotFoundException, AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException ;
+	int add(CreateInvoiceRequest createInvoiceRequest) throws RentedCarNotFoundException,
+			AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException;
 
-	Result addForDelayedReturn(CreateInvoiceForDelayedReturnRequest createInvoiceForDelayedReturnRequest) throws RentedCarNotFoundException, AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException ;
-	
-	Result delete(int invoiceId) throws InvoiceNotFoundException ;
-	
-	Result update(UpdateInvoiceRequest updateInvoiceRequest) throws InvoiceNotFoundException, RentedCarNotFoundException, AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException ;
+	Result addForDelayedReturn(CreateInvoiceForDelayedReturnRequest createInvoiceForDelayedReturnRequest)
+			throws RentedCarNotFoundException, AdditionalServiceNotFoundException, CarNotFoundException,
+			RentDetailsNotFoundException;
 
-	DataResult<GetInvoiceDto> getById(int invoiceId) throws InvoiceNotFoundException ;
+	Result delete(int invoiceId) throws InvoiceNotFoundException;
 
-	DataResult<GetInvoiceDto> getInvoiceByRentedCarId(int rentedCarId) throws RentedCarNotFoundException, InvoiceNotFoundException ;
+	Result update(UpdateInvoiceRequest updateInvoiceRequest)
+			throws InvoiceNotFoundException, RentedCarNotFoundException, AdditionalServiceNotFoundException,
+			CarNotFoundException, RentDetailsNotFoundException;
 
-	DataResult<List<InvoiceCustomerListDto>> getInvoicesByCustomerId(int customerId) throws CustomerNotFoundException ;
+	DataResult<GetInvoiceDto> getById(int invoiceId) throws InvoiceNotFoundException;
+
+	DataResult<GetInvoiceDto> getInvoiceByRentedCarId(int rentedCarId)
+			throws RentedCarNotFoundException, InvoiceNotFoundException;
+
+	DataResult<List<InvoiceCustomerListDto>> getInvoicesByCustomerId(int customerId) throws CustomerNotFoundException;
 
 	DataResult<List<InvoiceDateBetweenDto>> getInvoicesDateBetween(Date startDate, Date endDate);
 
 	DataResult<List<InvoiceListDto>> getAll();
 	
-	void checkIfInvoiceExists(int invoiceId) throws InvoiceNotFoundException ;
-	
+	CreateInvoiceRequest getInvoiceRequestForMapping(int rentedCarId) throws RentedCarNotFoundException;
 
-	//TODO:methot ismi yanlış.
+	void checkIfInvoiceExists(int invoiceId) throws InvoiceNotFoundException;
+
+	// TODO:methot ismi yanlış.
 	void deleteAllByRentedCarId(int rentedCarId) throws RentedCarNotFoundException;
 
 }

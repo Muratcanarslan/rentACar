@@ -1,4 +1,4 @@
-package com.rentACar.rentACar.core.utilities.postServices;
+package com.rentACar.rentACar.business.outServices;
 
 public class ZiraatBankPostService {
 	

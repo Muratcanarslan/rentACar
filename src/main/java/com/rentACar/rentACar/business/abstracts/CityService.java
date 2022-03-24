@@ -21,6 +21,8 @@ public interface CityService {
 	Result delete(int cityId) throws BusinessException;
 
 	DataResult<GetCityDto> getById(int cityId) throws CityNotFoundException;
+	
+	void checkIfCityExists(int cityId) throws CityNotFoundException;
 
 	DataResult<List<CityListDto>> getAll();
 

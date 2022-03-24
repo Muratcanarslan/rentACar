@@ -43,7 +43,13 @@ public class Invoice {
 	@ManyToOne
 	@JoinColumn(name = "rented_car_id")
 	private RentedCar rentedCar;
-
+	
+	//TODO burayı yap şimdilik daha önemli yerler vardı bıraktım.
+	/*
+	@ManyToOne
+	@JoinColumn(name = "customer_id")
+	private Customer customer;
+    */
 	@OneToOne(mappedBy = "invoice")
 	private Payment payment;
 }

@@ -6,15 +6,12 @@ import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rentACar.rentACar.api.models.CreateRentedCarForCorporateCustomerAndBankServiceModel;
-import com.rentACar.rentACar.api.models.UpdateRentedCarForDelayedReturnModel;
 import com.rentACar.rentACar.business.abstracts.RentedCarService;
 import com.rentACar.rentACar.business.dtos.rentedCarDtos.GetRentedCarDto;
 import com.rentACar.rentACar.business.dtos.rentedCarDtos.RentedCarListDto;
@@ -34,30 +31,9 @@ public class RentedCarsController {
 		this.rentedCarService = rentedCarService;
 	}
 
-	
-
-	@PostMapping("/addForCorporateCustomer")
-	public Result addForCorporateCustomer(
-			@RequestBody @Valid CreateRentedCarForCorporateCustomerAndBankServiceModel createRentedCarRequestForCorporateCustomer)
-			throws BusinessException {
-
-		return this.rentedCarService.addForCorporateCustomer(
-				createRentedCarRequestForCorporateCustomer.getCreateRentedCarRequestForCorporateCustomer());
-	}
-
 	@PutMapping("/update")
 	public Result update(@RequestBody @Valid UpdateRentedCarRequest updateRentedCarRequest) throws BusinessException {
 		return this.rentedCarService.update(updateRentedCarRequest);
-	}
-
-	@PutMapping("/updateRentedCarForDelayedReturn")
-	public Result updateRentedCarForDelayedReturn(
-			@RequestBody @Valid UpdateRentedCarForDelayedReturnModel updateRentedCarForDelayedReturnModel)
-			throws BusinessException {
-
-		return this.rentedCarService.updateRentedCarForDelayedReturn(
-				updateRentedCarForDelayedReturnModel.getUpdateRentedCarForDelayedReturnRequest());
-
 	}
 
 	@DeleteMapping("/delete")

@@ -1,4 +1,4 @@
-package com.rentACar.rentACar.business.requests.cardInformationRequests;
+package com.rentACar.rentACar.business.dtos.creditCardInformationDtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateCardInformationRequest {
-
+public class CardInformationListDto {
+	
+	private int cardInformationId;
+	
 	private String cardNumber;
 
 	private String CVV;
@@ -20,6 +22,6 @@ public class CreateCardInformationRequest {
 	private String ownerName;
 
 	@JsonProperty(value = "customerId")
-	private int userId;
+	private int Customer_CustomerId;
 
 }

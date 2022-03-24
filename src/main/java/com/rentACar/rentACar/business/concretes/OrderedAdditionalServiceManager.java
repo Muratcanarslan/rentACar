@@ -10,7 +10,6 @@ import com.rentACar.rentACar.business.abstracts.AdditionalServiceService;
 import com.rentACar.rentACar.business.abstracts.OrderedAdditionalServiceService;
 import com.rentACar.rentACar.business.abstracts.RentedCarService;
 import com.rentACar.rentACar.business.constants.messages.BusinessMessages;
-import com.rentACar.rentACar.business.dtos.additionalServiceDtos.GetAdditionalServiceDto;
 import com.rentACar.rentACar.business.dtos.orderedAdditionalServiceDto.OrderedAdditionalServiceListDto;
 import com.rentACar.rentACar.business.requests.orderedAdditionalServiceRequests.CreateOrderedAdditionalServiceRequest;
 import com.rentACar.rentACar.business.requests.orderedAdditionalServiceRequests.UpdateOrderedAdditionalServiceRequest;
@@ -24,7 +23,6 @@ import com.rentACar.rentACar.core.utilities.results.Result;
 import com.rentACar.rentACar.core.utilities.results.SuccessDataResult;
 import com.rentACar.rentACar.core.utilities.results.SuccessResult;
 import com.rentACar.rentACar.dataAccess.abstracts.OrderedAdditionalServiceDao;
-import com.rentACar.rentACar.entities.concretes.AdditionalService;
 import com.rentACar.rentACar.entities.concretes.OrderedAdditionalService;
 
 @Service
@@ -68,6 +66,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	@Override
 	public Result update(UpdateOrderedAdditionalServiceRequest updateOrderedAdditionalServiceRequest)
 			throws OrderedAdditionalServiceNotFoundException, OrderedAdditionalServiceAlreadyExistsException {
+		
 		checkIfOrderedAdditionalServiceExists(updateOrderedAdditionalServiceRequest.getOrderedAdditionalServiceId());
 		checkIfOrderedAdditionalServiceAlreadyExistsForRentedCar(
 				updateOrderedAdditionalServiceRequest.getAdditionalServiceId(),

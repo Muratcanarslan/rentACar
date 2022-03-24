@@ -17,13 +17,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "card_information")
-public class CardInformation {
+@Table(name = "credit_card_information")
+public class CreditCardInformation {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "card_information_id")
-	private int cardInformationId;
+	@Column(name = "credit_card_information_id")
+	private int creditCardInformationId;
 
 	@Column(name = "card_number")
 	private String cardNumber;
@@ -31,8 +31,8 @@ public class CardInformation {
 	@Column(name = "cvv")
 	private String CVV;
 
-	@Column(name = "card_date")
-	private String cardDate;
+	@Column(name = "card_expire_date")
+	private String cardExpireDate;
 
 	@Column(name = "owner_name")
 	private String ownerName;

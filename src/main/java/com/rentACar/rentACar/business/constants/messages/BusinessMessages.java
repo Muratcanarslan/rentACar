@@ -29,7 +29,13 @@ public class BusinessMessages {
 	public static final String PAYMENT_ALREADY_EXISTS_BY_INVOICE_ID = "Payment already exists by this invoice id : ";
 	public static final String USER_ALREADY_EXISTS_BY_EMAIL = "User already Exists By This Email : ";
 	public static final String PAYMENT_IS_NOT_SUCCESSFULL = "Payment is not successfull";
+	public static final String PAYMENT_NOT_FOUND = "Payment Not Found For This Id : ";
+	public static final String CREDIT_CARD_NOT_FOUND = "Credit Card Not Found For This Id : ";
 	
 	
-	public static final String ADDED_SUCCESSFULL = "Add Successfull";
+	
+	public static final String ADD_SUCCESSFULL = "Add Successfull";
+	public static final String DELETE_SUCCESSFUL = "Delete Successfull";
+	public static final String UPDATE_SUCCESSFULL = "Update Successfull";
+	public static final String GET_SUCCESSFUL = "Get Successfull";
 }

@@ -283,5 +283,17 @@ public class InvoiceManager implements InvoiceService {
 			throw new InvoiceNotFoundException(BusinessMessages.INVOICE_NOT_FOUND_FOR_RENTED_CAR + rentedCarId);
 		}
 	}
+	
+	public CreateInvoiceRequest getInvoiceRequestForMapping(int rentedCarId) throws RentedCarNotFoundException {
+		
+		this.rentedCarService.checkIfRentedCarIsExistsByRentedCarId(rentedCarId);
+		
+		CreateInvoiceRequest createInvoiceRequest = new CreateInvoiceRequest();
+		
+		createInvoiceRequest.setRentedCar_RentedCarId(rentedCarId);
+		
+		return createInvoiceRequest;
+		
+	}
 
 }

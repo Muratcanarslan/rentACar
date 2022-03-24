@@ -1,4 +1,4 @@
-package com.rentACar.rentACar.business.dtos.cardInformationDtos;
+package com.rentACar.rentACar.business.dtos.creditCardInformationDtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CardInformationListDto {
-	
+public class CreditCardInformationByCustomerDto {
+
 	private int cardInformationId;
-	
+
 	private String cardNumber;
 
 	private String CVV;

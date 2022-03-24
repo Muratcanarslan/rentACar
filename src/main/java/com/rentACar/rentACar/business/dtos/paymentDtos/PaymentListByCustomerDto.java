@@ -7,14 +7,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetPaymentDto {
+public class PaymentListByCustomerDto {
 
 	private int paymentId;
 
 	private double totalPrice;
 
-	private int Customer_CustomerId;
+	private int customerId;
 
-	private int RentedCar_RentedCarId;
-
+	private int rentedCarId;
 }

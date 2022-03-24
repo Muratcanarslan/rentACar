@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.business.abstracts.CarMaintenanceService;
 import com.rentACar.rentACar.business.abstracts.CarService;
+import com.rentACar.rentACar.business.abstracts.CityService;
 import com.rentACar.rentACar.business.abstracts.CorporateCustomerService;
 import com.rentACar.rentACar.business.abstracts.CustomerService;
 import com.rentACar.rentACar.business.abstracts.IndividualCustomerService;
@@ -25,6 +26,7 @@ import com.rentACar.rentACar.business.requests.rentedCarRequests.UpdateRentedCar
 import com.rentACar.rentACar.business.requests.rentedCarRequests.UpdateRentedCarRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.carExceptions.CarNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.carMaintenanceExceptions.CarAlreadyInMaintenanceException;
+import com.rentACar.rentACar.core.utilities.exceptions.cityExceptions.CityNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.corporateCustomerExceptions.CorporateCustomerNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.customerExceptions.CustomerNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.indiviualCustomerExceptions.IndividualCustomerNotFoundException;
@@ -52,13 +54,14 @@ public class RentedCarManager implements RentedCarService {
 	private IndividualCustomerService individualCustomerService;
 	private CustomerService customerService;
 	private CorporateCustomerService corporateCustomerService;
+	private CityService cityService;
 
 	@Autowired
 	public RentedCarManager(RentedCarDao rentedCarDao, ModelMapperService modelMapperService, CarService carService,
 			CarMaintenanceService carMaintenanceService,
 			OrderedAdditionalServiceService orderedAdditionalServiceService, InvoiceService invoiceService,
 			IndividualCustomerService individualCustomerService, CustomerService customerService,
-			CorporateCustomerService corporateCustomerService
+			CorporateCustomerService corporateCustomerService, CityService cityService
 
 	) {
 		this.rentedCarDao = rentedCarDao;
@@ -70,16 +73,20 @@ public class RentedCarManager implements RentedCarService {
 		this.individualCustomerService = individualCustomerService;
 		this.customerService = customerService;
 		this.corporateCustomerService = corporateCustomerService;
+		this.cityService = cityService;
 	}
 
 	@Override
-	public int addForIndividualCustomer(CreateRentedCarRequestForIndividualCustomer createRentedCarRequest) throws CarNotFoundException, CarAlreadyInRentException, CarAlreadyInMaintenanceException, IndividualCustomerNotFoundException, CustomerNotFoundException
-			 {
+	public int addForIndividualCustomer(CreateRentedCarRequestForIndividualCustomer createRentedCarRequest)
+			throws CarNotFoundException, CarAlreadyInRentException, CarAlreadyInMaintenanceException,
+			IndividualCustomerNotFoundException, CustomerNotFoundException, CityNotFoundException {
 
 		this.carService.checkIfExistByCarId(createRentedCarRequest.getCarId());
 		this.carMaintenanceService.checkIfCarMaintenanceIsExistsByCarId(createRentedCarRequest.getCarId());
 		checkIfCarIsAlreadyRentedByCarId(createRentedCarRequest.getCarId());
 		this.individualCustomerService.checkIfIndividualCustomerExistsById(createRentedCarRequest.getCustomerId());
+		this.cityService.checkIfCityExists(createRentedCarRequest.getHireCityId());
+		this.cityService.checkIfCityExists(createRentedCarRequest.getReturnCityId());
 
 		RentedCar rentedCar = this.modelMapperService.forRequest().map(createRentedCarRequest, RentedCar.class);
 
@@ -94,9 +101,10 @@ public class RentedCarManager implements RentedCarService {
 	}
 
 	@Override
-	public Result addForCorporateCustomer(
-			CreateRentedCarRequestForCorporateCustomer createRentedCarRequestForCorporateCustomer) throws CarNotFoundException, CorporateCustomerNotFoundException, CarAlreadyInMaintenanceException, CarAlreadyInRentException
-			 {
+	public int addForCorporateCustomer(
+			CreateRentedCarRequestForCorporateCustomer createRentedCarRequestForCorporateCustomer)
+			throws CarNotFoundException, CorporateCustomerNotFoundException, CarAlreadyInMaintenanceException,
+			CarAlreadyInRentException, CityNotFoundException, CustomerNotFoundException {
 
 		this.carService.checkIfExistByCarId(createRentedCarRequestForCorporateCustomer.getCarId());
 		this.corporateCustomerService
@@ -104,24 +112,32 @@ public class RentedCarManager implements RentedCarService {
 		this.carMaintenanceService
 				.checkIfCarMaintenanceIsExistsByCarId(createRentedCarRequestForCorporateCustomer.getCarId());
 		checkIfCarIsAlreadyRentedByCarId(createRentedCarRequestForCorporateCustomer.getCarId());
+		this.cityService.checkIfCityExists(createRentedCarRequestForCorporateCustomer.getHireCityId());
+		this.cityService.checkIfCityExists(createRentedCarRequestForCorporateCustomer.getReturnCityId());
 
 		RentedCar rentedCar = this.modelMapperService.forRequest().map(createRentedCarRequestForCorporateCustomer,
 				RentedCar.class);
 
 		rentedCar.setRentKilometre(
 				this.carService.getById(rentedCar.getCar().getCarId()).getData().getKilometreInformation());
+		
+		rentedCar.setCustomer(getCustomerForMapping(createRentedCarRequestForCorporateCustomer.getCustomerId()));
 
-		this.rentedCarDao.save(rentedCar);
+		RentedCar savedRentedCar = this.rentedCarDao.save(rentedCar);
 
-		return new SuccessResult("rented car added for corporate customer");
+		return savedRentedCar.getRentedCarId();
+
 	}
 
 	@Override
-	public Result update(UpdateRentedCarRequest updateRentedCarRequest) throws CarNotFoundException, CustomerNotFoundException, RentedCarNotFoundException  {
+	public Result update(UpdateRentedCarRequest updateRentedCarRequest)
+			throws CarNotFoundException, CustomerNotFoundException, RentedCarNotFoundException, CityNotFoundException {
 
 		this.carService.checkIfExistByCarId(updateRentedCarRequest.getCarId());
 		checkIfRentedCarIsExistsByRentedCarId(updateRentedCarRequest.getRentedCarId());
 		this.customerService.checkIfCustomerExists(updateRentedCarRequest.getCustomerId());
+		this.cityService.checkIfCityExists(updateRentedCarRequest.getHireCityId());
+		this.cityService.checkIfCityExists(updateRentedCarRequest.getReturnCityId());
 
 		RentedCar rentedCar = this.modelMapperService.forRequest().map(updateRentedCarRequest, RentedCar.class);
 
@@ -138,22 +154,24 @@ public class RentedCarManager implements RentedCarService {
 		return new SuccessResult("Rented Car Updated");
 
 	}
-	
+
 	@Override
 	public Result updateRentedCarForDelayedReturn(
-			UpdateRentedCarForDelayedReturnRequest updateRentedCarForDelayedReturnRequest) throws CarNotFoundException, RentedCarNotFoundException, CustomerNotFoundException  {
-		
+			UpdateRentedCarForDelayedReturnRequest updateRentedCarForDelayedReturnRequest)
+			throws CarNotFoundException, RentedCarNotFoundException, CustomerNotFoundException {
+
 		this.carService.checkIfExistByCarId(updateRentedCarForDelayedReturnRequest.getCarId());
 		checkIfRentedCarIsExistsByRentedCarId(updateRentedCarForDelayedReturnRequest.getRentedCarId());
 		this.customerService.checkIfCustomerExists(updateRentedCarForDelayedReturnRequest.getCustomerId());
 
-		RentedCar rentedCar = this.modelMapperService.forRequest().map(updateRentedCarForDelayedReturnRequest, RentedCar.class);
+		RentedCar rentedCar = this.modelMapperService.forRequest().map(updateRentedCarForDelayedReturnRequest,
+				RentedCar.class);
 
 		rentedCar.setCustomer(getCustomerForMapping(updateRentedCarForDelayedReturnRequest.getCustomerId()));
 
 		this.carService.updateKilometreInformation(updateRentedCarForDelayedReturnRequest.getCarId(),
 				updateRentedCarForDelayedReturnRequest.getReturnKilometre());
-		
+
 		rentedCar.setReturnKilometre(
 				this.carService.getById(rentedCar.getCar().getCarId()).getData().getKilometreInformation());
 
@@ -163,7 +181,7 @@ public class RentedCarManager implements RentedCarService {
 	}
 
 	@Override
-	public Result delete(int rentedCarId) throws RentedCarNotFoundException  {
+	public Result delete(int rentedCarId) throws RentedCarNotFoundException {
 
 		checkIfRentedCarIsExistsByRentedCarId(rentedCarId);
 
@@ -177,7 +195,7 @@ public class RentedCarManager implements RentedCarService {
 	}
 
 	@Override
-	public DataResult<GetRentedCarDto> getById(int rentedCarId) throws RentedCarNotFoundException  {
+	public DataResult<GetRentedCarDto> getById(int rentedCarId) throws RentedCarNotFoundException {
 
 		checkIfRentedCarIsExistsByRentedCarId(rentedCarId);
 
@@ -201,7 +219,7 @@ public class RentedCarManager implements RentedCarService {
 	}
 
 	@Override
-	public RentedCar getRentedCarForBusiness(int rentedCarId) throws RentedCarNotFoundException  {
+	public RentedCar getRentedCarForBusiness(int rentedCarId) throws RentedCarNotFoundException {
 		checkIfRentedCarIsExistsByRentedCarId(rentedCarId);
 
 		RentedCar rentedCar = this.rentedCarDao.getById(rentedCarId);
@@ -209,13 +227,13 @@ public class RentedCarManager implements RentedCarService {
 		return rentedCar;
 	}
 
-	public void checkIfRentedCarIsExistsByRentedCarId(int rentedCarId) throws RentedCarNotFoundException  {
+	public void checkIfRentedCarIsExistsByRentedCarId(int rentedCarId) throws RentedCarNotFoundException {
 		if (!this.rentedCarDao.existsById(rentedCarId)) {
 			throw new RentedCarNotFoundException(BusinessMessages.CAR_RENT_NOT_FOUND + rentedCarId);
 		}
 	}
 
-	public void checkIfCarIsAlreadyRentedByCarId(int carId) throws CarAlreadyInRentException  {
+	public void checkIfCarIsAlreadyRentedByCarId(int carId) throws CarAlreadyInRentException {
 		if (this.rentedCarDao.getByCar_CarIdAndReturnDateIsNull(carId) != null) {
 			throw new CarAlreadyInRentException(BusinessMessages.CAR_ALREADY_IN_RENT);
 		}
@@ -224,7 +242,5 @@ public class RentedCarManager implements RentedCarService {
 	private Customer getCustomerForMapping(int customerId) throws CustomerNotFoundException {
 		return this.customerService.getCustomerById(customerId);
 	}
-
-	
 
 }

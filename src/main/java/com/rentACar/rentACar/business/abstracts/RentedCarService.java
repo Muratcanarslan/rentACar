@@ -11,6 +11,7 @@ import com.rentACar.rentACar.business.requests.rentedCarRequests.UpdateRentedCar
 import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.exceptions.carExceptions.CarNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.carMaintenanceExceptions.CarAlreadyInMaintenanceException;
+import com.rentACar.rentACar.core.utilities.exceptions.cityExceptions.CityNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.corporateCustomerExceptions.CorporateCustomerNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.customerExceptions.CustomerNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.indiviualCustomerExceptions.IndividualCustomerNotFoundException;
@@ -22,10 +23,12 @@ import com.rentACar.rentACar.entities.concretes.RentedCar;
 
 public interface RentedCarService {
 
-	int addForIndividualCustomer(CreateRentedCarRequestForIndividualCustomer createRentedCarRequest) throws CarNotFoundException, CarAlreadyInRentException, CarAlreadyInMaintenanceException, IndividualCustomerNotFoundException, CustomerNotFoundException;
+	int addForIndividualCustomer(CreateRentedCarRequestForIndividualCustomer createRentedCarRequest) throws CarNotFoundException, CarAlreadyInRentException, CarAlreadyInMaintenanceException, IndividualCustomerNotFoundException, CustomerNotFoundException, CityNotFoundException;
 
-	Result addForCorporateCustomer(
-			CreateRentedCarRequestForCorporateCustomer createRentedCarRequestForCorporateCustomer) throws CarNotFoundException, CorporateCustomerNotFoundException, CarAlreadyInMaintenanceException, CarAlreadyInRentException;
+	int addForCorporateCustomer(
+			CreateRentedCarRequestForCorporateCustomer createRentedCarRequestForCorporateCustomer)
+			throws CarNotFoundException, CorporateCustomerNotFoundException, CarAlreadyInMaintenanceException,
+			CarAlreadyInRentException, CityNotFoundException, CustomerNotFoundException;
 
 	Result update(UpdateRentedCarRequest updateRentedCarRequest) throws BusinessException;
 
