@@ -3,6 +3,7 @@ package com.rentACar.rentACar.business.abstracts;
 import java.util.List;
 
 import com.rentACar.rentACar.api.models.MakePaymentForCorporateCustomerModel;
+import com.rentACar.rentACar.api.models.MakePaymentForDelayedReturnModel;
 import com.rentACar.rentACar.api.models.MakePaymentForIndividualCustomerModel;
 import com.rentACar.rentACar.business.dtos.paymentDtos.GetPaymentDto;
 import com.rentACar.rentACar.business.dtos.paymentDtos.PaymentListByCustomerDto;
@@ -34,6 +35,11 @@ public interface PaymentService {
 			AdditionalServiceNotFoundException, OrderedAdditionalServiceAlreadyExistsException,
 			RentedCarNotFoundException, RentDetailsNotFoundException,
 			CustomerNotFoundException, InvoiceNotFoundException;
+	
+	Result makePaymentForDelayedReturn(MakePaymentForDelayedReturnModel makePaymentForDelayedReturnModel)
+			throws PaymentNotSuccessfullException, RentedCarNotFoundException,
+			AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException,
+			InvoiceNotFoundException, CustomerNotFoundException;
 	
 	DataResult<GetPaymentDto> getById(int paymentId) throws PaymentNotFoundException;
 	

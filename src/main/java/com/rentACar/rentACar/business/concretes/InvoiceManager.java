@@ -22,7 +22,6 @@ import com.rentACar.rentACar.business.dtos.invoiceDtos.GetInvoiceDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceDateBetweenDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceListDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceCustomerListDto;
-import com.rentACar.rentACar.business.requests.invoiceRequests.CreateInvoiceForDelayedReturnRequest;
 import com.rentACar.rentACar.business.requests.invoiceRequests.CreateInvoiceRequest;
 import com.rentACar.rentACar.business.requests.invoiceRequests.UpdateInvoiceRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.additionalServiceExceptions.AdditionalServiceNotFoundException;
@@ -88,22 +87,22 @@ public class InvoiceManager implements InvoiceService {
 				rentedCar.getReturnCity().getCityId(), invoice.getTotalRentDays()));
 
 		Invoice savedInvoice = this.invoiceDao.save(invoice);
-		
+
 		return savedInvoice.getInvoiceId();
 
 	}
 
 	@Override
-	public Result addForDelayedReturn(CreateInvoiceForDelayedReturnRequest createInvoiceForDelayedReturnRequest)
-			throws RentedCarNotFoundException, AdditionalServiceNotFoundException, CarNotFoundException,
-			RentDetailsNotFoundException {
-		this.rentedCarService
-				.checkIfRentedCarIsExistsByRentedCarId(createInvoiceForDelayedReturnRequest.getRentedCar_RentedCarId());
+	public int addForDelayedReturn(int rentedCarId) throws RentedCarNotFoundException,
+			AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException {
 
-		RentedCar rentedCar = this.rentedCarService
-				.getRentedCarForBusiness(createInvoiceForDelayedReturnRequest.getRentedCar_RentedCarId());
+		this.rentedCarService.checkIfRentedCarIsExistsByRentedCarId(rentedCarId);
 
-		Invoice invoice = this.modelMapperService.forRequest().map(createInvoiceForDelayedReturnRequest, Invoice.class);
+		RentedCar rentedCar = this.rentedCarService.getRentedCarForBusiness(rentedCarId);
+
+		Invoice invoice = new Invoice();
+
+		invoice.setRentedCar(this.rentedCarService.getRentedCarForBusiness(rentedCarId));
 
 		invoice.setTotalRentDays(calculateTotalRentDays(rentedCar.getConfirmedPaidedDate(), rentedCar.getReturnDate()));
 
@@ -112,9 +111,10 @@ public class InvoiceManager implements InvoiceService {
 				rentedCar.getReturnCity().getCityId(), invoice.getTotalRentDays()));
 
 		invoice.setInvoiceId(0);
-		this.invoiceDao.save(invoice);
+		
+		Invoice savedInvoice = this.invoiceDao.save(invoice);
 
-		return new SuccessResult("invoice added by controller");
+		return savedInvoice.getInvoiceId();
 	}
 
 	@Override
@@ -283,17 +283,17 @@ public class InvoiceManager implements InvoiceService {
 			throw new InvoiceNotFoundException(BusinessMessages.INVOICE_NOT_FOUND_FOR_RENTED_CAR + rentedCarId);
 		}
 	}
-	
+
 	public CreateInvoiceRequest getInvoiceRequestForMapping(int rentedCarId) throws RentedCarNotFoundException {
-		
+
 		this.rentedCarService.checkIfRentedCarIsExistsByRentedCarId(rentedCarId);
-		
+
 		CreateInvoiceRequest createInvoiceRequest = new CreateInvoiceRequest();
-		
+
 		createInvoiceRequest.setRentedCar_RentedCarId(rentedCarId);
-		
+
 		return createInvoiceRequest;
-		
+
 	}
 
 }

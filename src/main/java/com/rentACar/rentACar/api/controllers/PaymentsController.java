@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rentACar.rentACar.api.models.MakePaymentForCorporateCustomerModel;
+import com.rentACar.rentACar.api.models.MakePaymentForDelayedReturnModel;
 import com.rentACar.rentACar.api.models.MakePaymentForIndividualCustomerModel;
 import com.rentACar.rentACar.business.abstracts.PaymentService;
 import com.rentACar.rentACar.business.dtos.paymentDtos.GetPaymentDto;
@@ -55,18 +56,28 @@ public class PaymentsController {
 
 		return this.paymentService.makePaymentForIndividualCustomer(makePaymentForIndividualCustomerModel);
 	}
-	
+
 	@PostMapping("/makePaymentForCorporateCustomer")
 	public Result makePaymentForCorporateCustomer(
 			@RequestBody @Valid MakePaymentForCorporateCustomerModel makePaymentForCorporateCustomerModel)
 			throws PaymentNotSuccessfullException, CarNotFoundException, CorporateCustomerNotFoundException,
 			CarAlreadyInMaintenanceException, CarAlreadyInRentException, CityNotFoundException,
 			AdditionalServiceNotFoundException, OrderedAdditionalServiceAlreadyExistsException,
-			RentedCarNotFoundException, RentDetailsNotFoundException,
-			CustomerNotFoundException, InvoiceNotFoundException {
-		
+			RentedCarNotFoundException, RentDetailsNotFoundException, CustomerNotFoundException,
+			InvoiceNotFoundException {
+
 		return this.paymentService.makePaymentForCorporateCustomer(makePaymentForCorporateCustomerModel);
-		
+
+	}
+
+	@PostMapping("/makePaymentForDelayedReturn")
+	public Result makePaymentForDelayedReturn(
+			@RequestBody @Valid MakePaymentForDelayedReturnModel makePaymentForDelayedReturnModel)
+			throws PaymentNotSuccessfullException, RentedCarNotFoundException, AdditionalServiceNotFoundException,
+			CarNotFoundException, RentDetailsNotFoundException, InvoiceNotFoundException, CustomerNotFoundException {
+
+		return this.paymentService.makePaymentForDelayedReturn(makePaymentForDelayedReturnModel);
+
 	}
 
 	@GetMapping("/getAll")

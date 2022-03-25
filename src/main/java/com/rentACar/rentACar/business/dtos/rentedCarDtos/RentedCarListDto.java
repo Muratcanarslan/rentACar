@@ -21,8 +21,6 @@ public class RentedCarListDto {
 
 	private int carId;
 
-	private double Invoice_TotalPrice;
-
 	private double rentKilometre;
 
 	private double returnKilometre;

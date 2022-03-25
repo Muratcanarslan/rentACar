@@ -120,7 +120,7 @@ public class RentedCarManager implements RentedCarService {
 
 		rentedCar.setRentKilometre(
 				this.carService.getById(rentedCar.getCar().getCarId()).getData().getKilometreInformation());
-		
+
 		rentedCar.setCustomer(getCustomerForMapping(createRentedCarRequestForCorporateCustomer.getCustomerId()));
 
 		RentedCar savedRentedCar = this.rentedCarDao.save(rentedCar);
@@ -158,24 +158,14 @@ public class RentedCarManager implements RentedCarService {
 	@Override
 	public Result updateRentedCarForDelayedReturn(
 			UpdateRentedCarForDelayedReturnRequest updateRentedCarForDelayedReturnRequest)
-			throws CarNotFoundException, RentedCarNotFoundException, CustomerNotFoundException {
+			throws RentedCarNotFoundException {
 
-		this.carService.checkIfExistByCarId(updateRentedCarForDelayedReturnRequest.getCarId());
-		checkIfRentedCarIsExistsByRentedCarId(updateRentedCarForDelayedReturnRequest.getRentedCarId());
-		this.customerService.checkIfCustomerExists(updateRentedCarForDelayedReturnRequest.getCustomerId());
+		this.checkIfRentedCarIsExistsByRentedCarId(updateRentedCarForDelayedReturnRequest.getRentedCarId());
 
-		RentedCar rentedCar = this.modelMapperService.forRequest().map(updateRentedCarForDelayedReturnRequest,
-				RentedCar.class);
+		RentedCar rentedCar = this.rentedCarDao.getById(updateRentedCarForDelayedReturnRequest.getRentedCarId());
 
-		rentedCar.setCustomer(getCustomerForMapping(updateRentedCarForDelayedReturnRequest.getCustomerId()));
-
-		this.carService.updateKilometreInformation(updateRentedCarForDelayedReturnRequest.getCarId(),
-				updateRentedCarForDelayedReturnRequest.getReturnKilometre());
-
-		rentedCar.setReturnKilometre(
-				this.carService.getById(rentedCar.getCar().getCarId()).getData().getKilometreInformation());
-
-		this.rentedCarDao.save(rentedCar);
+		rentedCar.setReturnDate(updateRentedCarForDelayedReturnRequest.getReturnDate());
+		rentedCar.setReturnKilometre(updateRentedCarForDelayedReturnRequest.getReturnKilometre());
 
 		return new SuccessResult("Rented Car Updated");
 	}

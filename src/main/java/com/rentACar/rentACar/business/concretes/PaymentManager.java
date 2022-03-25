@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.api.models.MakePaymentForCorporateCustomerModel;
+import com.rentACar.rentACar.api.models.MakePaymentForDelayedReturnModel;
 import com.rentACar.rentACar.api.models.MakePaymentForIndividualCustomerModel;
 import com.rentACar.rentACar.business.abstracts.CustomerService;
 import com.rentACar.rentACar.business.abstracts.InvoiceService;
@@ -138,7 +139,7 @@ public class PaymentManager implements PaymentService {
 
 		int rentedCarId = this.rentedCarService.addForCorporateCustomer(
 				makePaymentForCorporateCustomerModel.getCreateRentedCarRequestForCorporateCustomer());
-		
+
 		System.out.println(rentedCarId);
 
 		this.orderedAdditionalServiceService.addOrderedAdditionalServiceForPayment(makePaymentForCorporateCustomerModel
@@ -150,6 +151,45 @@ public class PaymentManager implements PaymentService {
 				this.invoiceService.getById(invoiceId).getData().getTotalPrice(),
 				makePaymentForCorporateCustomerModel.getCreateRentedCarRequestForCorporateCustomer().getCustomerId(),
 				rentedCarId, invoiceId);
+
+		Payment payment = this.modelMapperService.forRequest().map(createPaymentRequest, Payment.class);
+
+		payment.setCustomer(this.customerService.getCustomerById(createPaymentRequest.getCustomer_CustomerId()));
+
+		this.paymentDao.save(payment);
+
+	}
+
+	@Override
+	public Result makePaymentForDelayedReturn(MakePaymentForDelayedReturnModel makePaymentForDelayedReturnModel)
+			throws PaymentNotSuccessfullException, RentedCarNotFoundException, AdditionalServiceNotFoundException,
+			CarNotFoundException, RentDetailsNotFoundException, InvoiceNotFoundException, CustomerNotFoundException {
+
+		this.rentedCarService.checkIfRentedCarIsExistsByRentedCarId(
+				makePaymentForDelayedReturnModel.getUpdateRentedCarForDelayedReturnRequest().getRentedCarId());
+		this.checkIfPaymentIsSuccessfull(makePaymentForDelayedReturnModel.getCreateBankServiceRequest());
+
+		this.runPaymentSuccessorForDelayedReturn(makePaymentForDelayedReturnModel);
+
+		return new SuccessResult(BusinessMessages.ADD_SUCCESSFULL);
+	}
+
+	@Transactional
+	private void runPaymentSuccessorForDelayedReturn(MakePaymentForDelayedReturnModel makePaymentForDelayedReturnModel)
+			throws RentedCarNotFoundException, AdditionalServiceNotFoundException, CarNotFoundException,
+			RentDetailsNotFoundException, InvoiceNotFoundException, CustomerNotFoundException {
+
+		this.rentedCarService.updateRentedCarForDelayedReturn(
+				makePaymentForDelayedReturnModel.getUpdateRentedCarForDelayedReturnRequest());
+
+		int invoiceId = this.invoiceService.addForDelayedReturn(
+				makePaymentForDelayedReturnModel.getUpdateRentedCarForDelayedReturnRequest().getRentedCarId());
+
+		CreatePaymentRequest createPaymentRequest = this.getPaymentRequestForMapping(
+				this.invoiceService.getById(invoiceId).getData().getTotalPrice(),
+				makePaymentForDelayedReturnModel.getUpdateRentedCarForDelayedReturnRequest().getCustomerId(),
+				makePaymentForDelayedReturnModel.getUpdateRentedCarForDelayedReturnRequest().getRentedCarId(),
+				invoiceId);
 
 		Payment payment = this.modelMapperService.forRequest().map(createPaymentRequest, Payment.class);
 

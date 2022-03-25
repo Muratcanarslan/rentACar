@@ -23,17 +23,18 @@ import com.rentACar.rentACar.entities.concretes.RentedCar;
 
 public interface RentedCarService {
 
-	int addForIndividualCustomer(CreateRentedCarRequestForIndividualCustomer createRentedCarRequest) throws CarNotFoundException, CarAlreadyInRentException, CarAlreadyInMaintenanceException, IndividualCustomerNotFoundException, CustomerNotFoundException, CityNotFoundException;
+	int addForIndividualCustomer(CreateRentedCarRequestForIndividualCustomer createRentedCarRequest)
+			throws CarNotFoundException, CarAlreadyInRentException, CarAlreadyInMaintenanceException,
+			IndividualCustomerNotFoundException, CustomerNotFoundException, CityNotFoundException;
 
-	int addForCorporateCustomer(
-			CreateRentedCarRequestForCorporateCustomer createRentedCarRequestForCorporateCustomer)
+	int addForCorporateCustomer(CreateRentedCarRequestForCorporateCustomer createRentedCarRequestForCorporateCustomer)
 			throws CarNotFoundException, CorporateCustomerNotFoundException, CarAlreadyInMaintenanceException,
 			CarAlreadyInRentException, CityNotFoundException, CustomerNotFoundException;
 
 	Result update(UpdateRentedCarRequest updateRentedCarRequest) throws BusinessException;
 
 	Result updateRentedCarForDelayedReturn(
-			UpdateRentedCarForDelayedReturnRequest updateRentedCarForDelayedReturnRequest) throws CarNotFoundException, RentedCarNotFoundException, CustomerNotFoundException;
+			UpdateRentedCarForDelayedReturnRequest updateRentedCarForDelayedReturnRequest) throws RentedCarNotFoundException;
 
 	Result delete(int rentedCarId) throws RentedCarNotFoundException;
 
