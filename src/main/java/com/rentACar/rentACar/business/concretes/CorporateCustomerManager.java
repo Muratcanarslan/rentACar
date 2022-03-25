@@ -50,7 +50,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 
 		this.corporateCustomerDao.save(corporateCustomer);
 
-		return new SuccessResult("corporate customer added");
+		return new SuccessResult(BusinessMessages.ADD_SUCCESSFULL);
 
 	}
 
@@ -68,7 +68,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 
 		this.corporateCustomerDao.save(corporateCustomer);
 
-		return new SuccessResult("corporate customer updated");
+		return new SuccessResult(BusinessMessages.UPDATE_SUCCESSFULL);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 
 		this.corporateCustomerDao.deleteById(corporateCustomerId);
 
-		return new SuccessResult("corporate customer deleted");
+		return new SuccessResult(BusinessMessages.DELETE_SUCCESSFUL);
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 		GetCorporateCustomerDto getCorporateCustomerDto = this.modelMapperService.forDto().map(corporateCustomer,
 				GetCorporateCustomerDto.class);
 
-		return new SuccessDataResult<GetCorporateCustomerDto>(getCorporateCustomerDto, "get corporate customer");
+		return new SuccessDataResult<GetCorporateCustomerDto>(getCorporateCustomerDto, BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	@Override
@@ -105,7 +105,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 						CorporateCustomerListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<CorporateCustomerListDto>>(corporateCustomerListDtos, "corporate customers");
+		return new SuccessDataResult<List<CorporateCustomerListDto>>(corporateCustomerListDtos, BusinessMessages.GET_SUCCESSFUL);
 
 	}
 

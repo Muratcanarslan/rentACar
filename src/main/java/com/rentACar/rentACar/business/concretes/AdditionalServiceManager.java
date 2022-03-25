@@ -42,7 +42,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
 		this.additionalServiceDao.save(additionalService);
 
-		return new SuccessResult("additional service added");
+		return new SuccessResult(BusinessMessages.ADD_SUCCESSFULL);
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
 		this.additionalServiceDao.deleteById(additionalServiceId);
 
-		return new SuccessResult("additional service deleted");
+		return new SuccessResult(BusinessMessages.DELETE_SUCCESSFUL);
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
 		this.additionalServiceDao.save(additionalService);
 
-		return new SuccessResult("additional service updated");
+		return new SuccessResult(BusinessMessages.UPDATE_SUCCESSFULL);
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 		GetAdditionalServiceDto getAdditionalServiceDto = this.modelMapperService.forDto().map(additionalService,
 				GetAdditionalServiceDto.class);
 
-		return new SuccessDataResult<GetAdditionalServiceDto>(getAdditionalServiceDto, "get by id");
+		return new SuccessDataResult<GetAdditionalServiceDto>(getAdditionalServiceDto,BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 						AdditionalServiceListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<AdditionalServiceListDto>>(additionalServiceListDtos, "get all");
+		return new SuccessDataResult<List<AdditionalServiceListDto>>(additionalServiceListDtos, BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	public double calculateAdditionalServicePriceByAdditionalServiceIdListAndRentDateValue(

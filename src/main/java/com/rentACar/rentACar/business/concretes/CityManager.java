@@ -46,7 +46,7 @@ public class CityManager implements CityService{
 		
 		this.cityDao.save(city);
 		
-		return new SuccessResult("city added");
+		return new SuccessResult(BusinessMessages.ADD_SUCCESSFULL);
 	}
 	@Override
 	public Result update(UpdateCityRequest updateCityRequest) throws CityNotFoundException, CityAlreadyExistsException  {
@@ -58,7 +58,7 @@ public class CityManager implements CityService{
 		
 		this.cityDao.save(city);
 		
-		return new SuccessResult("city updated");
+		return new SuccessResult(BusinessMessages.UPDATE_SUCCESSFULL);
 	}
 	@Override
 	public Result delete(int cityId) throws BusinessException {
@@ -76,7 +76,7 @@ public class CityManager implements CityService{
 		
 		GetCityDto getCityDto = this.modelMapperService.forDto().map(city, GetCityDto.class);
 		
-		return new SuccessDataResult<GetCityDto>(getCityDto,"get city dto");
+		return new SuccessDataResult<GetCityDto>(getCityDto,BusinessMessages.GET_SUCCESSFUL);
 	}
 	@Override
 	public DataResult<List<CityListDto>> getAll() {
@@ -85,7 +85,7 @@ public class CityManager implements CityService{
 		
 		List<CityListDto> cityListDtos = cities.stream().map(city -> this.modelMapperService.forDto().map(city, CityListDto.class)).collect(Collectors.toList());
 		
-	    return new SuccessDataResult<List<CityListDto>>(cityListDtos,"cities");
+	    return new SuccessDataResult<List<CityListDto>>(cityListDtos,BusinessMessages.GET_SUCCESSFUL);
 	}
 	
 	private void checkIfCityExistsByCityName(String cityName) throws CityAlreadyExistsException  {

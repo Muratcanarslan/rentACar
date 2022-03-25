@@ -48,7 +48,7 @@ public class IndividualCustomerManager implements IndividualCustomerService{
 		
 		this.individualCustomerDao.save(individualCustomer);
 		
-		return new SuccessResult("individual customer added");
+		return new SuccessResult(BusinessMessages.ADD_SUCCESSFULL);
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class IndividualCustomerManager implements IndividualCustomerService{
 		
 		this.individualCustomerDao.save(individualCustomer);
 		
-		return new SuccessResult("individual customer updated");
+		return new SuccessResult(BusinessMessages.UPDATE_SUCCESSFULL);
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class IndividualCustomerManager implements IndividualCustomerService{
 		
 		this.individualCustomerDao.deleteById(individualCustomerId);
 		
-		return new SuccessResult("individual customer deleted");
+		return new SuccessResult(BusinessMessages.DELETE_SUCCESSFUL);
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class IndividualCustomerManager implements IndividualCustomerService{
 		
 		GetIndividualCustomerDto getIndividualCustomerDto = this.modelMapperService.forDto().map(individualCustomer, GetIndividualCustomerDto.class);
 		
-		return new SuccessDataResult<GetIndividualCustomerDto>(getIndividualCustomerDto,"get individual customer");
+		return new SuccessDataResult<GetIndividualCustomerDto>(getIndividualCustomerDto,BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class IndividualCustomerManager implements IndividualCustomerService{
 		
 		List<IndividualCustomerListDto> individualCustomerListDtos = individualCustomers.stream().map(individualCustomer->this.modelMapperService.forDto().map(individualCustomer, IndividualCustomerListDto.class)).collect(Collectors.toList());
 		
-		return new SuccessDataResult<List<IndividualCustomerListDto>>(individualCustomerListDtos,"individual customer list");
+		return new SuccessDataResult<List<IndividualCustomerListDto>>(individualCustomerListDtos,BusinessMessages.GET_SUCCESSFUL);
 	
 	}
 	

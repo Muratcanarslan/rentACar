@@ -147,6 +147,8 @@ public class PaymentManager implements PaymentService {
 
 		int invoiceId = this.invoiceService.add(this.invoiceService.getInvoiceRequestForMapping(rentedCarId));
 
+		System.out.println(invoiceId);
+
 		CreatePaymentRequest createPaymentRequest = this.getPaymentRequestForMapping(
 				this.invoiceService.getById(invoiceId).getData().getTotalPrice(),
 				makePaymentForCorporateCustomerModel.getCreateRentedCarRequestForCorporateCustomer().getCustomerId(),
@@ -221,7 +223,7 @@ public class PaymentManager implements PaymentService {
 				.map(payment -> this.modelMapperService.forDto().map(payment, PaymentListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<PaymentListDto>>(paymentListDtos, "payments");
+		return new SuccessDataResult<List<PaymentListDto>>(paymentListDtos,BusinessMessages.GET_SUCCESSFUL);
 
 	}
 

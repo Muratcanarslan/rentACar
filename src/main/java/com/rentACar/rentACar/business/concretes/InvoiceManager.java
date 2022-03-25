@@ -110,8 +110,6 @@ public class InvoiceManager implements InvoiceService {
 				rentedCar.getRentedCarId(), rentedCar.getCar().getCarId(), rentedCar.getHireCity().getCityId(),
 				rentedCar.getReturnCity().getCityId(), invoice.getTotalRentDays()));
 
-		invoice.setInvoiceId(0);
-		
 		Invoice savedInvoice = this.invoiceDao.save(invoice);
 
 		return savedInvoice.getInvoiceId();
@@ -141,7 +139,7 @@ public class InvoiceManager implements InvoiceService {
 
 		this.invoiceDao.save(invoice);
 
-		return new SuccessResult("invoice updated");
+		return new SuccessResult(BusinessMessages.UPDATE_SUCCESSFULL);
 	}
 
 	@Override
@@ -153,7 +151,7 @@ public class InvoiceManager implements InvoiceService {
 
 		GetInvoiceDto getInvoiceDto = this.modelMapperService.forDto().map(invoice, GetInvoiceDto.class);
 
-		return new SuccessDataResult<GetInvoiceDto>(getInvoiceDto, "invoice");
+		return new SuccessDataResult<GetInvoiceDto>(getInvoiceDto, BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	@Override
@@ -168,7 +166,7 @@ public class InvoiceManager implements InvoiceService {
 				.map(invoice -> this.modelMapperService.forDto().map(invoice, InvoiceCustomerListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<InvoiceCustomerListDto>>(invoiceListDtos, "invoice list");
+		return new SuccessDataResult<List<InvoiceCustomerListDto>>(invoiceListDtos, BusinessMessages.GET_SUCCESSFUL);
 
 	}
 
@@ -180,7 +178,7 @@ public class InvoiceManager implements InvoiceService {
 				.map(invoice -> this.modelMapperService.forDto().map(invoice, InvoiceListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<InvoiceListDto>>(invoiceListDtos, "get all");
+		return new SuccessDataResult<List<InvoiceListDto>>(invoiceListDtos, BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	@Override
@@ -194,7 +192,7 @@ public class InvoiceManager implements InvoiceService {
 
 		GetInvoiceDto getInvoiceDto = this.modelMapperService.forDto().map(invoice, GetInvoiceDto.class);
 
-		return new SuccessDataResult<GetInvoiceDto>(getInvoiceDto, "get invoice by rented car id");
+		return new SuccessDataResult<GetInvoiceDto>(getInvoiceDto, BusinessMessages.GET_SUCCESSFUL);
 
 	}
 
@@ -207,7 +205,7 @@ public class InvoiceManager implements InvoiceService {
 				.map(invoice -> this.modelMapperService.forDto().map(invoice, InvoiceDateBetweenDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<InvoiceDateBetweenDto>>(dateBetweenDtos, "date between invoice list");
+		return new SuccessDataResult<List<InvoiceDateBetweenDto>>(dateBetweenDtos, BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	@Override
@@ -216,7 +214,7 @@ public class InvoiceManager implements InvoiceService {
 
 		this.invoiceDao.deleteById(invoiceId);
 
-		return new SuccessResult("invoice deleted");
+		return new SuccessResult(BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	private double calculateTotalPrice(LocalDate rentDate, LocalDate confirmedPaidDate, int rentedCarId, int carId,

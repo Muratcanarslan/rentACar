@@ -13,7 +13,7 @@ public class PaymentListByCustomerDto {
 
 	private double totalPrice;
 
-	private int customerId;
+	private int Customer_CustomerId;
 
-	private int rentedCarId;
+	private int RentedCar_RentedCarId;
 }

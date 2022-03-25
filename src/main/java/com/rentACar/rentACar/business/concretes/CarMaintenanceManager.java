@@ -55,7 +55,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 				CarMaintenance.class);
 		
 		this.carMaintenanceDao.save(carMaintenance);
-		return new SuccessResult("Car Maintenance Added");
+		return new SuccessResult(BusinessMessages.ADD_SUCCESSFULL);
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
 		this.carMaintenanceDao.deleteById(carMaintenanceId);
 
-		return new SuccessResult("Car Maintenance Deleted");
+		return new SuccessResult(BusinessMessages.DELETE_SUCCESSFUL);
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 		checkIfExistsByCarMaintenanceId(carMaintenance.getCarMaintenanceId());
 		this.carService.checkIfExistByCarId(carMaintenance.getCar().getCarId());
 		this.carMaintenanceDao.save(carMaintenance);
-		return new SuccessResult("Car Maintenance Updated");
+		return new SuccessResult(BusinessMessages.UPDATE_SUCCESSFULL);
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 		GetCarMaintenanceDto carMaintenanceDto = this.modelMapperService.forDto().map(carMaintenance,
 				GetCarMaintenanceDto.class);
 		carMaintenanceDto.setCarId(carMaintenance.getCar().getCarId());
-		return new SuccessDataResult<GetCarMaintenanceDto>(carMaintenanceDto, "car maintenance");
+		return new SuccessDataResult<GetCarMaintenanceDto>(carMaintenanceDto, BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	@Override
@@ -96,7 +96,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 				carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, CarMaintenanceListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<CarMaintenanceListDto>>(carMaintenanceListDtos, "car maintenance list");
+		return new SuccessDataResult<List<CarMaintenanceListDto>>(carMaintenanceListDtos, BusinessMessages.GET_SUCCESSFUL);
 
 	}
 

@@ -16,11 +16,11 @@ import com.rentACar.rentACar.dataAccess.abstracts.RentDetailsDao;
 import com.rentACar.rentACar.entities.concretes.RentDetails;
 
 @Service
-public class RentDetailsManager implements RentDetailsService{
+public class RentDetailsManager implements RentDetailsService {
 
 	private RentDetailsDao rentDetailsDao;
 	private ModelMapperService modelMapperService;
-	
+
 	public RentDetailsManager(RentDetailsDao rentDetailsDao, ModelMapperService modelMapperService) {
 		super();
 		this.rentDetailsDao = rentDetailsDao;
@@ -28,37 +28,37 @@ public class RentDetailsManager implements RentDetailsService{
 	}
 
 	@Override
-	public Result update(UpdateRentDetailsRequest updateRentDetailsService) throws RentDetailsNotFoundException  {
-		
+	public Result update(UpdateRentDetailsRequest updateRentDetailsService) throws RentDetailsNotFoundException {
+
 		checkIfRentDetailsExists();
 		RentDetails rentDetails = this.modelMapperService.forRequest().map(updateRentDetailsService, RentDetails.class);
 		rentDetails.setRentDetailsId(1);
-		
+
 		this.rentDetailsDao.save(rentDetails);
-		
-		return new SuccessResult("rent details updated");
-		
+
+		return new SuccessResult(BusinessMessages.UPDATE_SUCCESSFULL);
+
 	}
 
 	@Override
-	public DataResult<GetRentDetails> getRentDetails() throws RentDetailsNotFoundException  {
-		
+	public DataResult<GetRentDetails> getRentDetails() throws RentDetailsNotFoundException {
+
 		checkIfRentDetailsExists();
-		
+
 		RentDetails rentDetails = this.rentDetailsDao.getById(1);
-		
+
 		GetRentDetails getRentDetails = this.modelMapperService.forDto().map(rentDetails, GetRentDetails.class);
-		
-		return new SuccessDataResult<GetRentDetails>(getRentDetails,"get rent details");
-		
+
+		return new SuccessDataResult<GetRentDetails>(getRentDetails, BusinessMessages.GET_SUCCESSFUL);
+
 	}
-	
-	public void checkIfRentDetailsExists() throws RentDetailsNotFoundException  {
-		if(!this.rentDetailsDao.existsById(1)) {
-		 throw new RentDetailsNotFoundException(BusinessMessages.RENT_DETAILS_NOT_FOUND);
+
+	public void checkIfRentDetailsExists() throws RentDetailsNotFoundException {
+		if (!this.rentDetailsDao.existsById(1)) {
+			throw new RentDetailsNotFoundException(BusinessMessages.RENT_DETAILS_NOT_FOUND);
 		}
 	}
-	
+
 	public double getDifferentCityDeliveryPrice() throws RentDetailsNotFoundException {
 		checkIfRentDetailsExists();
 		return this.rentDetailsDao.getById(1).getDifferentCityDeliveryPrice();

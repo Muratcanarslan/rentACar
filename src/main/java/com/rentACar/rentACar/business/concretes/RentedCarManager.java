@@ -151,7 +151,7 @@ public class RentedCarManager implements RentedCarService {
 
 		this.rentedCarDao.save(rentedCar);
 
-		return new SuccessResult("Rented Car Updated");
+		return new SuccessResult(BusinessMessages.UPDATE_SUCCESSFULL);
 
 	}
 
@@ -167,7 +167,7 @@ public class RentedCarManager implements RentedCarService {
 		rentedCar.setReturnDate(updateRentedCarForDelayedReturnRequest.getReturnDate());
 		rentedCar.setReturnKilometre(updateRentedCarForDelayedReturnRequest.getReturnKilometre());
 
-		return new SuccessResult("Rented Car Updated");
+		return new SuccessResult(BusinessMessages.UPDATE_SUCCESSFULL);
 	}
 
 	@Override
@@ -181,7 +181,7 @@ public class RentedCarManager implements RentedCarService {
 
 		this.rentedCarDao.deleteById(rentedCarId);
 
-		return new SuccessResult("Rented Car Deleted");
+		return new SuccessResult(BusinessMessages.DELETE_SUCCESSFUL);
 	}
 
 	@Override
@@ -193,7 +193,7 @@ public class RentedCarManager implements RentedCarService {
 
 		GetRentedCarDto getRentedCarDto = this.modelMapperService.forDto().map(rentedCar, GetRentedCarDto.class);
 
-		return new SuccessDataResult<GetRentedCarDto>(getRentedCarDto, "Get Rented Car Dto");
+		return new SuccessDataResult<GetRentedCarDto>(getRentedCarDto, BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	@Override
@@ -205,7 +205,7 @@ public class RentedCarManager implements RentedCarService {
 				.map(rentedCar -> this.modelMapperService.forDto().map(rentedCar, RentedCarListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<RentedCarListDto>>(rentedCarListDtos, "rented cars");
+		return new SuccessDataResult<List<RentedCarListDto>>(rentedCarListDtos, BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	@Override

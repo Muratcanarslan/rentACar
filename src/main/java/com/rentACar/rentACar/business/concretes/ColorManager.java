@@ -41,7 +41,7 @@ public class ColorManager implements ColorService {
 				.map(color -> this.modelMapperService.forDto().map(color, ColorListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<ColorListDto>>(result, "color list");
+		return new SuccessDataResult<List<ColorListDto>>(result, BusinessMessages.GET_SUCCESSFUL);
 
 	}
 
@@ -54,7 +54,7 @@ public class ColorManager implements ColorService {
 
 		this.colorDao.save(color);
 
-		return new SuccessResult("color added");
+		return new SuccessResult(BusinessMessages.ADD_SUCCESSFULL);
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class ColorManager implements ColorService {
 
 		GetColorDto getColorDto = this.modelMapperService.forDto().map(color, GetColorDto.class);
 
-		return new SuccessDataResult<GetColorDto>(getColorDto, "color get by id");
+		return new SuccessDataResult<GetColorDto>(getColorDto, BusinessMessages.GET_SUCCESSFUL);
 
 	}
 

@@ -69,7 +69,7 @@ public class CarManager implements CarService {
 		List<CarListDto> carListDto = cars.stream()
 				.map(car -> this.modelMapperService.forDto().map(car, CarListDto.class)).collect(Collectors.toList());
 
-		return new SuccessDataResult<List<CarListDto>>(carListDto, "car list");
+		return new SuccessDataResult<List<CarListDto>>(carListDto, BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class CarManager implements CarService {
 
 		this.carDao.save(car);
 
-		return new SuccessResult("cars added");
+		return new SuccessResult(BusinessMessages.ADD_SUCCESSFULL);
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class CarManager implements CarService {
 
 		this.carDao.save(car);
 
-		return new SuccessResult("car updated");
+		return new SuccessResult(BusinessMessages.UPDATE_SUCCESSFULL);
 
 	}
 
@@ -111,7 +111,7 @@ public class CarManager implements CarService {
 
 		this.carDao.deleteById(carId);
 
-		return new SuccessResult("car deleted");
+		return new SuccessResult(BusinessMessages.DELETE_SUCCESSFUL);
 
 	}
 
@@ -124,7 +124,7 @@ public class CarManager implements CarService {
 
 		GetCarDto getCarDto = this.modelMapperService.forDto().map(car, GetCarDto.class);
 
-		return new SuccessDataResult<GetCarDto>(getCarDto, "car get by id");
+		return new SuccessDataResult<GetCarDto>(getCarDto, BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	@Override
@@ -136,12 +136,13 @@ public class CarManager implements CarService {
 				.map(car -> this.modelMapperService.forDto().map(car, CarListLessThanDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<CarListLessThanDto>>(carListLessThanDto, "Car List");
+		return new SuccessDataResult<List<CarListLessThanDto>>(carListLessThanDto, BusinessMessages.GET_SUCCESSFUL);
 
 	}
 
 	@Override
 	public DataResult<List<CarListSortByDailyPrice>> getCarListSortByDailyPrice(Direction sortDirection) {
+		
 		Sort sort = Sort.by(sortDirection, "dailyPrice");
 
 		List<Car> cars = this.carDao.findAll(sort);
@@ -150,7 +151,7 @@ public class CarManager implements CarService {
 				.map(car -> this.modelMapperService.forDto().map(car, CarListSortByDailyPrice.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<CarListSortByDailyPrice>>(carListSortByDailyPrice, "sorted car list");
+		return new SuccessDataResult<List<CarListSortByDailyPrice>>(carListSortByDailyPrice, BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	public double calculateRentPriceByCarIdAndRentDateValue(int carId, int rentDateValue) throws CarNotFoundException {

@@ -41,7 +41,7 @@ public class BrandManager implements BrandService {
 				.map(brand -> this.modelMapperService.forDto().map(brand, BrandListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<BrandListDto>>(result, "Brands");
+		return new SuccessDataResult<List<BrandListDto>>(result, BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class BrandManager implements BrandService {
 
 		this.brandDao.save(brand);
 
-		return new SuccessResult("Brand added");
+		return new SuccessResult(BusinessMessages.ADD_SUCCESSFULL);
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class BrandManager implements BrandService {
 
 		GetBrandDto getBrandDto = this.modelMapperService.forDto().map(brand, GetBrandDto.class);
 
-		return new SuccessDataResult<GetBrandDto>(getBrandDto, "get by id brand");
+		return new SuccessDataResult<GetBrandDto>(getBrandDto, BusinessMessages.GET_SUCCESSFUL);
 
 	}
 

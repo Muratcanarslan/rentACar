@@ -50,7 +50,7 @@ public class CarCrashInformationManager implements CarCrashInformationService {
 
 		this.carCrashInformationDao.save(carCrashInformation);
 
-		return new SuccessResult("car crash information added");
+		return new SuccessResult(BusinessMessages.ADD_SUCCESSFULL);
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class CarCrashInformationManager implements CarCrashInformationService {
 
 		this.carCrashInformationDao.save(carCrashInformation);
 
-		return new SuccessResult("car crash information updated");
+		return new SuccessResult(BusinessMessages.UPDATE_SUCCESSFULL);
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class CarCrashInformationManager implements CarCrashInformationService {
 
 		this.carCrashInformationDao.deleteById(carCrashInformationId);
 
-		return new SuccessResult("car crash information deleted");
+		return new SuccessResult(BusinessMessages.DELETE_SUCCESSFUL);
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class CarCrashInformationManager implements CarCrashInformationService {
 		GetCarCrashInformationDto getCarCrashInformationDto = this.modelMapperService.forDto().map(carCrashInformation,
 				GetCarCrashInformationDto.class);
 
-		return new SuccessDataResult<GetCarCrashInformationDto>(getCarCrashInformationDto, "get car crash infomation");
+		return new SuccessDataResult<GetCarCrashInformationDto>(getCarCrashInformationDto,BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class CarCrashInformationManager implements CarCrashInformationService {
 				.collect(Collectors.toList());
 
 		return new SuccessDataResult<List<CarCrashInformationListByCarDto>>(carCrashInformationListByCarDtos,
-				"get by car id");
+				BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public class CarCrashInformationManager implements CarCrashInformationService {
 						CarCrashInformationListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<CarCrashInformationListDto>>(carCrashInformationListDtos, "get all");
+		return new SuccessDataResult<List<CarCrashInformationListDto>>(carCrashInformationListDtos, BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	private void checkIfCarCrashInformationExists(int carCrashInformationId)
