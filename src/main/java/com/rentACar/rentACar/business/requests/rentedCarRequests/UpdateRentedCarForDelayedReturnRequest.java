@@ -29,5 +29,9 @@ public class UpdateRentedCarForDelayedReturnRequest {
 	@Positive
 	@NotNull
 	private int customerId;
+	
+	@Positive
+	@NotNull
+	private int Car_CarId;
 
 }

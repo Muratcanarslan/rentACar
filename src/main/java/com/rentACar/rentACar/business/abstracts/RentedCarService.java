@@ -8,7 +8,6 @@ import com.rentACar.rentACar.business.requests.rentedCarRequests.CreateRentedCar
 import com.rentACar.rentACar.business.requests.rentedCarRequests.CreateRentedCarRequestForIndividualCustomer;
 import com.rentACar.rentACar.business.requests.rentedCarRequests.UpdateRentedCarForDelayedReturnRequest;
 import com.rentACar.rentACar.business.requests.rentedCarRequests.UpdateRentedCarRequest;
-import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.exceptions.carExceptions.CarNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.carMaintenanceExceptions.CarAlreadyInMaintenanceException;
 import com.rentACar.rentACar.core.utilities.exceptions.cityExceptions.CityNotFoundException;
@@ -16,6 +15,9 @@ import com.rentACar.rentACar.core.utilities.exceptions.corporateCustomerExceptio
 import com.rentACar.rentACar.core.utilities.exceptions.customerExceptions.CustomerNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.indiviualCustomerExceptions.IndividualCustomerNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.CarAlreadyInRentException;
+import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentUpdateNotRequiresPaymentException;
+import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentUpdateRequiresPaymentException;
+import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentedCarAlreadyReturnException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentedCarNotFoundException;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
@@ -31,10 +33,10 @@ public interface RentedCarService {
 			throws CarNotFoundException, CorporateCustomerNotFoundException, CarAlreadyInMaintenanceException,
 			CarAlreadyInRentException, CityNotFoundException, CustomerNotFoundException;
 
-	Result update(UpdateRentedCarRequest updateRentedCarRequest) throws BusinessException;
+	Result updateForValidReturn(UpdateRentedCarRequest updateRentedCarRequest) throws RentUpdateRequiresPaymentException, RentedCarNotFoundException, CarNotFoundException;
 
 	Result updateRentedCarForDelayedReturn(
-			UpdateRentedCarForDelayedReturnRequest updateRentedCarForDelayedReturnRequest) throws RentedCarNotFoundException;
+			UpdateRentedCarForDelayedReturnRequest updateRentedCarForDelayedReturnRequest) throws RentedCarNotFoundException, CarNotFoundException, RentUpdateNotRequiresPaymentException;
 
 	Result delete(int rentedCarId) throws RentedCarNotFoundException;
 
@@ -47,4 +49,6 @@ public interface RentedCarService {
 	void checkIfCarIsAlreadyRentedByCarId(int carId) throws CarAlreadyInRentException;
 
 	void checkIfRentedCarIsExistsByRentedCarId(int rentedCarId) throws RentedCarNotFoundException;
+	
+	void checkIfRentedCarAlreadyReturn(int rentedCarId) throws RentedCarNotFoundException, RentedCarAlreadyReturnException;
 }

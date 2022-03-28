@@ -13,7 +13,7 @@ public interface InvoiceDao extends JpaRepository<Invoice, Integer> {
 
 	boolean existsByRentedCar_RentedCarId(int rentedCarId);
 	
-	Invoice getByRentedCar_RentedCarId(int rentedCarId);
+	List<Invoice> getByRentedCar_RentedCarId(int rentedCarId);
 
 	List<Invoice> getByRentedCar_Customer_CustomerId(int customerId);
 	

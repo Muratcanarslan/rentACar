@@ -31,9 +31,9 @@ public class RentedCarsController {
 		this.rentedCarService = rentedCarService;
 	}
 
-	@PutMapping("/update")
+	@PutMapping("/updateForValidReturn")
 	public Result update(@RequestBody @Valid UpdateRentedCarRequest updateRentedCarRequest) throws BusinessException {
-		return this.rentedCarService.update(updateRentedCarRequest);
+		return this.rentedCarService.updateForValidReturn(updateRentedCarRequest);
 	}
 
 	@DeleteMapping("/delete")

@@ -21,6 +21,7 @@ import com.rentACar.rentACar.business.constants.messages.BusinessMessages;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.GetInvoiceDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceDateBetweenDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceListDto;
+import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceRentedCarListDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceCustomerListDto;
 import com.rentACar.rentACar.business.requests.invoiceRequests.CreateInvoiceRequest;
 import com.rentACar.rentACar.business.requests.invoiceRequests.UpdateInvoiceRequest;
@@ -125,9 +126,6 @@ public class InvoiceManager implements InvoiceService {
 
 		Invoice invoice = this.modelMapperService.forRequest().map(updateInvoiceRequest, Invoice.class);
 
-		invoice.setInvoiceId(this.invoiceDao.getByRentedCar_RentedCarId(updateInvoiceRequest.getRentedCar_RentedCarId())
-				.getInvoiceId());
-
 		RentedCar rentedCar = this.rentedCarService
 				.getRentedCarForBusiness(updateInvoiceRequest.getRentedCar_RentedCarId());
 
@@ -182,17 +180,19 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	@Override
-	public DataResult<GetInvoiceDto> getInvoiceByRentedCarId(int rentedCarId)
+	public DataResult<List<InvoiceRentedCarListDto>> getInvoiceByRentedCarId(int rentedCarId)
 			throws RentedCarNotFoundException, InvoiceNotFoundException {
 
 		this.rentedCarService.checkIfRentedCarIsExistsByRentedCarId(rentedCarId);
 		checkIfInvoiceExistsByRentedCarId(rentedCarId);
 
-		Invoice invoice = this.invoiceDao.getByRentedCar_RentedCarId(rentedCarId);
+		List<Invoice> invoices = this.invoiceDao.getByRentedCar_RentedCarId(rentedCarId);
 
-		GetInvoiceDto getInvoiceDto = this.modelMapperService.forDto().map(invoice, GetInvoiceDto.class);
-
-		return new SuccessDataResult<GetInvoiceDto>(getInvoiceDto, BusinessMessages.GET_SUCCESSFUL);
+		List<InvoiceRentedCarListDto> rentedCarListDtos = invoices.stream()
+				.map(invoice -> this.modelMapperService.forDto().map(invoice, InvoiceRentedCarListDto.class))
+				.collect(Collectors.toList());
+		
+		return new SuccessDataResult<List<InvoiceRentedCarListDto>>(rentedCarListDtos, BusinessMessages.GET_SUCCESSFUL);
 
 	}
 
@@ -210,11 +210,13 @@ public class InvoiceManager implements InvoiceService {
 
 	@Override
 	public Result delete(int invoiceId) throws InvoiceNotFoundException {
+
 		checkIfInvoiceExists(invoiceId);
 
 		this.invoiceDao.deleteById(invoiceId);
 
-		return new SuccessResult(BusinessMessages.GET_SUCCESSFUL);
+		return new SuccessResult(BusinessMessages.DELETE_SUCCESSFUL);
+
 	}
 
 	private double calculateTotalPrice(LocalDate rentDate, LocalDate confirmedPaidDate, int rentedCarId, int carId,

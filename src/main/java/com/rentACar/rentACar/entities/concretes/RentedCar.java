@@ -3,6 +3,7 @@ package com.rentACar.rentACar.entities.concretes;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -42,7 +43,7 @@ public class RentedCar {
 	private double rentKilometre;
 
 	@Column(name = "return_kilometre")
-	private double returnKilometre;
+	private Double returnKilometre;
 
 	@ManyToOne
 	@JoinColumn(name = "car_id")
@@ -63,10 +64,10 @@ public class RentedCar {
 	@OneToMany(mappedBy = "rentedCar")
 	private List<OrderedAdditionalService> orderedAdditionalServices;
 
-	@OneToMany(mappedBy = "rentedCar")
+	@OneToMany(mappedBy = "rentedCar",cascade = CascadeType.ALL)
 	private List<Invoice> invoice;
 	
-	@OneToMany(mappedBy = "rentedCar")
+	@OneToMany(mappedBy = "rentedCar",cascade = CascadeType.ALL)
 	private List<Payment> payments;
 
 }

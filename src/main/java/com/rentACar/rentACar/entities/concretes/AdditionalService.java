@@ -2,6 +2,7 @@ package com.rentACar.rentACar.entities.concretes;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,7 +33,8 @@ public class AdditionalService {
 	@Column(name = "additional_service_daily_price")
 	private double additionalServiceDailyPrice;
 	
-	@OneToMany(mappedBy = "additionalService")
+	//TODO: SOR BUNU.
+	@OneToMany(mappedBy = "additionalService",cascade = CascadeType.ALL)
 	private List<OrderedAdditionalService> orderedAdditonalServices;
 	
 }

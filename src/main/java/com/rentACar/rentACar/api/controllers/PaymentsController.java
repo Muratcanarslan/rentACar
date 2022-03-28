@@ -31,6 +31,8 @@ import com.rentACar.rentACar.core.utilities.exceptions.orderedAdditionalServiceE
 import com.rentACar.rentACar.core.utilities.exceptions.paymentExceptions.PaymentNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentDetailsExceptions.RentDetailsNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.CarAlreadyInRentException;
+import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentUpdateNotRequiresPaymentException;
+import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentedCarAlreadyReturnException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentedCarNotFoundException;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
@@ -74,7 +76,8 @@ public class PaymentsController {
 	public Result makePaymentForDelayedReturn(
 			@RequestBody @Valid MakePaymentForDelayedReturnModel makePaymentForDelayedReturnModel)
 			throws PaymentNotSuccessfullException, RentedCarNotFoundException, AdditionalServiceNotFoundException,
-			CarNotFoundException, RentDetailsNotFoundException, InvoiceNotFoundException, CustomerNotFoundException {
+			CarNotFoundException, RentDetailsNotFoundException, InvoiceNotFoundException, CustomerNotFoundException,
+			RentUpdateNotRequiresPaymentException, RentedCarAlreadyReturnException {
 
 		return this.paymentService.makePaymentForDelayedReturn(makePaymentForDelayedReturnModel);
 

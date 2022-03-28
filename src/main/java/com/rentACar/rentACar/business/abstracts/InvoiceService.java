@@ -6,6 +6,7 @@ import java.util.List;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.GetInvoiceDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceDateBetweenDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceListDto;
+import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceRentedCarListDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceCustomerListDto;
 import com.rentACar.rentACar.business.requests.invoiceRequests.CreateInvoiceRequest;
 import com.rentACar.rentACar.business.requests.invoiceRequests.UpdateInvoiceRequest;
@@ -35,7 +36,7 @@ public interface InvoiceService {
 
 	DataResult<GetInvoiceDto> getById(int invoiceId) throws InvoiceNotFoundException;
 
-	DataResult<GetInvoiceDto> getInvoiceByRentedCarId(int rentedCarId)
+	DataResult<List<InvoiceRentedCarListDto>> getInvoiceByRentedCarId(int rentedCarId)
 			throws RentedCarNotFoundException, InvoiceNotFoundException;
 
 	DataResult<List<InvoiceCustomerListDto>> getInvoicesByCustomerId(int customerId) throws CustomerNotFoundException;

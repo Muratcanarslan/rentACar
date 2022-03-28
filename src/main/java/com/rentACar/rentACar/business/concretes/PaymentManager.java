@@ -35,6 +35,8 @@ import com.rentACar.rentACar.core.utilities.exceptions.orderedAdditionalServiceE
 import com.rentACar.rentACar.core.utilities.exceptions.paymentExceptions.PaymentNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentDetailsExceptions.RentDetailsNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.CarAlreadyInRentException;
+import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentUpdateNotRequiresPaymentException;
+import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentedCarAlreadyReturnException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentedCarNotFoundException;
 import com.rentACar.rentACar.core.utilities.mapping.ModelMapperService;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
@@ -165,10 +167,14 @@ public class PaymentManager implements PaymentService {
 	@Override
 	public Result makePaymentForDelayedReturn(MakePaymentForDelayedReturnModel makePaymentForDelayedReturnModel)
 			throws PaymentNotSuccessfullException, RentedCarNotFoundException, AdditionalServiceNotFoundException,
-			CarNotFoundException, RentDetailsNotFoundException, InvoiceNotFoundException, CustomerNotFoundException {
+			CarNotFoundException, RentDetailsNotFoundException, InvoiceNotFoundException, CustomerNotFoundException,
+			RentUpdateNotRequiresPaymentException, RentedCarAlreadyReturnException {
 
 		this.rentedCarService.checkIfRentedCarIsExistsByRentedCarId(
 				makePaymentForDelayedReturnModel.getUpdateRentedCarForDelayedReturnRequest().getRentedCarId());
+		this.checkIfPaymentIsSuccessfull(makePaymentForDelayedReturnModel.getCreateBankServiceRequest());
+		this.rentedCarService.checkIfRentedCarAlreadyReturn(makePaymentForDelayedReturnModel.getUpdateRentedCarForDelayedReturnRequest().getRentedCarId());
+		
 		this.checkIfPaymentIsSuccessfull(makePaymentForDelayedReturnModel.getCreateBankServiceRequest());
 
 		this.runPaymentSuccessorForDelayedReturn(makePaymentForDelayedReturnModel);
@@ -179,7 +185,8 @@ public class PaymentManager implements PaymentService {
 	@Transactional
 	private void runPaymentSuccessorForDelayedReturn(MakePaymentForDelayedReturnModel makePaymentForDelayedReturnModel)
 			throws RentedCarNotFoundException, AdditionalServiceNotFoundException, CarNotFoundException,
-			RentDetailsNotFoundException, InvoiceNotFoundException, CustomerNotFoundException {
+			RentDetailsNotFoundException, InvoiceNotFoundException, CustomerNotFoundException,
+			RentUpdateNotRequiresPaymentException {
 
 		this.rentedCarService.updateRentedCarForDelayedReturn(
 				makePaymentForDelayedReturnModel.getUpdateRentedCarForDelayedReturnRequest());
@@ -223,7 +230,7 @@ public class PaymentManager implements PaymentService {
 				.map(payment -> this.modelMapperService.forDto().map(payment, PaymentListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<PaymentListDto>>(paymentListDtos,BusinessMessages.GET_SUCCESSFUL);
+		return new SuccessDataResult<List<PaymentListDto>>(paymentListDtos, BusinessMessages.GET_SUCCESSFUL);
 
 	}
 

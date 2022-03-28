@@ -15,6 +15,7 @@ import com.rentACar.rentACar.business.abstracts.InvoiceService;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.GetInvoiceDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceDateBetweenDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceListDto;
+import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceRentedCarListDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceCustomerListDto;
 import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.exceptions.customerExceptions.CustomerNotFoundException;
@@ -45,7 +46,7 @@ public class InvoicesController {
 	}
 
 	@GetMapping("/getInvoiceByRentedCarId")
-	public DataResult<GetInvoiceDto> getByRentedCarId(@RequestParam int rentedCarId) throws BusinessException {
+	public DataResult<List<InvoiceRentedCarListDto>> getByRentedCarId(@RequestParam int rentedCarId) throws BusinessException {
 		return this.invoiceService.getInvoiceByRentedCarId(rentedCarId);
 	}
 

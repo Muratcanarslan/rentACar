@@ -1,5 +1,7 @@
 package com.rentACar.rentACar.business.concretes;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +33,9 @@ import com.rentACar.rentACar.core.utilities.exceptions.corporateCustomerExceptio
 import com.rentACar.rentACar.core.utilities.exceptions.customerExceptions.CustomerNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.indiviualCustomerExceptions.IndividualCustomerNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.CarAlreadyInRentException;
+import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentUpdateNotRequiresPaymentException;
+import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentUpdateRequiresPaymentException;
+import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentedCarAlreadyReturnException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentedCarNotFoundException;
 import com.rentACar.rentACar.core.utilities.mapping.ModelMapperService;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
@@ -95,6 +100,8 @@ public class RentedCarManager implements RentedCarService {
 		rentedCar.setRentKilometre(
 				this.carService.getById(rentedCar.getCar().getCarId()).getData().getKilometreInformation());
 
+		rentedCar.setRentedCarId(0);
+
 		RentedCar savedRentedCar = this.rentedCarDao.save(rentedCar);
 
 		return savedRentedCar.getRentedCarId();
@@ -123,6 +130,8 @@ public class RentedCarManager implements RentedCarService {
 
 		rentedCar.setCustomer(getCustomerForMapping(createRentedCarRequestForCorporateCustomer.getCustomerId()));
 
+		rentedCar.setRentedCarId(0);
+
 		RentedCar savedRentedCar = this.rentedCarDao.save(rentedCar);
 
 		return savedRentedCar.getRentedCarId();
@@ -130,26 +139,20 @@ public class RentedCarManager implements RentedCarService {
 	}
 
 	@Override
-	public Result update(UpdateRentedCarRequest updateRentedCarRequest)
-			throws CarNotFoundException, CustomerNotFoundException, RentedCarNotFoundException, CityNotFoundException {
+	public Result updateForValidReturn(UpdateRentedCarRequest updateRentedCarRequest)
+			throws RentUpdateRequiresPaymentException, RentedCarNotFoundException, CarNotFoundException {
 
-		this.carService.checkIfExistByCarId(updateRentedCarRequest.getCarId());
-		checkIfRentedCarIsExistsByRentedCarId(updateRentedCarRequest.getRentedCarId());
-		this.customerService.checkIfCustomerExists(updateRentedCarRequest.getCustomerId());
-		this.cityService.checkIfCityExists(updateRentedCarRequest.getHireCityId());
-		this.cityService.checkIfCityExists(updateRentedCarRequest.getReturnCityId());
+		this.checkIfRentedCarIsExistsByRentedCarId(updateRentedCarRequest.getRentedCarId());
 
-		RentedCar rentedCar = this.modelMapperService.forRequest().map(updateRentedCarRequest, RentedCar.class);
+		RentedCar rentedCar = this.rentedCarDao.getById(updateRentedCarRequest.getRentedCarId());
 
-		rentedCar.setCustomer(getCustomerForMapping(updateRentedCarRequest.getCustomerId()));
+		checkIfReturnDateIsValidReturn(rentedCar.getConfirmedPaidedDate(), updateRentedCarRequest.getReturnDate());
 
-		rentedCar.setRentKilometre(
-				this.carService.getById(rentedCar.getCar().getCarId()).getData().getKilometreInformation());
+		rentedCar.setReturnDate(updateRentedCarRequest.getReturnDate());
+		rentedCar.setReturnKilometre(updateRentedCarRequest.getReturnKilometre());
 
-		this.carService.updateKilometreInformation(updateRentedCarRequest.getCarId(),
+		this.carService.updateKilometreInformation(updateRentedCarRequest.getCar_CarId(),
 				updateRentedCarRequest.getReturnKilometre());
-
-		this.rentedCarDao.save(rentedCar);
 
 		return new SuccessResult(BusinessMessages.UPDATE_SUCCESSFULL);
 
@@ -158,14 +161,20 @@ public class RentedCarManager implements RentedCarService {
 	@Override
 	public Result updateRentedCarForDelayedReturn(
 			UpdateRentedCarForDelayedReturnRequest updateRentedCarForDelayedReturnRequest)
-			throws RentedCarNotFoundException {
+			throws RentedCarNotFoundException, CarNotFoundException, RentUpdateNotRequiresPaymentException {
 
 		this.checkIfRentedCarIsExistsByRentedCarId(updateRentedCarForDelayedReturnRequest.getRentedCarId());
 
 		RentedCar rentedCar = this.rentedCarDao.getById(updateRentedCarForDelayedReturnRequest.getRentedCarId());
 
+		checkIfReturnDateIsDelayedReturn(rentedCar.getConfirmedPaidedDate(),
+				updateRentedCarForDelayedReturnRequest.getReturnDate());
+
 		rentedCar.setReturnDate(updateRentedCarForDelayedReturnRequest.getReturnDate());
 		rentedCar.setReturnKilometre(updateRentedCarForDelayedReturnRequest.getReturnKilometre());
+
+		this.carService.updateKilometreInformation(updateRentedCarForDelayedReturnRequest.getCar_CarId(),
+				updateRentedCarForDelayedReturnRequest.getReturnKilometre());
 
 		return new SuccessResult(BusinessMessages.UPDATE_SUCCESSFULL);
 	}
@@ -232,5 +241,32 @@ public class RentedCarManager implements RentedCarService {
 	private Customer getCustomerForMapping(int customerId) throws CustomerNotFoundException {
 		return this.customerService.getCustomerById(customerId);
 	}
+
+	private void checkIfReturnDateIsValidReturn(LocalDate paidDate, LocalDate returnDate)
+			throws RentUpdateRequiresPaymentException {
+		if (ChronoUnit.DAYS.between(paidDate, returnDate) > 0) {
+			throw new RentUpdateRequiresPaymentException(BusinessMessages.UPDATE_RENT_REQUIRES_PAYMENT);
+		}
+
+	}
+
+	private void checkIfReturnDateIsDelayedReturn(LocalDate paidDate, LocalDate returnDate)
+			throws RentUpdateNotRequiresPaymentException {
+		if (ChronoUnit.DAYS.between(paidDate, returnDate) <= 0) {
+			throw new RentUpdateNotRequiresPaymentException(BusinessMessages.UPDATE_RENT_NOT_REQUIRES_PAYMENT);
+		}
+	}
+
+	@Override
+	public void checkIfRentedCarAlreadyReturn(int rentedCarId) throws RentedCarNotFoundException, RentedCarAlreadyReturnException {
+		
+		this.checkIfRentedCarIsExistsByRentedCarId(rentedCarId);
+		
+		if(this.rentedCarDao.getById(rentedCarId).getReturnDate() != null) {
+			throw new RentedCarAlreadyReturnException(BusinessMessages.RENTED_CAR_ALREADY_RETURN);
+		}
+	}
+	
+
 
 }

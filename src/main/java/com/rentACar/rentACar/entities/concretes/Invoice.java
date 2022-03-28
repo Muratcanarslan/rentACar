@@ -2,8 +2,10 @@ package com.rentACar.rentACar.entities.concretes;
 
 import java.sql.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,16 +42,10 @@ public class Invoice {
 	@Column(name = "total_price")
 	private double totalPrice;
 
-	@ManyToOne
+	@ManyToOne()
 	@JoinColumn(name = "rented_car_id")
 	private RentedCar rentedCar;
-	
-	//TODO burayı yap şimdilik daha önemli yerler vardı bıraktım.
-	/*
-	@ManyToOne
-	@JoinColumn(name = "customer_id")
-	private Customer customer;
-    */
+
 	@OneToOne(mappedBy = "invoice")
 	private Payment payment;
 }

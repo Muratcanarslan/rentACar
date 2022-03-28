@@ -2,6 +2,7 @@ package com.rentACar.rentACar.business.requests.rentedCarRequests;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -15,11 +16,11 @@ import lombok.NoArgsConstructor;
 public class CreateRentedCarRequestForCorporateCustomer {
 
 	@NotNull
+	@FutureOrPresent
 	private LocalDate rentDate;
 
-	private LocalDate returnDate;
-
 	@NotNull
+	@FutureOrPresent
 	private LocalDate confirmedPaidedDate;
 
 	@NotNull
