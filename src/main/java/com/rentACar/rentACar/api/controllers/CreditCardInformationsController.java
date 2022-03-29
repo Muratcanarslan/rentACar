@@ -21,7 +21,6 @@ import com.rentACar.rentACar.core.utilities.exceptions.customerExceptions.Custom
 import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
 
-
 @RestController
 @RequestMapping("/api/cardInformation")
 public class CreditCardInformationsController {
@@ -34,23 +33,26 @@ public class CreditCardInformationsController {
 	}
 
 	@PostMapping("/add")
-	public Result add(@RequestBody CreateCreditCardInformationRequest createCardInformationRequest) throws CustomerNotFoundException {
+	public Result add(@RequestBody CreateCreditCardInformationRequest createCardInformationRequest)
+			throws CustomerNotFoundException {
 		return this.cardInformationService.add(createCardInformationRequest);
 	}
-	
+
 	@DeleteMapping("/delete")
-	public Result delete(@RequestBody @Valid DeleteCreditCardInformationRequest deleteCreditCardInformationRequest) throws CreditCardNotFoundException {
+	public Result delete(@RequestBody @Valid DeleteCreditCardInformationRequest deleteCreditCardInformationRequest)
+			throws CreditCardNotFoundException {
 		return this.cardInformationService.delete(deleteCreditCardInformationRequest);
 	}
-	
+
 	@GetMapping("/getByCustomerId")
 	public Result getByCustomerId(@RequestParam int customerId) throws CustomerNotFoundException {
 		return this.cardInformationService.getByCustomerId(customerId);
 	}
 
 	@GetMapping("/getAll")
-	public DataResult<List<CardInformationListDto>> getAll() {
-		return this.cardInformationService.getAll();
+	public DataResult<List<CardInformationListDto>> getAll(@RequestParam("pageNo") int pageNo,
+			@RequestParam("pageSize") int pageSize) {
+		return this.cardInformationService.getAll(pageNo, pageSize);
 	}
 
 }

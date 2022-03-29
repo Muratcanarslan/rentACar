@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.business.abstracts.AdditionalServiceService;
@@ -169,8 +171,11 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	@Override
-	public DataResult<List<InvoiceListDto>> getAll() {
-		List<Invoice> invoices = this.invoiceDao.findAll();
+	public DataResult<List<InvoiceListDto>> getAll(int pageNo,int pageSize) {
+	
+		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+		
+		List<Invoice> invoices = this.invoiceDao.findAll(pageable).getContent();
 
 		List<InvoiceListDto> invoiceListDtos = invoices.stream()
 				.map(invoice -> this.modelMapperService.forDto().map(invoice, InvoiceListDto.class))

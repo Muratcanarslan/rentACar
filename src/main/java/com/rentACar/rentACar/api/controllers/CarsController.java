@@ -28,46 +28,50 @@ import com.rentACar.rentACar.core.utilities.results.Result;
 @RestController
 @RequestMapping("/api/cars")
 public class CarsController {
-	
+
 	private CarService carService;
 
 	public CarsController(CarService carService) {
 		super();
 		this.carService = carService;
 	}
-	
+
 	@GetMapping("/getAll")
-	public DataResult<List<CarListDto>> getAll(int pageNo,int pageSize) throws BusinessException{
-		return this.carService.getAll(pageNo,pageSize);
+	public DataResult<List<CarListDto>> getAll(@RequestParam("pageNo") int pageNo,
+			@RequestParam("pageSize") int pageSize) throws BusinessException {
+		return this.carService.getAll(pageNo, pageSize);
 	}
-	
+
 	@GetMapping("/getById")
-	public DataResult<GetCarDto> getById(@RequestParam int carId) throws BusinessException{
+	public DataResult<GetCarDto> getById(@RequestParam int carId) throws BusinessException {
 		return this.carService.getById(carId);
 	}
-	
+
 	@GetMapping("/getByDailyPrice")
-	public DataResult<List<CarListLessThanDto>> findByDailyPriceLessThanEqual(@RequestParam double dailyPrice) throws BusinessException{
+	public DataResult<List<CarListLessThanDto>> findByDailyPriceLessThanEqual(@RequestParam double dailyPrice)
+			throws BusinessException {
 		return this.carService.findByDailyPriceLessThanEqual(dailyPrice);
 	}
-	
+
 	@GetMapping("/getBySortedDailyPrice")
-	public DataResult<List<CarListSortByDailyPrice>> getCarListSortByDailyPrice(Sort.Direction sortDirection) throws BusinessException{
+	public DataResult<List<CarListSortByDailyPrice>> getCarListSortByDailyPrice(Sort.Direction sortDirection)
+			throws BusinessException {
 		return this.carService.getCarListSortByDailyPrice(sortDirection);
 	}
-	
+
 	@PostMapping("/add")
 	public Result add(@RequestBody @Valid CreateCarRequest createCarRequest) throws BusinessException {
 		return this.carService.add(createCarRequest);
 	}
-	
+
 	@PutMapping("/update")
 	public Result update(@RequestBody @Valid UpdateCarRequest updateCarRequest) throws BusinessException {
 		return this.carService.update(updateCarRequest);
 	}
+
 	@DeleteMapping("/delete")
 	public Result delete(@RequestParam int carId) throws BusinessException {
 		return this.carService.delete(carId);
 	}
-	
+
 }

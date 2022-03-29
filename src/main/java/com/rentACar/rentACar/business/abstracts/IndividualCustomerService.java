@@ -22,7 +22,7 @@ public interface IndividualCustomerService {
 	
 	DataResult<GetIndividualCustomerDto> getById(int individualCustomerId) throws IndividualCustomerNotFoundException;
 	
-	DataResult<List<IndividualCustomerListDto>> getAll();
+	DataResult<List<IndividualCustomerListDto>> getAll(int pageNo,int pageSize);
 	
 	void checkIfIndividualCustomerExistsById(int individualCustomerId) throws IndividualCustomerNotFoundException;
 }

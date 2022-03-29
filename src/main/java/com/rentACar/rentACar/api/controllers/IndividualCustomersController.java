@@ -60,8 +60,9 @@ public class IndividualCustomersController {
 	}
 
 	@GetMapping("/getAll")
-	public DataResult<List<IndividualCustomerListDto>> getAll() {
-		return this.individualCustomerService.getAll();
+	public DataResult<List<IndividualCustomerListDto>> getAll(@RequestParam("pageNo") int pageNo,
+			@RequestParam("pageSize") int pageSize) {
+		return this.individualCustomerService.getAll(pageNo,pageSize);
 	}
 
 }

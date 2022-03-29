@@ -24,6 +24,6 @@ public interface CarCrashInformationService {
 
 	DataResult<List<CarCrashInformationListByCarDto>> getByCarId(int carId) throws CarNotFoundException;
 
-	DataResult<List<CarCrashInformationListDto>> getAll();
+	DataResult<List<CarCrashInformationListDto>> getAll(int pageNo,int pageSize);
 
 }

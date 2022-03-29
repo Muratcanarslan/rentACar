@@ -44,7 +44,7 @@ public interface RentedCarService {
 
 	RentedCar getRentedCarForBusiness(int rentedCarId) throws RentedCarNotFoundException;
 
-	DataResult<List<RentedCarListDto>> getAll();
+	DataResult<List<RentedCarListDto>> getAll(int pageNo,int pageSize);
 
 	void checkIfCarIsAlreadyRentedByCarId(int carId) throws CarAlreadyInRentException;
 

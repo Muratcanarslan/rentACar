@@ -22,39 +22,40 @@ import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
 
-
 @RestController
 @RequestMapping("/api/cities")
 public class CitiesController {
-	
+
 	private CityService cityService;
 
 	public CitiesController(CityService cityService) {
 		super();
 		this.cityService = cityService;
 	}
-	
+
 	@GetMapping("/getAll")
-	public DataResult<List<CityListDto>> getAll(){
-		return this.cityService.getAll();
+	public DataResult<List<CityListDto>> getAll(@RequestParam("pageNo") int pageNo,
+			@RequestParam("pageSize") int pageSize) {
+		return this.cityService.getAll(pageNo, pageSize);
 	}
-	
+
 	@GetMapping("/getById")
-	public DataResult<GetCityDto> getById(@RequestParam int cityId) throws BusinessException{
+	public DataResult<GetCityDto> getById(@RequestParam int cityId) throws BusinessException {
 		return this.cityService.getById(cityId);
 	}
-	
+
 	@PostMapping("/add")
-	public Result add(@RequestBody @Valid  CreateCityRequest createCityRequest) throws BusinessException {
+	public Result add(@RequestBody @Valid CreateCityRequest createCityRequest) throws BusinessException {
 		return this.cityService.add(createCityRequest);
 	}
-    
-    @PutMapping("/update")
-    public Result update(@RequestBody @Valid UpdateCityRequest updateCityRequest) throws BusinessException {
-    	return this.cityService.update(updateCityRequest);
-    }
-    @DeleteMapping("/delete")
-    public Result delete(@RequestParam int cityId) throws BusinessException {
-    	return this.cityService.delete(cityId);
-    }
+
+	@PutMapping("/update")
+	public Result update(@RequestBody @Valid UpdateCityRequest updateCityRequest) throws BusinessException {
+		return this.cityService.update(updateCityRequest);
+	}
+
+	@DeleteMapping("/delete")
+	public Result delete(@RequestParam int cityId) throws BusinessException {
+		return this.cityService.delete(cityId);
+	}
 }

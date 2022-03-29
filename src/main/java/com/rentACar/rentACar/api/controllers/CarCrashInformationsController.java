@@ -46,8 +46,8 @@ public class CarCrashInformationsController {
 	}
 	
 	@GetMapping("/getAll")
-	public DataResult<List<CarCrashInformationListDto>> getAll(){
-		return this.carCrashInformationService.getAll();
+	public DataResult<List<CarCrashInformationListDto>> getAll(@RequestParam("pageNo") int pageNo,@RequestParam("pageSize") int pageSize){
+		return this.carCrashInformationService.getAll(pageNo,pageSize);
 	}
 	
 	@PostMapping("/add")

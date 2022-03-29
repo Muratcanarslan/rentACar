@@ -60,7 +60,8 @@ public class CorporateCustomersController {
 	}
 
 	@GetMapping("/getAll")
-	public DataResult<List<CorporateCustomerListDto>> getAll() {
-		return this.corporateCustomerService.getAll();
+	public DataResult<List<CorporateCustomerListDto>> getAll(@RequestParam("pageNo") int pageNo,
+			@RequestParam("pageSize") int pageSize) {
+		return this.corporateCustomerService.getAll(pageNo,pageSize);
 	}
 }

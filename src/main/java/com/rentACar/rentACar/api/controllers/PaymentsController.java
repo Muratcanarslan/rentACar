@@ -84,8 +84,10 @@ public class PaymentsController {
 	}
 
 	@GetMapping("/getAll")
-	public DataResult<List<PaymentListDto>> getAll() {
-		return this.paymentService.getAll();
+	public DataResult<List<PaymentListDto>> getAll(@RequestParam("pageNo") int pageNo,
+			@RequestParam("pageSize") int pageSize) {
+
+		return this.paymentService.getAll(pageNo, pageSize);
 	}
 
 	@GetMapping("/getById")

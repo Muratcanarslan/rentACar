@@ -24,6 +24,6 @@ public interface CityService {
 	
 	void checkIfCityExists(int cityId) throws CityNotFoundException;
 
-	DataResult<List<CityListDto>> getAll();
+	DataResult<List<CityListDto>> getAll(int pageNo,int pageSize);
 
 }

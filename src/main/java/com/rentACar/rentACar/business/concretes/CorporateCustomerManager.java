@@ -3,6 +3,8 @@ package com.rentACar.rentACar.business.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.business.abstracts.CorporateCustomerService;
@@ -96,16 +98,19 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	}
 
 	@Override
-	public DataResult<List<CorporateCustomerListDto>> getAll() {
+	public DataResult<List<CorporateCustomerListDto>> getAll(int pageNo, int pageSize) {
 
-		List<CorporateCustomer> corporateCustomers = this.corporateCustomerDao.findAll();
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+
+		List<CorporateCustomer> corporateCustomers = this.corporateCustomerDao.findAll(pageable).getContent();
 
 		List<CorporateCustomerListDto> corporateCustomerListDtos = corporateCustomers.stream()
 				.map(corporateCustomer -> this.modelMapperService.forDto().map(corporateCustomer,
 						CorporateCustomerListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<CorporateCustomerListDto>>(corporateCustomerListDtos, BusinessMessages.GET_SUCCESSFUL);
+		return new SuccessDataResult<List<CorporateCustomerListDto>>(corporateCustomerListDtos,
+				BusinessMessages.GET_SUCCESSFUL);
 
 	}
 

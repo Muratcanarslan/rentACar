@@ -17,7 +17,7 @@ public interface AdditionalServiceService {
 	Result delete(int additionalServiceId) throws AdditionalServiceNotFoundException ;
 	Result update(UpdateAdditionalServiceRequest updateAdditionalServiceRequest) throws AdditionalServiceNotFoundException ;
 	DataResult<GetAdditionalServiceDto> getById(int additionalServiceId) throws AdditionalServiceNotFoundException ;
-	DataResult<List<AdditionalServiceListDto>> getAll();
+	DataResult<List<AdditionalServiceListDto>> getAll(int pageNo,int pageSize);
 	void checkIfAdditionalServiceExists(int id) throws AdditionalServiceNotFoundException ;
 	void checkIfAdditionalServicesExists(List<Integer> additionalServiceIds) throws AdditionalServiceNotFoundException;
 	double calculateAdditionalServicePriceByAdditionalServiceIdListAndRentDateValue(List<Integer> additionalServiceIds,int rentDateValue) throws AdditionalServiceNotFoundException ;

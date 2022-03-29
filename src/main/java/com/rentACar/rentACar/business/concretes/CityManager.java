@@ -3,6 +3,8 @@ package com.rentACar.rentACar.business.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.business.abstracts.CityService;
@@ -79,9 +81,11 @@ public class CityManager implements CityService{
 		return new SuccessDataResult<GetCityDto>(getCityDto,BusinessMessages.GET_SUCCESSFUL);
 	}
 	@Override
-	public DataResult<List<CityListDto>> getAll() {
+	public DataResult<List<CityListDto>> getAll(int pageNo,int pageSize) {
 		
-		List<City> cities = this.cityDao.findAll();
+		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+		
+		List<City> cities = this.cityDao.findAll(pageable).getContent();
 		
 		List<CityListDto> cityListDtos = cities.stream().map(city -> this.modelMapperService.forDto().map(city, CityListDto.class)).collect(Collectors.toList());
 		

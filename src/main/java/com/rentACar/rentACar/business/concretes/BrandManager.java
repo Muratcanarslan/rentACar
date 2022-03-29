@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.business.abstracts.BrandService;
@@ -11,6 +13,8 @@ import com.rentACar.rentACar.business.constants.messages.BusinessMessages;
 import com.rentACar.rentACar.business.dtos.brandDtos.BrandListDto;
 import com.rentACar.rentACar.business.dtos.brandDtos.GetBrandDto;
 import com.rentACar.rentACar.business.requests.brandRequests.CreateBrandRequest;
+import com.rentACar.rentACar.business.requests.brandRequests.DeleteBrandRequest;
+import com.rentACar.rentACar.business.requests.brandRequests.UpdateBrandRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.brandExceptions.BrandAlreadyExistsException;
 import com.rentACar.rentACar.core.utilities.exceptions.brandExceptions.BrandNotFoundException;
 import com.rentACar.rentACar.core.utilities.mapping.ModelMapperService;
@@ -34,8 +38,11 @@ public class BrandManager implements BrandService {
 	}
 
 	@Override
-	public DataResult<List<BrandListDto>> getAll() {
-		List<Brand> brands = this.brandDao.findAll();
+	public DataResult<List<BrandListDto>> getAll(int pageNo, int pageSize) {
+
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+
+		List<Brand> brands = this.brandDao.findAll(pageable).getContent();
 
 		List<BrandListDto> result = brands.stream()
 				.map(brand -> this.modelMapperService.forDto().map(brand, BrandListDto.class))
@@ -69,7 +76,30 @@ public class BrandManager implements BrandService {
 
 	}
 
-	public void checkIfIsExistByBrandName(String name) throws BrandAlreadyExistsException {
+	@Override
+	public Result update(UpdateBrandRequest updateBrandRequest)
+			throws BrandNotFoundException, BrandAlreadyExistsException {
+		checkIfIsExistByBrandName(updateBrandRequest.getBrandName());
+		checkIfIsExistsByBrandId(updateBrandRequest.getBrandId());
+
+		Brand brand = this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
+
+		this.brandDao.save(brand);
+
+		return new SuccessResult(BusinessMessages.UPDATE_SUCCESSFULL);
+	}
+
+	@Override
+	public Result delete(DeleteBrandRequest deleteBrandRequest) throws BrandNotFoundException {
+
+		checkIfIsExistsByBrandId(deleteBrandRequest.getBrandId());
+
+		this.brandDao.deleteById(deleteBrandRequest.getBrandId());
+
+		return new SuccessResult(BusinessMessages.DELETE_SUCCESSFUL);
+	}
+
+	private void checkIfIsExistByBrandName(String name) throws BrandAlreadyExistsException {
 		if (this.brandDao.existsByBrandName(name)) {
 			throw new BrandAlreadyExistsException(BusinessMessages.BRAND_ALREADY_EXISTS);
 		}
@@ -77,7 +107,7 @@ public class BrandManager implements BrandService {
 
 	public void checkIfIsExistsByBrandId(int id) throws BrandNotFoundException {
 		if (!this.brandDao.existsById(id)) {
-			throw new BrandNotFoundException(BusinessMessages.BRAND_NOT_FOUND+id);
+			throw new BrandNotFoundException(BusinessMessages.BRAND_NOT_FOUND + id);
 		}
 	}
 

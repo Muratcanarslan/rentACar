@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.business.abstracts.CreditCardInformationService;
@@ -48,8 +50,9 @@ public class CreditCardInformationManager implements CreditCardInformationServic
 
 		CreditCardInformation cardInformation = this.modelMapperService.forRequest().map(createCardInformationRequest,
 				CreditCardInformation.class);
-		
-		cardInformation.setCustomer(this.customerService.getCustomerById(createCardInformationRequest.getCustomer_CustomerId()));
+
+		cardInformation.setCustomer(
+				this.customerService.getCustomerById(createCardInformationRequest.getCustomer_CustomerId()));
 
 		this.cardInformationDao.save(cardInformation);
 
@@ -68,15 +71,17 @@ public class CreditCardInformationManager implements CreditCardInformationServic
 	}
 
 	@Override
-	public DataResult<List<CardInformationListDto>> getAll() {
+	public DataResult<List<CardInformationListDto>> getAll(int pageNo, int pageSize) {
 
-		List<CreditCardInformation> cardInformations = this.cardInformationDao.findAll();
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+
+		List<CreditCardInformation> cardInformations = this.cardInformationDao.findAll(pageable).getContent();
 
 		List<CardInformationListDto> cardInformationListDtos = cardInformations.stream().map(
 				cardInformation -> this.modelMapperService.forDto().map(cardInformation, CardInformationListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<CardInformationListDto>>(cardInformationListDtos);
+		return new SuccessDataResult<List<CardInformationListDto>>(cardInformationListDtos,BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	@Override
@@ -92,8 +97,9 @@ public class CreditCardInformationManager implements CreditCardInformationServic
 				.map(creditCardInformation -> this.modelMapperService.forDto().map(creditCardInformation,
 						CreditCardInformationByCustomerDto.class))
 				.collect(Collectors.toList());
-		
-		return new SuccessDataResult<List<CreditCardInformationByCustomerDto>>(creditCardInformationByCustomerDtos,BusinessMessages.GET_SUCCESSFUL);
+
+		return new SuccessDataResult<List<CreditCardInformationByCustomerDto>>(creditCardInformationByCustomerDtos,
+				BusinessMessages.GET_SUCCESSFUL);
 
 	}
 

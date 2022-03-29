@@ -36,4 +36,13 @@ public class GlobalHandler {
 		
 		return error;
 	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler
+	public ErrorDataResult<Object> handleIllegalArgumentForPageable(IllegalArgumentException illegalArgumentException){
+		
+		ErrorDataResult<Object> error = new ErrorDataResult<Object>(illegalArgumentException.getMessage(),"Illegal Argument");
+		
+		return error;
+	}
 }

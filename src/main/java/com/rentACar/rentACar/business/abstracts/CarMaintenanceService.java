@@ -23,7 +23,7 @@ public interface CarMaintenanceService {
 
 	DataResult<GetCarMaintenanceDto> getById(int carMaintenanceId) throws CarMaintenanceNotFoundException;
 
-	DataResult<List<CarMaintenanceListDto>> getAll();
+	DataResult<List<CarMaintenanceListDto>> getAll(int pageNo,int pageSize);
 
 	void checkIfCarMaintenanceIsExistsByCarId(int carId) throws CarAlreadyInMaintenanceException;
 

@@ -61,7 +61,7 @@ public class RentedCar {
 	@JoinColumn(name = "return_city_id")
 	private City returnCity;
 
-	@OneToMany(mappedBy = "rentedCar")
+	@OneToMany(mappedBy = "rentedCar",cascade = CascadeType.ALL)
 	private List<OrderedAdditionalService> orderedAdditionalServices;
 
 	@OneToMany(mappedBy = "rentedCar",cascade = CascadeType.ALL)

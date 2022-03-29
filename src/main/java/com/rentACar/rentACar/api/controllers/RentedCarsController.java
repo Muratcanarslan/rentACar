@@ -47,7 +47,9 @@ public class RentedCarsController {
 	}
 
 	@GetMapping("/getAll")
-	public DataResult<List<RentedCarListDto>> getAll() throws BusinessException {
-		return this.rentedCarService.getAll();
+	public DataResult<List<RentedCarListDto>> getAll(@RequestParam("pageNo") int pageNo,
+			@RequestParam("pageSize") int pageSize) throws BusinessException {
+
+		return this.rentedCarService.getAll(pageNo, pageSize);
 	}
 }

@@ -3,6 +3,8 @@ package com.rentACar.rentACar.business.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.business.abstracts.IndividualCustomerService;
@@ -88,8 +90,11 @@ public class IndividualCustomerManager implements IndividualCustomerService{
 	}
 
 	@Override
-	public DataResult<List<IndividualCustomerListDto>> getAll() {
-		List<IndividualCustomer> individualCustomers = this.individualCustomerDao.findAll();
+	public DataResult<List<IndividualCustomerListDto>> getAll(int pageNo,int pageSize) {
+		
+		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+		
+		List<IndividualCustomer> individualCustomers = this.individualCustomerDao.findAll(pageable).getContent();
 		
 		List<IndividualCustomerListDto> individualCustomerListDtos = individualCustomers.stream().map(individualCustomer->this.modelMapperService.forDto().map(individualCustomer, IndividualCustomerListDto.class)).collect(Collectors.toList());
 		

@@ -20,6 +20,8 @@ import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
 
 public interface InvoiceService {
+	
+	//TODO list dönen end pointlere pageable eklenmeli.
 
 	int add(CreateInvoiceRequest createInvoiceRequest) throws RentedCarNotFoundException,
 			AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException;
@@ -43,7 +45,7 @@ public interface InvoiceService {
 
 	DataResult<List<InvoiceDateBetweenDto>> getInvoicesDateBetween(Date startDate, Date endDate);
 
-	DataResult<List<InvoiceListDto>> getAll();
+	DataResult<List<InvoiceListDto>> getAll(int pageNo,int pageSize);
 	
 	CreateInvoiceRequest getInvoiceRequestForMapping(int rentedCarId) throws RentedCarNotFoundException;
 

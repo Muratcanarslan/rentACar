@@ -2,6 +2,7 @@ package com.rentACar.rentACar.entities.concretes;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,7 +39,7 @@ public class Car {
 	@Column(name = "description")
 	private String description;
 	
-	@ManyToOne
+	@ManyToOne()
 	@JoinColumn(name = "brand_id")
 	private Brand brand;
 	
@@ -49,13 +50,13 @@ public class Car {
 	@JoinColumn(name = "color_id")
 	private Color color;
 	
-	@OneToMany(mappedBy = "car")
+	@OneToMany(mappedBy = "car",cascade = CascadeType.ALL)
 	private List<CarMaintenance> carMaintenances;
 	
-	@OneToMany(mappedBy = "car")
+	@OneToMany(mappedBy = "car",cascade = CascadeType.ALL)
 	private List<RentedCar> rentValues;
 	
-	@OneToMany(mappedBy = "car")
+	@OneToMany(mappedBy = "car",cascade = CascadeType.ALL)
 	private List<CarCrashInformation> crashInformations;
 	
 }

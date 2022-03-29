@@ -21,6 +21,6 @@ public interface CreditCardInformationService {
 	DataResult<List<CreditCardInformationByCustomerDto>> getByCustomerId(int customerId)
 			throws CustomerNotFoundException;
 
-	DataResult<List<CardInformationListDto>> getAll();
+	DataResult<List<CardInformationListDto>> getAll(int pageNo,int pageSize);
 
 }

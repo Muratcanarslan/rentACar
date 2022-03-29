@@ -3,6 +3,8 @@ package com.rentACar.rentACar.business.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.business.abstracts.AdditionalServiceService;
@@ -68,6 +70,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
 	@Override
 	public DataResult<GetAdditionalServiceDto> getById(int additionalServiceId) throws AdditionalServiceNotFoundException {
+		
 		checkIfAdditionalServiceExists(additionalServiceId);
 
 		AdditionalService additionalService = this.additionalServiceDao.getById(additionalServiceId);
@@ -79,8 +82,11 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 	}
 
 	@Override
-	public DataResult<List<AdditionalServiceListDto>> getAll() {
-		List<AdditionalService> additionalServices = this.additionalServiceDao.findAll();
+	public DataResult<List<AdditionalServiceListDto>> getAll(int pageNo,int pageSize) {
+		
+		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+		
+		List<AdditionalService> additionalServices = this.additionalServiceDao.findAll(pageable).getContent();
 
 		List<AdditionalServiceListDto> additionalServiceListDtos = additionalServices.stream()
 				.map(additionalService -> this.modelMapperService.forDto().map(additionalService,
@@ -122,5 +128,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 			throw new AdditionalServiceNotFoundException(BusinessMessages.ADDITIONAL_SERVICE_NOT_FOUND+id);
 		}
 	}
+
+
 
 }

@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.business.abstracts.CarMaintenanceService;
@@ -206,9 +208,11 @@ public class RentedCarManager implements RentedCarService {
 	}
 
 	@Override
-	public DataResult<List<RentedCarListDto>> getAll() {
-
-		List<RentedCar> rentedCars = this.rentedCarDao.findAll();
+	public DataResult<List<RentedCarListDto>> getAll(int pageNo,int pageSize) {
+		
+		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+		
+		List<RentedCar> rentedCars = this.rentedCarDao.findAll(pageable).getContent();
 
 		List<RentedCarListDto> rentedCarListDtos = rentedCars.stream()
 				.map(rentedCar -> this.modelMapperService.forDto().map(rentedCar, RentedCarListDto.class))

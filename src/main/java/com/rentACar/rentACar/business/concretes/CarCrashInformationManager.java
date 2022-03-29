@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.business.abstracts.CarCrashInformationService;
@@ -107,9 +109,11 @@ public class CarCrashInformationManager implements CarCrashInformationService {
 	}
 
 	@Override
-	public DataResult<List<CarCrashInformationListDto>> getAll() {
+	public DataResult<List<CarCrashInformationListDto>> getAll(int pageNo,int pageSize) {
+		
+		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
 
-		List<CarCrashInformation> carCrashInformations = this.carCrashInformationDao.findAll();
+		List<CarCrashInformation> carCrashInformations = this.carCrashInformationDao.findAll(pageable).getContent();
 
 		List<CarCrashInformationListDto> carCrashInformationListDtos = carCrashInformations.stream()
 				.map(carCrashInformation -> this.modelMapperService.forDto().map(carCrashInformation,

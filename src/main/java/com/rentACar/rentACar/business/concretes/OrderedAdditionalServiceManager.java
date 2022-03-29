@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.business.abstracts.AdditionalServiceService;
@@ -11,6 +13,7 @@ import com.rentACar.rentACar.business.abstracts.OrderedAdditionalServiceService;
 import com.rentACar.rentACar.business.abstracts.RentedCarService;
 import com.rentACar.rentACar.business.constants.messages.BusinessMessages;
 import com.rentACar.rentACar.business.dtos.orderedAdditionalServiceDto.OrderedAdditionalServiceListDto;
+import com.rentACar.rentACar.business.dtos.orderedAdditionalServiceDto.OrderedAdditionalServiceListForRentedCarDto;
 import com.rentACar.rentACar.business.requests.orderedAdditionalServiceRequests.CreateOrderedAdditionalServiceRequest;
 import com.rentACar.rentACar.business.requests.orderedAdditionalServiceRequests.UpdateOrderedAdditionalServiceRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.additionalServiceExceptions.AdditionalServiceNotFoundException;
@@ -81,7 +84,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	}
 
 	@Override
-	public DataResult<List<OrderedAdditionalServiceListDto>> getByRentedCarId(int rentedCarId)
+	public DataResult<List<OrderedAdditionalServiceListForRentedCarDto>> getByRentedCarId(int rentedCarId)
 			throws RentedCarNotFoundException {
 
 		this.rentedCarService.checkIfRentedCarIsExistsByRentedCarId(rentedCarId);
@@ -89,13 +92,30 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 		List<OrderedAdditionalService> orderedAdditionalServices = this.orderedAdditionalServiceDao
 				.getByRentedCar_RentedCarId(rentedCarId);
 
+		List<OrderedAdditionalServiceListForRentedCarDto> orderedAdditionalServiceListDtos = orderedAdditionalServices
+				.stream().map(orderedAdditionalService -> this.modelMapperService.forDto().map(orderedAdditionalService,
+						OrderedAdditionalServiceListForRentedCarDto.class))
+				.collect(Collectors.toList());
+
+		return new SuccessDataResult<List<OrderedAdditionalServiceListForRentedCarDto>>(
+				orderedAdditionalServiceListDtos, BusinessMessages.GET_SUCCESSFUL);
+	}
+
+	@Override
+	public DataResult<List<OrderedAdditionalServiceListDto>> getAll(int pageNo, int pageSize) {
+
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+
+		List<OrderedAdditionalService> orderedAdditionalServices = this.orderedAdditionalServiceDao.findAll(pageable)
+				.getContent();
+
 		List<OrderedAdditionalServiceListDto> orderedAdditionalServiceListDtos = orderedAdditionalServices.stream()
 				.map(orderedAdditionalService -> this.modelMapperService.forDto().map(orderedAdditionalService,
 						OrderedAdditionalServiceListDto.class))
 				.collect(Collectors.toList());
+		
+		return new SuccessDataResult<List<OrderedAdditionalServiceListDto>>(orderedAdditionalServiceListDtos,BusinessMessages.GET_SUCCESSFUL);
 
-		return new SuccessDataResult<List<OrderedAdditionalServiceListDto>>(orderedAdditionalServiceListDtos,
-				BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	@Override

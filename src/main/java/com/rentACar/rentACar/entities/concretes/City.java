@@ -2,6 +2,7 @@ package com.rentACar.rentACar.entities.concretes;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,10 +30,10 @@ public class City {
 	@Column(name = "city_name")
 	private String cityName;
 	
-	@OneToMany(mappedBy = "returnCity")
+	@OneToMany(mappedBy = "returnCity",cascade = CascadeType.ALL)
 	private List<RentedCar> returnCityCars;
 	
-	@OneToMany(mappedBy = "hireCity")
+	@OneToMany(mappedBy = "hireCity",cascade = CascadeType.ALL)
 	private List<RentedCar> rentCityCars;
 
 }

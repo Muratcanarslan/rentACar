@@ -45,7 +45,7 @@ public interface PaymentService {
 	
 	DataResult<GetPaymentDto> getById(int paymentId) throws PaymentNotFoundException;
 	
-	DataResult<List<PaymentListDto>> getAll();
+	DataResult<List<PaymentListDto>> getAll(int pageNo,int pageSize);
 	
 	DataResult<List<PaymentListByCustomerDto>> getByCustomerId(int customerId) throws CustomerNotFoundException;
 }

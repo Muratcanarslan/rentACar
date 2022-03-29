@@ -5,7 +5,6 @@ import java.sql.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -46,6 +45,6 @@ public class Invoice {
 	@JoinColumn(name = "rented_car_id")
 	private RentedCar rentedCar;
 
-	@OneToOne(mappedBy = "invoice")
+	@OneToOne(mappedBy = "invoice",cascade = CascadeType.ALL)
 	private Payment payment;
 }

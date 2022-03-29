@@ -3,6 +3,7 @@ package com.rentACar.rentACar.entities.concretes;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -36,9 +37,9 @@ public class Customer extends User{
 	@CreatedDate
 	private LocalDate dateRegistered;
 	
-	@OneToMany(mappedBy = "customer")
+	@OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
 	private List<RentedCar> rentedCars;
 	
-	@OneToMany(mappedBy = "customer")
+	@OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
 	private List<Payment> payments;
 }

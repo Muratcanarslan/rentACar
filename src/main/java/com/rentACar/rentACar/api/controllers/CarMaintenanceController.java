@@ -25,36 +25,40 @@ import com.rentACar.rentACar.core.utilities.results.Result;
 @RestController
 @RequestMapping("/api/carMaintenance")
 public class CarMaintenanceController {
-	
+
 	private CarMaintenanceService carMaintenanceService;
-	
+
 	public CarMaintenanceController(CarMaintenanceService carMaintenanceService) {
 		super();
 		this.carMaintenanceService = carMaintenanceService;
 	}
 
 	@PostMapping("/add")
-	public Result add(@RequestBody @Valid CreateCarMaintenanceRequest createCarMaintenanceRequest) throws BusinessException {
+	public Result add(@RequestBody @Valid CreateCarMaintenanceRequest createCarMaintenanceRequest)
+			throws BusinessException {
 		return this.carMaintenanceService.add(createCarMaintenanceRequest);
 	}
-	
+
 	@DeleteMapping("/delete")
 	public Result delete(@RequestParam int carMaintenanceId) throws BusinessException {
 		return this.carMaintenanceService.delete(carMaintenanceId);
 	}
-	
+
 	@PutMapping("/update")
-	public Result update(@RequestBody @Valid UpdateCarMaintenanceRequest updateCarMaintenanceRequest) throws BusinessException {
+	public Result update(@RequestBody @Valid UpdateCarMaintenanceRequest updateCarMaintenanceRequest)
+			throws BusinessException {
 		return this.carMaintenanceService.update(updateCarMaintenanceRequest);
 	}
-	
+
 	@GetMapping("/getById")
-	public DataResult<GetCarMaintenanceDto> getCarMaintenanceById(@RequestParam int carMaintenanceId) throws BusinessException{
+	public DataResult<GetCarMaintenanceDto> getCarMaintenanceById(@RequestParam int carMaintenanceId)
+			throws BusinessException {
 		return this.carMaintenanceService.getById(carMaintenanceId);
 	}
-	
+
 	@GetMapping("/getAll")
-	public DataResult<List<CarMaintenanceListDto>> getCarMaintenanceListDto() throws BusinessException{
-		return this.carMaintenanceService.getAll();
+	public DataResult<List<CarMaintenanceListDto>> getCarMaintenanceListDto(@RequestParam("pageNo") int pageNo,
+			@RequestParam("pageSize") int pageSize) throws BusinessException {
+		return this.carMaintenanceService.getAll(pageNo, pageSize);
 	}
 }

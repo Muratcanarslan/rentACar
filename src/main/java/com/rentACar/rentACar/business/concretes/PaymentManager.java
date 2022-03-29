@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.rentACar.rentACar.api.models.MakePaymentForCorporateCustomerModel;
@@ -222,9 +224,11 @@ public class PaymentManager implements PaymentService {
 	}
 
 	@Override
-	public DataResult<List<PaymentListDto>> getAll() {
+	public DataResult<List<PaymentListDto>> getAll(int pageNo,int pageSize) {
+		
+		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
 
-		List<Payment> payments = this.paymentDao.findAll();
+		List<Payment> payments = this.paymentDao.findAll(pageable).getContent();
 
 		List<PaymentListDto> paymentListDtos = payments.stream()
 				.map(payment -> this.modelMapperService.forDto().map(payment, PaymentListDto.class))

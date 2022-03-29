@@ -3,7 +3,6 @@ package com.rentACar.rentACar.api.controllers;
 import java.util.Date;
 import java.util.List;
 
-
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,7 +45,8 @@ public class InvoicesController {
 	}
 
 	@GetMapping("/getInvoiceByRentedCarId")
-	public DataResult<List<InvoiceRentedCarListDto>> getByRentedCarId(@RequestParam int rentedCarId) throws BusinessException {
+	public DataResult<List<InvoiceRentedCarListDto>> getByRentedCarId(@RequestParam int rentedCarId)
+			throws BusinessException {
 		return this.invoiceService.getInvoiceByRentedCarId(rentedCarId);
 	}
 
@@ -58,9 +58,10 @@ public class InvoicesController {
 	}
 
 	@GetMapping("/getAll")
-	public DataResult<List<InvoiceListDto>> getAll() {
+	public DataResult<List<InvoiceListDto>> getAll(@RequestParam("pageNo") int pageNo,
+			@RequestParam("pageSize") int pageSize) {
 
-		return this.invoiceService.getAll();
+		return this.invoiceService.getAll(pageNo,pageSize);
 
 	}
 
