@@ -17,6 +17,7 @@ import com.rentACar.rentACar.business.abstracts.CarMaintenanceService;
 import com.rentACar.rentACar.business.dtos.carMaintenanceDtos.GetCarMaintenanceDto;
 import com.rentACar.rentACar.business.dtos.carMaintenanceDtos.CarMaintenanceListDto;
 import com.rentACar.rentACar.business.requests.carMaintenanceRequests.CreateCarMaintenanceRequest;
+import com.rentACar.rentACar.business.requests.carMaintenanceRequests.DeleteCarMaintenanceRequest;
 import com.rentACar.rentACar.business.requests.carMaintenanceRequests.UpdateCarMaintenanceRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
@@ -40,8 +41,8 @@ public class CarMaintenanceController {
 	}
 
 	@DeleteMapping("/delete")
-	public Result delete(@RequestParam int carMaintenanceId) throws BusinessException {
-		return this.carMaintenanceService.delete(carMaintenanceId);
+	public Result delete(@RequestBody DeleteCarMaintenanceRequest deleteCarMaintenanceRequest) throws BusinessException {
+		return this.carMaintenanceService.delete(deleteCarMaintenanceRequest);
 	}
 
 	@PutMapping("/update")

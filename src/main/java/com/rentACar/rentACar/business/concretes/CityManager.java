@@ -12,6 +12,7 @@ import com.rentACar.rentACar.business.constants.messages.BusinessMessages;
 import com.rentACar.rentACar.business.dtos.cityDtos.CityListDto;
 import com.rentACar.rentACar.business.dtos.cityDtos.GetCityDto;
 import com.rentACar.rentACar.business.requests.cityRequest.CreateCityRequest;
+import com.rentACar.rentACar.business.requests.cityRequest.DeleteCityRequest;
 import com.rentACar.rentACar.business.requests.cityRequest.UpdateCityRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.exceptions.cityExceptions.CityAlreadyExistsException;
@@ -63,12 +64,13 @@ public class CityManager implements CityService{
 		return new SuccessResult(BusinessMessages.UPDATE_SUCCESSFULL);
 	}
 	@Override
-	public Result delete(int cityId) throws BusinessException {
-		checkIfCityExists(cityId);
+	public Result delete(DeleteCityRequest deleteCityRequest) throws BusinessException {
 		
-		this.cityDao.deleteById(cityId);
+		checkIfCityExists(deleteCityRequest.getCityId());
 		
-		return new SuccessResult("city deleted");
+		this.cityDao.deleteById(deleteCityRequest.getCityId());
+		
+		return new SuccessResult(BusinessMessages.DELETE_SUCCESSFUL);
 	}
 	@Override
 	public DataResult<GetCityDto> getById(int cityId) throws CityNotFoundException  {

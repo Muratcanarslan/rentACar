@@ -15,6 +15,7 @@ import com.rentACar.rentACar.business.constants.messages.BusinessMessages;
 import com.rentACar.rentACar.business.dtos.orderedAdditionalServiceDto.OrderedAdditionalServiceListDto;
 import com.rentACar.rentACar.business.dtos.orderedAdditionalServiceDto.OrderedAdditionalServiceListForRentedCarDto;
 import com.rentACar.rentACar.business.requests.orderedAdditionalServiceRequests.CreateOrderedAdditionalServiceRequest;
+import com.rentACar.rentACar.business.requests.orderedAdditionalServiceRequests.DeleteOrderedAdditionalServiceRequest;
 import com.rentACar.rentACar.business.requests.orderedAdditionalServiceRequests.UpdateOrderedAdditionalServiceRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.additionalServiceExceptions.AdditionalServiceNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.orderedAdditionalServiceExceptions.OrderedAdditionalServiceAlreadyExistsException;
@@ -113,8 +114,9 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 				.map(orderedAdditionalService -> this.modelMapperService.forDto().map(orderedAdditionalService,
 						OrderedAdditionalServiceListDto.class))
 				.collect(Collectors.toList());
-		
-		return new SuccessDataResult<List<OrderedAdditionalServiceListDto>>(orderedAdditionalServiceListDtos,BusinessMessages.GET_SUCCESSFUL);
+
+		return new SuccessDataResult<List<OrderedAdditionalServiceListDto>>(orderedAdditionalServiceListDtos,
+				BusinessMessages.GET_SUCCESSFUL);
 
 	}
 
@@ -131,11 +133,13 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	}
 
 	@Override
-	public Result delete(int orderedAdditionalServiceId) throws OrderedAdditionalServiceNotFoundException {
+	public Result delete(DeleteOrderedAdditionalServiceRequest deleteOrderedAdditionalServiceRequest)
+			throws OrderedAdditionalServiceNotFoundException {
 
-		checkIfOrderedAdditionalServiceExists(orderedAdditionalServiceId);
+		checkIfOrderedAdditionalServiceExists(deleteOrderedAdditionalServiceRequest.getOrderedAdditionalServiceId());
 
-		this.orderedAdditionalServiceDao.deleteById(orderedAdditionalServiceId);
+		this.orderedAdditionalServiceDao
+				.deleteById(deleteOrderedAdditionalServiceRequest.getOrderedAdditionalServiceId());
 
 		return new SuccessResult(BusinessMessages.DELETE_SUCCESSFUL);
 	}

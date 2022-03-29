@@ -5,6 +5,7 @@ import java.util.List;
 import com.rentACar.rentACar.business.dtos.carMaintenanceDtos.GetCarMaintenanceDto;
 import com.rentACar.rentACar.business.dtos.carMaintenanceDtos.CarMaintenanceListDto;
 import com.rentACar.rentACar.business.requests.carMaintenanceRequests.CreateCarMaintenanceRequest;
+import com.rentACar.rentACar.business.requests.carMaintenanceRequests.DeleteCarMaintenanceRequest;
 import com.rentACar.rentACar.business.requests.carMaintenanceRequests.UpdateCarMaintenanceRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.carExceptions.CarNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.carMaintenanceExceptions.CarAlreadyInMaintenanceException;
@@ -17,7 +18,7 @@ public interface CarMaintenanceService {
 
 	Result add(CreateCarMaintenanceRequest createCarMaintenanceRequest) throws CarNotFoundException, CarAlreadyInMaintenanceException, CarAlreadyInRentException;
 
-	Result delete(int carMaintenanceId) throws CarMaintenanceNotFoundException;
+	Result delete(DeleteCarMaintenanceRequest deleteCarMaintenanceRequest) throws CarMaintenanceNotFoundException;
 
 	Result update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest) throws CarMaintenanceNotFoundException, CarNotFoundException;
 

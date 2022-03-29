@@ -9,6 +9,7 @@ import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceListDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceRentedCarListDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceCustomerListDto;
 import com.rentACar.rentACar.business.requests.invoiceRequests.CreateInvoiceRequest;
+import com.rentACar.rentACar.business.requests.invoiceRequests.DeleteInvoiceRequest;
 import com.rentACar.rentACar.business.requests.invoiceRequests.UpdateInvoiceRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.additionalServiceExceptions.AdditionalServiceNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.carExceptions.CarNotFoundException;
@@ -30,7 +31,7 @@ public interface InvoiceService {
 			throws RentedCarNotFoundException, AdditionalServiceNotFoundException, CarNotFoundException,
 			RentDetailsNotFoundException;
 
-	Result delete(int invoiceId) throws InvoiceNotFoundException;
+	Result delete(DeleteInvoiceRequest deleteInvoiceRequest) throws InvoiceNotFoundException;
 
 	Result update(UpdateInvoiceRequest updateInvoiceRequest)
 			throws InvoiceNotFoundException, RentedCarNotFoundException, AdditionalServiceNotFoundException,

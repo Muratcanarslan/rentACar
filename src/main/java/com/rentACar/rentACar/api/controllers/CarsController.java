@@ -20,6 +20,7 @@ import com.rentACar.rentACar.business.dtos.carDtos.CarListLessThanDto;
 import com.rentACar.rentACar.business.dtos.carDtos.CarListSortByDailyPrice;
 import com.rentACar.rentACar.business.dtos.carDtos.GetCarDto;
 import com.rentACar.rentACar.business.requests.carRequests.CreateCarRequest;
+import com.rentACar.rentACar.business.requests.carRequests.DeleteCarRequest;
 import com.rentACar.rentACar.business.requests.carRequests.UpdateCarRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
@@ -70,8 +71,8 @@ public class CarsController {
 	}
 
 	@DeleteMapping("/delete")
-	public Result delete(@RequestParam int carId) throws BusinessException {
-		return this.carService.delete(carId);
+	public Result delete(@RequestBody @Valid DeleteCarRequest deleteCarRequest) throws BusinessException {
+		return this.carService.delete(deleteCarRequest);
 	}
 
 }

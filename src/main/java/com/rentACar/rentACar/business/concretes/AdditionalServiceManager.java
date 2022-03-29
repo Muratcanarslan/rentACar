@@ -12,6 +12,7 @@ import com.rentACar.rentACar.business.constants.messages.BusinessMessages;
 import com.rentACar.rentACar.business.dtos.additionalServiceDtos.AdditionalServiceListDto;
 import com.rentACar.rentACar.business.dtos.additionalServiceDtos.GetAdditionalServiceDto;
 import com.rentACar.rentACar.business.requests.additionalServiceRequests.CreateAdditionalServiceRequest;
+import com.rentACar.rentACar.business.requests.additionalServiceRequests.DeleteAdditionalServiceRequest;
 import com.rentACar.rentACar.business.requests.additionalServiceRequests.UpdateAdditionalServiceRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.additionalServiceExceptions.AdditionalServiceAlreadyExistsException;
 import com.rentACar.rentACar.core.utilities.exceptions.additionalServiceExceptions.AdditionalServiceNotFoundException;
@@ -36,7 +37,8 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 	}
 
 	@Override
-	public Result add(CreateAdditionalServiceRequest createAdditionalServiceRequest) throws AdditionalServiceAlreadyExistsException {
+	public Result add(CreateAdditionalServiceRequest createAdditionalServiceRequest)
+			throws AdditionalServiceAlreadyExistsException {
 		checkIfAdditionalServiceAlreadyExistsByName(createAdditionalServiceRequest.getAdditionalServiceName());
 
 		AdditionalService additionalService = this.modelMapperService.forRequest().map(createAdditionalServiceRequest,
@@ -48,16 +50,19 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 	}
 
 	@Override
-	public Result delete(int additionalServiceId) throws AdditionalServiceNotFoundException  {
-		checkIfAdditionalServiceExists(additionalServiceId);
+	public Result delete(DeleteAdditionalServiceRequest deleteAdditionalServiceRequest)
+			throws AdditionalServiceNotFoundException {
 
-		this.additionalServiceDao.deleteById(additionalServiceId);
+		checkIfAdditionalServiceExists(deleteAdditionalServiceRequest.getAdditionalServiceId());
+
+		this.additionalServiceDao.deleteById(deleteAdditionalServiceRequest.getAdditionalServiceId());
 
 		return new SuccessResult(BusinessMessages.DELETE_SUCCESSFUL);
 	}
 
 	@Override
-	public Result update(UpdateAdditionalServiceRequest updateAdditionalServiceRequest) throws AdditionalServiceNotFoundException  {
+	public Result update(UpdateAdditionalServiceRequest updateAdditionalServiceRequest)
+			throws AdditionalServiceNotFoundException {
 		checkIfAdditionalServiceExists(updateAdditionalServiceRequest.getAdditionalServiceId());
 
 		AdditionalService additionalService = this.modelMapperService.forRequest().map(updateAdditionalServiceRequest,
@@ -69,8 +74,9 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 	}
 
 	@Override
-	public DataResult<GetAdditionalServiceDto> getById(int additionalServiceId) throws AdditionalServiceNotFoundException {
-		
+	public DataResult<GetAdditionalServiceDto> getById(int additionalServiceId)
+			throws AdditionalServiceNotFoundException {
+
 		checkIfAdditionalServiceExists(additionalServiceId);
 
 		AdditionalService additionalService = this.additionalServiceDao.getById(additionalServiceId);
@@ -78,14 +84,14 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 		GetAdditionalServiceDto getAdditionalServiceDto = this.modelMapperService.forDto().map(additionalService,
 				GetAdditionalServiceDto.class);
 
-		return new SuccessDataResult<GetAdditionalServiceDto>(getAdditionalServiceDto,BusinessMessages.GET_SUCCESSFUL);
+		return new SuccessDataResult<GetAdditionalServiceDto>(getAdditionalServiceDto, BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	@Override
-	public DataResult<List<AdditionalServiceListDto>> getAll(int pageNo,int pageSize) {
-		
-		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
-		
+	public DataResult<List<AdditionalServiceListDto>> getAll(int pageNo, int pageSize) {
+
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+
 		List<AdditionalService> additionalServices = this.additionalServiceDao.findAll(pageable).getContent();
 
 		List<AdditionalServiceListDto> additionalServiceListDtos = additionalServices.stream()
@@ -93,11 +99,12 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 						AdditionalServiceListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<AdditionalServiceListDto>>(additionalServiceListDtos, BusinessMessages.GET_SUCCESSFUL);
+		return new SuccessDataResult<List<AdditionalServiceListDto>>(additionalServiceListDtos,
+				BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	public double calculateAdditionalServicePriceByAdditionalServiceIdListAndRentDateValue(
-			List<Integer> additionalServiceIds, int rentDateValue) throws AdditionalServiceNotFoundException  {
+			List<Integer> additionalServiceIds, int rentDateValue) throws AdditionalServiceNotFoundException {
 
 		checkIfAdditionalServicesExists(additionalServiceIds);
 
@@ -111,24 +118,24 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 		return additionalServicePrice;
 	}
 
-	public void checkIfAdditionalServicesExists(List<Integer> additionalServiceIds) throws AdditionalServiceNotFoundException  {
+	public void checkIfAdditionalServicesExists(List<Integer> additionalServiceIds)
+			throws AdditionalServiceNotFoundException {
 		for (int additionalId : additionalServiceIds) {
 			checkIfAdditionalServiceExists(additionalId);
 		}
 	}
 
-	private void checkIfAdditionalServiceAlreadyExistsByName(String name) throws AdditionalServiceAlreadyExistsException  {
+	private void checkIfAdditionalServiceAlreadyExistsByName(String name)
+			throws AdditionalServiceAlreadyExistsException {
 		if (this.additionalServiceDao.existsByAdditionalServiceName(name)) {
 			throw new AdditionalServiceAlreadyExistsException(BusinessMessages.ADDITIONAL_SERVİCE_ALREADY_EXISTS);
 		}
 	}
 
-	public void checkIfAdditionalServiceExists(int id) throws AdditionalServiceNotFoundException  {
+	public void checkIfAdditionalServiceExists(int id) throws AdditionalServiceNotFoundException {
 		if (!this.additionalServiceDao.existsById(id)) {
-			throw new AdditionalServiceNotFoundException(BusinessMessages.ADDITIONAL_SERVICE_NOT_FOUND+id);
+			throw new AdditionalServiceNotFoundException(BusinessMessages.ADDITIONAL_SERVICE_NOT_FOUND + id);
 		}
 	}
-
-
 
 }

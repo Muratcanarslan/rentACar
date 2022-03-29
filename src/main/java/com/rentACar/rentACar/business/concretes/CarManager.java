@@ -18,6 +18,7 @@ import com.rentACar.rentACar.business.dtos.carDtos.CarListLessThanDto;
 import com.rentACar.rentACar.business.dtos.carDtos.CarListSortByDailyPrice;
 import com.rentACar.rentACar.business.dtos.carDtos.GetCarDto;
 import com.rentACar.rentACar.business.requests.carRequests.CreateCarRequest;
+import com.rentACar.rentACar.business.requests.carRequests.DeleteCarRequest;
 import com.rentACar.rentACar.business.requests.carRequests.UpdateCarRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.brandExceptions.BrandNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.carExceptions.CarNotFoundException;
@@ -105,11 +106,11 @@ public class CarManager implements CarService {
 	}
 
 	@Override
-	public Result delete(int carId) throws CarNotFoundException {
+	public Result delete(DeleteCarRequest deleteCarRequest) throws CarNotFoundException {
 
-		checkIfExistByCarId(carId);
+		this.checkIfExistByCarId(deleteCarRequest.getCarId());
 
-		this.carDao.deleteById(carId);
+		this.carDao.deleteById(deleteCarRequest.getCarId());
 
 		return new SuccessResult(BusinessMessages.DELETE_SUCCESSFUL);
 
@@ -142,7 +143,7 @@ public class CarManager implements CarService {
 
 	@Override
 	public DataResult<List<CarListSortByDailyPrice>> getCarListSortByDailyPrice(Direction sortDirection) {
-		
+
 		Sort sort = Sort.by(sortDirection, "dailyPrice");
 
 		List<Car> cars = this.carDao.findAll(sort);
@@ -151,7 +152,8 @@ public class CarManager implements CarService {
 				.map(car -> this.modelMapperService.forDto().map(car, CarListSortByDailyPrice.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<CarListSortByDailyPrice>>(carListSortByDailyPrice, BusinessMessages.GET_SUCCESSFUL);
+		return new SuccessDataResult<List<CarListSortByDailyPrice>>(carListSortByDailyPrice,
+				BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	public double calculateRentPriceByCarIdAndRentDateValue(int carId, int rentDateValue) throws CarNotFoundException {

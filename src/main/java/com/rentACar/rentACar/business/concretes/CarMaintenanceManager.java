@@ -16,6 +16,7 @@ import com.rentACar.rentACar.business.constants.messages.BusinessMessages;
 import com.rentACar.rentACar.business.dtos.carMaintenanceDtos.GetCarMaintenanceDto;
 import com.rentACar.rentACar.business.dtos.carMaintenanceDtos.CarMaintenanceListDto;
 import com.rentACar.rentACar.business.requests.carMaintenanceRequests.CreateCarMaintenanceRequest;
+import com.rentACar.rentACar.business.requests.carMaintenanceRequests.DeleteCarMaintenanceRequest;
 import com.rentACar.rentACar.business.requests.carMaintenanceRequests.UpdateCarMaintenanceRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.carExceptions.CarNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.carMaintenanceExceptions.CarAlreadyInMaintenanceException;
@@ -61,12 +62,14 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	}
 
 	@Override
-	public Result delete(int carMaintenanceId) throws CarMaintenanceNotFoundException  {
-		checkIfExistsByCarMaintenanceId(carMaintenanceId);
+	public Result delete(DeleteCarMaintenanceRequest deleteCarMaintenanceRequest) throws CarMaintenanceNotFoundException  {
+		
+		checkIfExistsByCarMaintenanceId(deleteCarMaintenanceRequest.getCarMaintenanceId());
 
-		this.carMaintenanceDao.deleteById(carMaintenanceId);
+		this.carMaintenanceDao.deleteById(deleteCarMaintenanceRequest.getCarMaintenanceId());
 
 		return new SuccessResult(BusinessMessages.DELETE_SUCCESSFUL);
+		
 	}
 
 	@Override

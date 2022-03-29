@@ -9,6 +9,7 @@ import com.rentACar.rentACar.business.dtos.carDtos.CarListLessThanDto;
 import com.rentACar.rentACar.business.dtos.carDtos.CarListSortByDailyPrice;
 import com.rentACar.rentACar.business.dtos.carDtos.GetCarDto;
 import com.rentACar.rentACar.business.requests.carRequests.CreateCarRequest;
+import com.rentACar.rentACar.business.requests.carRequests.DeleteCarRequest;
 import com.rentACar.rentACar.business.requests.carRequests.UpdateCarRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.exceptions.brandExceptions.BrandNotFoundException;
@@ -25,7 +26,7 @@ public interface CarService {
 
 	Result update(UpdateCarRequest updateCarRequest) throws CarNotFoundException, BrandNotFoundException, ColorNotFoundException;
 
-	Result delete(int carId) throws CarNotFoundException;
+	Result delete(DeleteCarRequest deleteCarRequest) throws CarNotFoundException;
 
 	DataResult<GetCarDto> getById(int carId) throws CarNotFoundException;
 

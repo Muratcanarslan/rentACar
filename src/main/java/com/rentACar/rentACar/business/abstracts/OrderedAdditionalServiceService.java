@@ -5,6 +5,7 @@ import java.util.List;
 import com.rentACar.rentACar.business.dtos.orderedAdditionalServiceDto.OrderedAdditionalServiceListDto;
 import com.rentACar.rentACar.business.dtos.orderedAdditionalServiceDto.OrderedAdditionalServiceListForRentedCarDto;
 import com.rentACar.rentACar.business.requests.orderedAdditionalServiceRequests.CreateOrderedAdditionalServiceRequest;
+import com.rentACar.rentACar.business.requests.orderedAdditionalServiceRequests.DeleteOrderedAdditionalServiceRequest;
 import com.rentACar.rentACar.business.requests.orderedAdditionalServiceRequests.UpdateOrderedAdditionalServiceRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.additionalServiceExceptions.AdditionalServiceNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.orderedAdditionalServiceExceptions.OrderedAdditionalServiceAlreadyExistsException;
@@ -23,7 +24,7 @@ public interface OrderedAdditionalServiceService {
 	Result update(UpdateOrderedAdditionalServiceRequest updateOrderedAdditionalServiceRequest)
 			throws OrderedAdditionalServiceNotFoundException, OrderedAdditionalServiceAlreadyExistsException;
 
-	Result delete(int orderedAdditionalServiceId) throws OrderedAdditionalServiceNotFoundException;
+	Result delete(DeleteOrderedAdditionalServiceRequest deleteOrderedAdditionalServiceRequest) throws OrderedAdditionalServiceNotFoundException;
 
 	DataResult<List<OrderedAdditionalServiceListForRentedCarDto>> getByRentedCarId(int rentedCarId)
 			throws RentedCarNotFoundException;

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rentACar.rentACar.business.abstracts.OrderedAdditionalServiceService;
 import com.rentACar.rentACar.business.dtos.orderedAdditionalServiceDto.OrderedAdditionalServiceListDto;
 import com.rentACar.rentACar.business.dtos.orderedAdditionalServiceDto.OrderedAdditionalServiceListForRentedCarDto;
+import com.rentACar.rentACar.business.requests.orderedAdditionalServiceRequests.DeleteOrderedAdditionalServiceRequest;
 import com.rentACar.rentACar.business.requests.orderedAdditionalServiceRequests.UpdateOrderedAdditionalServiceRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
@@ -46,13 +47,15 @@ public class OrderedAdditionalServicesController {
 	@GetMapping("/getAll")
 	public DataResult<List<OrderedAdditionalServiceListDto>> getAll(@RequestParam("pageNo") int pageNo,
 			@RequestParam("pageSize") int pageSize) {
-		
+
 		return this.orderedAdditionalServiceService.getAll(pageNo, pageSize);
 
 	}
 
 	@DeleteMapping("/delete")
-	public Result delete(@RequestParam int orderedAdditionalServiceId) throws BusinessException {
-		return this.orderedAdditionalServiceService.delete(orderedAdditionalServiceId);
+	public Result delete(
+			@RequestBody @Valid DeleteOrderedAdditionalServiceRequest deleteOrderedAdditionalServiceRequest)
+			throws BusinessException {
+		return this.orderedAdditionalServiceService.delete(deleteOrderedAdditionalServiceRequest);
 	}
 }

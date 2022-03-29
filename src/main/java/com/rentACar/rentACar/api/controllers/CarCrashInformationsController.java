@@ -18,6 +18,7 @@ import com.rentACar.rentACar.business.dtos.carCrashInfomationDtos.CarCrashInform
 import com.rentACar.rentACar.business.dtos.carCrashInfomationDtos.CarCrashInformationListDto;
 import com.rentACar.rentACar.business.dtos.carCrashInfomationDtos.GetCarCrashInformationDto;
 import com.rentACar.rentACar.business.requests.carCrashRequests.CreateCarCrashInformationRequest;
+import com.rentACar.rentACar.business.requests.carCrashRequests.DeleteCarCrashInformationRequest;
 import com.rentACar.rentACar.business.requests.carCrashRequests.UpdateCarCrashInformationRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.exceptions.carCrashExceptions.CarCrashInformationNotFoundException;
@@ -27,41 +28,46 @@ import com.rentACar.rentACar.core.utilities.results.Result;
 @RestController
 @RequestMapping("/api/carCrashInformations")
 public class CarCrashInformationsController {
-	
+
 	private CarCrashInformationService carCrashInformationService;
 
 	public CarCrashInformationsController(CarCrashInformationService carCrashInformationService) {
 		super();
 		this.carCrashInformationService = carCrashInformationService;
 	}
-	
+
 	@GetMapping("/getById")
-	public DataResult<GetCarCrashInformationDto> getById(@RequestParam int carInformationId) throws CarCrashInformationNotFoundException{
+	public DataResult<GetCarCrashInformationDto> getById(@RequestParam int carInformationId)
+			throws CarCrashInformationNotFoundException {
 		return this.carCrashInformationService.getById(carInformationId);
 	}
-	
+
 	@GetMapping("/getByCarId")
-	public DataResult<List<CarCrashInformationListByCarDto>> getByCarId(int carId) throws BusinessException{
+	public DataResult<List<CarCrashInformationListByCarDto>> getByCarId(int carId) throws BusinessException {
 		return this.carCrashInformationService.getByCarId(carId);
 	}
-	
+
 	@GetMapping("/getAll")
-	public DataResult<List<CarCrashInformationListDto>> getAll(@RequestParam("pageNo") int pageNo,@RequestParam("pageSize") int pageSize){
-		return this.carCrashInformationService.getAll(pageNo,pageSize);
+	public DataResult<List<CarCrashInformationListDto>> getAll(@RequestParam("pageNo") int pageNo,
+			@RequestParam("pageSize") int pageSize) {
+		return this.carCrashInformationService.getAll(pageNo, pageSize);
 	}
-	
+
 	@PostMapping("/add")
-	public Result add(@RequestBody @Valid CreateCarCrashInformationRequest createCarCrashInformationRequest) throws BusinessException {
+	public Result add(@RequestBody @Valid CreateCarCrashInformationRequest createCarCrashInformationRequest)
+			throws BusinessException {
 		return this.carCrashInformationService.add(createCarCrashInformationRequest);
 	}
-	
+
 	@PutMapping("/update")
-	public Result update(@RequestBody @Valid UpdateCarCrashInformationRequest updateCarCrashInformationRequest) throws CarCrashInformationNotFoundException, BusinessException {
+	public Result update(@RequestBody @Valid UpdateCarCrashInformationRequest updateCarCrashInformationRequest)
+			throws CarCrashInformationNotFoundException, BusinessException {
 		return this.carCrashInformationService.update(updateCarCrashInformationRequest);
 	}
-	
+
 	@DeleteMapping("/delete")
-	public Result delete(@RequestParam int carCrashInformationId) throws CarCrashInformationNotFoundException {
-		return this.carCrashInformationService.delete(carCrashInformationId);
+	public Result delete(@RequestBody @Valid DeleteCarCrashInformationRequest deleteCarCrashInformationRequest)
+			throws CarCrashInformationNotFoundException {
+		return this.carCrashInformationService.delete(deleteCarCrashInformationRequest);
 	}
 }

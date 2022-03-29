@@ -15,6 +15,7 @@ import com.rentACar.rentACar.business.dtos.carCrashInfomationDtos.CarCrashInform
 import com.rentACar.rentACar.business.dtos.carCrashInfomationDtos.CarCrashInformationListDto;
 import com.rentACar.rentACar.business.dtos.carCrashInfomationDtos.GetCarCrashInformationDto;
 import com.rentACar.rentACar.business.requests.carCrashRequests.CreateCarCrashInformationRequest;
+import com.rentACar.rentACar.business.requests.carCrashRequests.DeleteCarCrashInformationRequest;
 import com.rentACar.rentACar.business.requests.carCrashRequests.UpdateCarCrashInformationRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.carCrashExceptions.CarCrashInformationNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.carExceptions.CarNotFoundException;
@@ -56,7 +57,8 @@ public class CarCrashInformationManager implements CarCrashInformationService {
 	}
 
 	@Override
-	public Result update(UpdateCarCrashInformationRequest updateCarCrashInformationRequest) throws CarNotFoundException, CarCrashInformationNotFoundException {
+	public Result update(UpdateCarCrashInformationRequest updateCarCrashInformationRequest)
+			throws CarNotFoundException, CarCrashInformationNotFoundException {
 
 		checkIfCarCrashInformationExists(updateCarCrashInformationRequest.getCarCrashInformationId());
 		this.carService.checkIfExistByCarId(updateCarCrashInformationRequest.getCarId());
@@ -70,17 +72,19 @@ public class CarCrashInformationManager implements CarCrashInformationService {
 	}
 
 	@Override
-	public Result delete(int carCrashInformationId) throws CarCrashInformationNotFoundException {
+	public Result delete(DeleteCarCrashInformationRequest deleteCarCrashInformationRequest)
+			throws CarCrashInformationNotFoundException {
 
-		checkIfCarCrashInformationExists(carCrashInformationId);
+		checkIfCarCrashInformationExists(deleteCarCrashInformationRequest.getCarCrashInformationId());
 
-		this.carCrashInformationDao.deleteById(carCrashInformationId);
+		this.carCrashInformationDao.deleteById(deleteCarCrashInformationRequest.getCarCrashInformationId());
 
 		return new SuccessResult(BusinessMessages.DELETE_SUCCESSFUL);
 	}
 
 	@Override
-	public DataResult<GetCarCrashInformationDto> getById(int carCrashInformationId) throws CarCrashInformationNotFoundException {
+	public DataResult<GetCarCrashInformationDto> getById(int carCrashInformationId)
+			throws CarCrashInformationNotFoundException {
 
 		checkIfCarCrashInformationExists(carCrashInformationId);
 
@@ -89,7 +93,8 @@ public class CarCrashInformationManager implements CarCrashInformationService {
 		GetCarCrashInformationDto getCarCrashInformationDto = this.modelMapperService.forDto().map(carCrashInformation,
 				GetCarCrashInformationDto.class);
 
-		return new SuccessDataResult<GetCarCrashInformationDto>(getCarCrashInformationDto,BusinessMessages.GET_SUCCESSFUL);
+		return new SuccessDataResult<GetCarCrashInformationDto>(getCarCrashInformationDto,
+				BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	@Override
@@ -109,9 +114,9 @@ public class CarCrashInformationManager implements CarCrashInformationService {
 	}
 
 	@Override
-	public DataResult<List<CarCrashInformationListDto>> getAll(int pageNo,int pageSize) {
-		
-		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+	public DataResult<List<CarCrashInformationListDto>> getAll(int pageNo, int pageSize) {
+
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
 
 		List<CarCrashInformation> carCrashInformations = this.carCrashInformationDao.findAll(pageable).getContent();
 
@@ -120,7 +125,8 @@ public class CarCrashInformationManager implements CarCrashInformationService {
 						CarCrashInformationListDto.class))
 				.collect(Collectors.toList());
 
-		return new SuccessDataResult<List<CarCrashInformationListDto>>(carCrashInformationListDtos, BusinessMessages.GET_SUCCESSFUL);
+		return new SuccessDataResult<List<CarCrashInformationListDto>>(carCrashInformationListDtos,
+				BusinessMessages.GET_SUCCESSFUL);
 	}
 
 	private void checkIfCarCrashInformationExists(int carCrashInformationId)

@@ -26,6 +26,7 @@ import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceListDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceRentedCarListDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceCustomerListDto;
 import com.rentACar.rentACar.business.requests.invoiceRequests.CreateInvoiceRequest;
+import com.rentACar.rentACar.business.requests.invoiceRequests.DeleteInvoiceRequest;
 import com.rentACar.rentACar.business.requests.invoiceRequests.UpdateInvoiceRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.additionalServiceExceptions.AdditionalServiceNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.carExceptions.CarNotFoundException;
@@ -171,10 +172,10 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	@Override
-	public DataResult<List<InvoiceListDto>> getAll(int pageNo,int pageSize) {
-	
-		Pageable pageable = PageRequest.of(pageNo-1, pageSize);
-		
+	public DataResult<List<InvoiceListDto>> getAll(int pageNo, int pageSize) {
+
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+
 		List<Invoice> invoices = this.invoiceDao.findAll(pageable).getContent();
 
 		List<InvoiceListDto> invoiceListDtos = invoices.stream()
@@ -196,7 +197,7 @@ public class InvoiceManager implements InvoiceService {
 		List<InvoiceRentedCarListDto> rentedCarListDtos = invoices.stream()
 				.map(invoice -> this.modelMapperService.forDto().map(invoice, InvoiceRentedCarListDto.class))
 				.collect(Collectors.toList());
-		
+
 		return new SuccessDataResult<List<InvoiceRentedCarListDto>>(rentedCarListDtos, BusinessMessages.GET_SUCCESSFUL);
 
 	}
@@ -214,11 +215,11 @@ public class InvoiceManager implements InvoiceService {
 	}
 
 	@Override
-	public Result delete(int invoiceId) throws InvoiceNotFoundException {
+	public Result delete(DeleteInvoiceRequest deleteInvoiceRequest) throws InvoiceNotFoundException {
 
-		checkIfInvoiceExists(invoiceId);
+		checkIfInvoiceExists(deleteInvoiceRequest.getInvoiceId());
 
-		this.invoiceDao.deleteById(invoiceId);
+		this.invoiceDao.deleteById(deleteInvoiceRequest.getInvoiceId());
 
 		return new SuccessResult(BusinessMessages.DELETE_SUCCESSFUL);
 

@@ -17,6 +17,7 @@ import com.rentACar.rentACar.business.abstracts.CityService;
 import com.rentACar.rentACar.business.dtos.cityDtos.CityListDto;
 import com.rentACar.rentACar.business.dtos.cityDtos.GetCityDto;
 import com.rentACar.rentACar.business.requests.cityRequest.CreateCityRequest;
+import com.rentACar.rentACar.business.requests.cityRequest.DeleteCityRequest;
 import com.rentACar.rentACar.business.requests.cityRequest.UpdateCityRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
@@ -55,7 +56,7 @@ public class CitiesController {
 	}
 
 	@DeleteMapping("/delete")
-	public Result delete(@RequestParam int cityId) throws BusinessException {
-		return this.cityService.delete(cityId);
+	public Result delete(@RequestBody @Valid DeleteCityRequest deleteCityRequest) throws BusinessException {
+		return this.cityService.delete(deleteCityRequest);
 	}
 }

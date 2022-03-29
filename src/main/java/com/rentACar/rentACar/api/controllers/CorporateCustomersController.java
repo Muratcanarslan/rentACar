@@ -17,6 +17,7 @@ import com.rentACar.rentACar.business.abstracts.CorporateCustomerService;
 import com.rentACar.rentACar.business.dtos.corporateCustomerDtos.CorporateCustomerListDto;
 import com.rentACar.rentACar.business.dtos.corporateCustomerDtos.GetCorporateCustomerDto;
 import com.rentACar.rentACar.business.requests.corporateCustomerRequests.CreateCorporateCustomerRequest;
+import com.rentACar.rentACar.business.requests.corporateCustomerRequests.DeleteCorporateCustomerRequest;
 import com.rentACar.rentACar.business.requests.corporateCustomerRequests.UpdateCorporateCustomerRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.corporateCustomerExceptions.CorporateCustomerAlreadyExistsByTaxNumberException;
 import com.rentACar.rentACar.core.utilities.exceptions.corporateCustomerExceptions.CorporateCustomerNotFoundException;
@@ -42,8 +43,9 @@ public class CorporateCustomersController {
 	}
 
 	@DeleteMapping("/delete")
-	public Result delete(@RequestParam int corporateCustomerId) throws CorporateCustomerNotFoundException {
-		return this.corporateCustomerService.delete(corporateCustomerId);
+	public Result delete(@RequestBody @Valid DeleteCorporateCustomerRequest deleteCorporateCustomerRequest)
+			throws CorporateCustomerNotFoundException {
+		return this.corporateCustomerService.delete(deleteCorporateCustomerRequest);
 	}
 
 	@PutMapping("/update")
@@ -62,6 +64,6 @@ public class CorporateCustomersController {
 	@GetMapping("/getAll")
 	public DataResult<List<CorporateCustomerListDto>> getAll(@RequestParam("pageNo") int pageNo,
 			@RequestParam("pageSize") int pageSize) {
-		return this.corporateCustomerService.getAll(pageNo,pageSize);
+		return this.corporateCustomerService.getAll(pageNo, pageSize);
 	}
 }

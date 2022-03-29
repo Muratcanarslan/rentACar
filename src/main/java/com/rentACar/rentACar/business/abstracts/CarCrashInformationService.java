@@ -6,6 +6,7 @@ import com.rentACar.rentACar.business.dtos.carCrashInfomationDtos.CarCrashInform
 import com.rentACar.rentACar.business.dtos.carCrashInfomationDtos.CarCrashInformationListDto;
 import com.rentACar.rentACar.business.dtos.carCrashInfomationDtos.GetCarCrashInformationDto;
 import com.rentACar.rentACar.business.requests.carCrashRequests.CreateCarCrashInformationRequest;
+import com.rentACar.rentACar.business.requests.carCrashRequests.DeleteCarCrashInformationRequest;
 import com.rentACar.rentACar.business.requests.carCrashRequests.UpdateCarCrashInformationRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.carCrashExceptions.CarCrashInformationNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.carExceptions.CarNotFoundException;
@@ -18,7 +19,7 @@ public interface CarCrashInformationService {
 
 	Result update(UpdateCarCrashInformationRequest updateCarCrashInformationRequest) throws CarNotFoundException, CarCrashInformationNotFoundException;
 
-	Result delete(int carCrashInformationId) throws CarCrashInformationNotFoundException;
+	Result delete(DeleteCarCrashInformationRequest deleteCarCrashInformationRequest) throws CarCrashInformationNotFoundException;
 
 	DataResult<GetCarCrashInformationDto> getById(int carCrashInformationId) throws CarCrashInformationNotFoundException;
 

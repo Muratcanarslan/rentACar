@@ -1,4 +1,4 @@
-package com.rentACar.rentACar.business.requests.orderedAdditionalServiceRequests;
+package com.rentACar.rentACar.business.requests.invoiceRequests;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -11,13 +11,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateOrderedAdditionalServiceRequest {
+public class DeleteInvoiceRequest {
 	
-	@NotNull
 	@Positive
-	private int rentedCarId;
-	
 	@NotNull
-	@Positive
-	private int additionalServiceId;
+	private int invoiceId;
+
 }

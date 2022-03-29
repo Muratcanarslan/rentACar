@@ -4,8 +4,10 @@ import java.util.List;
 
 import com.rentACar.rentACar.business.dtos.rentedCarDtos.GetRentedCarDto;
 import com.rentACar.rentACar.business.dtos.rentedCarDtos.RentedCarListDto;
+import com.rentACar.rentACar.business.dtos.rentedCarDtos.RentedCarListForCustomerDto;
 import com.rentACar.rentACar.business.requests.rentedCarRequests.CreateRentedCarRequestForCorporateCustomer;
 import com.rentACar.rentACar.business.requests.rentedCarRequests.CreateRentedCarRequestForIndividualCustomer;
+import com.rentACar.rentACar.business.requests.rentedCarRequests.DeleteRentedCarRequest;
 import com.rentACar.rentACar.business.requests.rentedCarRequests.UpdateRentedCarForDelayedReturnRequest;
 import com.rentACar.rentACar.business.requests.rentedCarRequests.UpdateRentedCarRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.carExceptions.CarNotFoundException;
@@ -38,13 +40,15 @@ public interface RentedCarService {
 	Result updateRentedCarForDelayedReturn(
 			UpdateRentedCarForDelayedReturnRequest updateRentedCarForDelayedReturnRequest) throws RentedCarNotFoundException, CarNotFoundException, RentUpdateNotRequiresPaymentException;
 
-	Result delete(int rentedCarId) throws RentedCarNotFoundException;
+	Result delete(DeleteRentedCarRequest deleteRentedCarRequest) throws RentedCarNotFoundException;
 
 	DataResult<GetRentedCarDto> getById(int rentedCarId) throws RentedCarNotFoundException;
-
-	RentedCar getRentedCarForBusiness(int rentedCarId) throws RentedCarNotFoundException;
-
+	
+	DataResult<List<RentedCarListForCustomerDto>> getByCustomerId(int customerId) throws CustomerNotFoundException;
+	
 	DataResult<List<RentedCarListDto>> getAll(int pageNo,int pageSize);
+	
+	RentedCar getRentedCarForBusiness(int rentedCarId) throws RentedCarNotFoundException;
 
 	void checkIfCarIsAlreadyRentedByCarId(int carId) throws CarAlreadyInRentException;
 

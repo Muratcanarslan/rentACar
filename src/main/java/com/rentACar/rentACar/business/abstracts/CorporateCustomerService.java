@@ -5,6 +5,7 @@ import java.util.List;
 import com.rentACar.rentACar.business.dtos.corporateCustomerDtos.CorporateCustomerListDto;
 import com.rentACar.rentACar.business.dtos.corporateCustomerDtos.GetCorporateCustomerDto;
 import com.rentACar.rentACar.business.requests.corporateCustomerRequests.CreateCorporateCustomerRequest;
+import com.rentACar.rentACar.business.requests.corporateCustomerRequests.DeleteCorporateCustomerRequest;
 import com.rentACar.rentACar.business.requests.corporateCustomerRequests.UpdateCorporateCustomerRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.corporateCustomerExceptions.CorporateCustomerAlreadyExistsByTaxNumberException;
 import com.rentACar.rentACar.core.utilities.exceptions.corporateCustomerExceptions.CorporateCustomerNotFoundException;
@@ -18,7 +19,7 @@ public interface CorporateCustomerService {
 	
 	Result update(UpdateCorporateCustomerRequest updateCorporateCustomerRequest) throws UserAlreadyExistsException, CorporateCustomerAlreadyExistsByTaxNumberException, CorporateCustomerNotFoundException;
 	
-	Result delete(int corporateCustomerId) throws CorporateCustomerNotFoundException;
+	Result delete(DeleteCorporateCustomerRequest deleteCorporateCustomerRequest) throws CorporateCustomerNotFoundException;
 	
 	DataResult<GetCorporateCustomerDto> getById(int corporateCustomerId) throws CorporateCustomerNotFoundException;
 	

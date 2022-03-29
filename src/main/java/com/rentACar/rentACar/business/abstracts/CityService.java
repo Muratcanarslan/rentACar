@@ -5,6 +5,7 @@ import java.util.List;
 import com.rentACar.rentACar.business.dtos.cityDtos.CityListDto;
 import com.rentACar.rentACar.business.dtos.cityDtos.GetCityDto;
 import com.rentACar.rentACar.business.requests.cityRequest.CreateCityRequest;
+import com.rentACar.rentACar.business.requests.cityRequest.DeleteCityRequest;
 import com.rentACar.rentACar.business.requests.cityRequest.UpdateCityRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.exceptions.cityExceptions.CityAlreadyExistsException;
@@ -18,7 +19,7 @@ public interface CityService {
 
 	Result update(UpdateCityRequest updateCityRequest) throws CityNotFoundException, CityAlreadyExistsException;
 
-	Result delete(int cityId) throws BusinessException;
+	Result delete(DeleteCityRequest deleteCityRequest) throws BusinessException;
 
 	DataResult<GetCityDto> getById(int cityId) throws CityNotFoundException;
 	

@@ -13,6 +13,7 @@ import com.rentACar.rentACar.business.constants.messages.BusinessMessages;
 import com.rentACar.rentACar.business.dtos.corporateCustomerDtos.CorporateCustomerListDto;
 import com.rentACar.rentACar.business.dtos.corporateCustomerDtos.GetCorporateCustomerDto;
 import com.rentACar.rentACar.business.requests.corporateCustomerRequests.CreateCorporateCustomerRequest;
+import com.rentACar.rentACar.business.requests.corporateCustomerRequests.DeleteCorporateCustomerRequest;
 import com.rentACar.rentACar.business.requests.corporateCustomerRequests.UpdateCorporateCustomerRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.corporateCustomerExceptions.CorporateCustomerAlreadyExistsByTaxNumberException;
 import com.rentACar.rentACar.core.utilities.exceptions.corporateCustomerExceptions.CorporateCustomerNotFoundException;
@@ -74,11 +75,11 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	}
 
 	@Override
-	public Result delete(int corporateCustomerId) throws CorporateCustomerNotFoundException {
+	public Result delete(DeleteCorporateCustomerRequest deleteCorporateCustomerRequest) throws CorporateCustomerNotFoundException {
 
-		checkIfCorporateCustomerExists(corporateCustomerId);
+		checkIfCorporateCustomerExists(deleteCorporateCustomerRequest.getCorporateCustomerId());
 
-		this.corporateCustomerDao.deleteById(corporateCustomerId);
+		this.corporateCustomerDao.deleteById(deleteCorporateCustomerRequest.getCorporateCustomerId());
 
 		return new SuccessResult(BusinessMessages.DELETE_SUCCESSFUL);
 	}

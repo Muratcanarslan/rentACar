@@ -17,6 +17,7 @@ import com.rentACar.rentACar.business.abstracts.IndividualCustomerService;
 import com.rentACar.rentACar.business.dtos.individualCustomerDtos.GetIndividualCustomerDto;
 import com.rentACar.rentACar.business.dtos.individualCustomerDtos.IndividualCustomerListDto;
 import com.rentACar.rentACar.business.requests.individualCustomerDtos.CreateIndividualCustomerRequest;
+import com.rentACar.rentACar.business.requests.individualCustomerDtos.DeleteIndividualCustomerRequest;
 import com.rentACar.rentACar.business.requests.individualCustomerDtos.UpdateIndividualCustomerRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.indiviualCustomerExceptions.IndividualCustomerAlreadyExistsByNationalIdentityException;
 import com.rentACar.rentACar.core.utilities.exceptions.indiviualCustomerExceptions.IndividualCustomerNotFoundException;
@@ -42,8 +43,9 @@ public class IndividualCustomersController {
 	}
 
 	@DeleteMapping("/delete")
-	public Result delete(@RequestParam int individualCustomerId) throws IndividualCustomerNotFoundException {
-		return this.individualCustomerService.delete(individualCustomerId);
+	public Result delete(@RequestBody @Valid DeleteIndividualCustomerRequest deleteIndividualCustomerRequest)
+			throws IndividualCustomerNotFoundException {
+		return this.individualCustomerService.delete(deleteIndividualCustomerRequest);
 	}
 
 	@PutMapping("/update")
@@ -62,7 +64,7 @@ public class IndividualCustomersController {
 	@GetMapping("/getAll")
 	public DataResult<List<IndividualCustomerListDto>> getAll(@RequestParam("pageNo") int pageNo,
 			@RequestParam("pageSize") int pageSize) {
-		return this.individualCustomerService.getAll(pageNo,pageSize);
+		return this.individualCustomerService.getAll(pageNo, pageSize);
 	}
 
 }

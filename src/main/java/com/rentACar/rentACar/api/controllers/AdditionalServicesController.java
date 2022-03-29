@@ -17,6 +17,7 @@ import com.rentACar.rentACar.business.abstracts.AdditionalServiceService;
 import com.rentACar.rentACar.business.dtos.additionalServiceDtos.AdditionalServiceListDto;
 import com.rentACar.rentACar.business.dtos.additionalServiceDtos.GetAdditionalServiceDto;
 import com.rentACar.rentACar.business.requests.additionalServiceRequests.CreateAdditionalServiceRequest;
+import com.rentACar.rentACar.business.requests.additionalServiceRequests.DeleteAdditionalServiceRequest;
 import com.rentACar.rentACar.business.requests.additionalServiceRequests.UpdateAdditionalServiceRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.exceptions.additionalServiceExceptions.AdditionalServiceNotFoundException;
@@ -41,8 +42,8 @@ public class AdditionalServicesController {
 	}
 
 	@DeleteMapping("/delete")
-	public Result delete(@RequestParam int additionalServiceId) throws BusinessException {
-		return this.additionalServiceService.delete(additionalServiceId);
+	public Result delete(@RequestBody @Valid DeleteAdditionalServiceRequest deleteAdditionalServiceRequest) throws BusinessException {
+		return this.additionalServiceService.delete(deleteAdditionalServiceRequest);
 	}
 
 	@PutMapping("/update")

@@ -3,9 +3,12 @@ package com.rentACar.rentACar.api.controllers;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +18,7 @@ import com.rentACar.rentACar.business.dtos.invoiceDtos.GetInvoiceDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceDateBetweenDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceListDto;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceRentedCarListDto;
+import com.rentACar.rentACar.business.requests.invoiceRequests.DeleteInvoiceRequest;
 import com.rentACar.rentACar.business.dtos.invoiceDtos.InvoiceCustomerListDto;
 import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.exceptions.customerExceptions.CustomerNotFoundException;
@@ -61,13 +65,14 @@ public class InvoicesController {
 	public DataResult<List<InvoiceListDto>> getAll(@RequestParam("pageNo") int pageNo,
 			@RequestParam("pageSize") int pageSize) {
 
-		return this.invoiceService.getAll(pageNo,pageSize);
+		return this.invoiceService.getAll(pageNo, pageSize);
 
 	}
 
 	@DeleteMapping("/deleteByInvoiceId")
-	public Result deleteById(@RequestParam int invoiceId) throws InvoiceNotFoundException {
-		return this.invoiceService.delete(invoiceId);
+	public Result deleteById(@RequestBody @Valid DeleteInvoiceRequest deleteInvoiceRequest)
+			throws InvoiceNotFoundException {
+		return this.invoiceService.delete(deleteInvoiceRequest);
 	}
 
 }

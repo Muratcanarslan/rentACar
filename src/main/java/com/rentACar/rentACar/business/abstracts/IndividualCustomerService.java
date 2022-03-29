@@ -5,6 +5,7 @@ import java.util.List;
 import com.rentACar.rentACar.business.dtos.individualCustomerDtos.GetIndividualCustomerDto;
 import com.rentACar.rentACar.business.dtos.individualCustomerDtos.IndividualCustomerListDto;
 import com.rentACar.rentACar.business.requests.individualCustomerDtos.CreateIndividualCustomerRequest;
+import com.rentACar.rentACar.business.requests.individualCustomerDtos.DeleteIndividualCustomerRequest;
 import com.rentACar.rentACar.business.requests.individualCustomerDtos.UpdateIndividualCustomerRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.indiviualCustomerExceptions.IndividualCustomerAlreadyExistsByNationalIdentityException;
 import com.rentACar.rentACar.core.utilities.exceptions.indiviualCustomerExceptions.IndividualCustomerNotFoundException;
@@ -18,7 +19,7 @@ public interface IndividualCustomerService {
 
 	Result update(UpdateIndividualCustomerRequest updateIndividualCustomerRequest) throws IndividualCustomerNotFoundException, UserAlreadyExistsException, IndividualCustomerAlreadyExistsByNationalIdentityException;
 	
-	Result delete(int individualCustomerId) throws IndividualCustomerNotFoundException;
+	Result delete(DeleteIndividualCustomerRequest deleteIndividualCustomerRequest) throws IndividualCustomerNotFoundException;
 	
 	DataResult<GetIndividualCustomerDto> getById(int individualCustomerId) throws IndividualCustomerNotFoundException;
 	
