@@ -28,24 +28,28 @@ import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
 
 public interface PaymentService {
-	
-	Result makePaymentForIndividualCustomer(MakePaymentForIndividualCustomerModel makePaymentForIndividualCustomerModel) throws PaymentNotSuccessfullException, CarNotFoundException, CarAlreadyInRentException, CarAlreadyInMaintenanceException, IndividualCustomerNotFoundException, CustomerNotFoundException, AdditionalServiceNotFoundException, OrderedAdditionalServiceAlreadyExistsException, RentedCarNotFoundException, RentDetailsNotFoundException, InvoiceNotFoundException, CityNotFoundException;
+
+	Result makePaymentForIndividualCustomer(MakePaymentForIndividualCustomerModel makePaymentForIndividualCustomerModel)
+			throws PaymentNotSuccessfullException, CarNotFoundException, CarAlreadyInRentException,
+			CarAlreadyInMaintenanceException, IndividualCustomerNotFoundException, CustomerNotFoundException,
+			AdditionalServiceNotFoundException, OrderedAdditionalServiceAlreadyExistsException,
+			RentedCarNotFoundException, RentDetailsNotFoundException, InvoiceNotFoundException, CityNotFoundException;
 
 	Result makePaymentForCorporateCustomer(MakePaymentForCorporateCustomerModel makePaymentForCorporateCustomerModel)
 			throws PaymentNotSuccessfullException, CarNotFoundException, CorporateCustomerNotFoundException,
 			CarAlreadyInMaintenanceException, CarAlreadyInRentException, CityNotFoundException,
 			AdditionalServiceNotFoundException, OrderedAdditionalServiceAlreadyExistsException,
-			RentedCarNotFoundException, RentDetailsNotFoundException,
-			CustomerNotFoundException, InvoiceNotFoundException;
-	
+			RentedCarNotFoundException, RentDetailsNotFoundException, CustomerNotFoundException,
+			InvoiceNotFoundException;
+
 	Result makePaymentForDelayedReturn(MakePaymentForDelayedReturnModel makePaymentForDelayedReturnModel)
-			throws PaymentNotSuccessfullException, RentedCarNotFoundException,
-			AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException,
-			InvoiceNotFoundException, CustomerNotFoundException, RentUpdateNotRequiresPaymentException, RentedCarAlreadyReturnException;
-	
+			throws PaymentNotSuccessfullException, RentedCarNotFoundException, AdditionalServiceNotFoundException,
+			CarNotFoundException, RentDetailsNotFoundException, InvoiceNotFoundException, CustomerNotFoundException,
+			RentUpdateNotRequiresPaymentException, RentedCarAlreadyReturnException;
+
 	DataResult<GetPaymentDto> getById(int paymentId) throws PaymentNotFoundException;
-	
-	DataResult<List<PaymentListDto>> getAll(int pageNo,int pageSize);
-	
+
+	DataResult<List<PaymentListDto>> getAll(int pageNo, int pageSize);
+
 	DataResult<List<PaymentListByCustomerDto>> getByCustomerId(int customerId) throws CustomerNotFoundException;
 }

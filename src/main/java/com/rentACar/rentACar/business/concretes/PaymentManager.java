@@ -3,11 +3,12 @@ package com.rentACar.rentACar.business.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rentACar.rentACar.api.models.MakePaymentForCorporateCustomerModel;
 import com.rentACar.rentACar.api.models.MakePaymentForDelayedReturnModel;
@@ -24,6 +25,7 @@ import com.rentACar.rentACar.business.dtos.paymentDtos.PaymentListDto;
 import com.rentACar.rentACar.business.requests.bankServiceRequests.CreateBankServiceRequest;
 import com.rentACar.rentACar.business.requests.paymentRequests.CreatePaymentRequest;
 import com.rentACar.rentACar.core.utilities.adapters.abstracts.BankService;
+import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.exceptions.additionalServiceExceptions.AdditionalServiceNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.bankServiceExceptions.PaymentNotSuccessfullException;
 import com.rentACar.rentACar.core.utilities.exceptions.carExceptions.CarNotFoundException;
@@ -72,6 +74,7 @@ public class PaymentManager implements PaymentService {
 		this.customerService = customerService;
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED,rollbackFor = BusinessException.class)
 	@Override
 	public Result makePaymentForIndividualCustomer(
 			MakePaymentForIndividualCustomerModel makePaymentForIndividualCustomerModel)
@@ -87,9 +90,9 @@ public class PaymentManager implements PaymentService {
 		return new SuccessResult(BusinessMessages.ADD_SUCCESSFULL);
 
 	}
-
-	@Transactional
-	private void runPaymentSuccessorForIndividualCustomer(
+	
+	@Transactional(propagation = Propagation.REQUIRED,rollbackFor = BusinessException.class)
+	public void runPaymentSuccessorForIndividualCustomer(
 			MakePaymentForIndividualCustomerModel makePaymentForIndividualCustomerModel)
 			throws CarNotFoundException, CarAlreadyInRentException, CarAlreadyInMaintenanceException,
 			IndividualCustomerNotFoundException, CustomerNotFoundException, AdditionalServiceNotFoundException,
@@ -112,11 +115,14 @@ public class PaymentManager implements PaymentService {
 		Payment payment = this.modelMapperService.forRequest().map(createPaymentRequest, Payment.class);
 
 		payment.setCustomer(this.customerService.getCustomerById(createPaymentRequest.getCustomer_CustomerId()));
-
+	
 		this.paymentDao.save(payment);
+		
+		throw new CarAlreadyInRentException("");
 
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED,rollbackFor = BusinessException.class)
 	@Override
 	public Result makePaymentForCorporateCustomer(
 			MakePaymentForCorporateCustomerModel makePaymentForCorporateCustomerModel)
@@ -133,8 +139,8 @@ public class PaymentManager implements PaymentService {
 		return new SuccessResult(BusinessMessages.ADD_SUCCESSFULL);
 	}
 
-	@Transactional
-	private void runPaymentSuccessorForCorporateCustomer(
+	@Transactional(propagation = Propagation.REQUIRED,rollbackFor = BusinessException.class)
+	public void runPaymentSuccessorForCorporateCustomer(
 			MakePaymentForCorporateCustomerModel makePaymentForCorporateCustomerModel)
 			throws CarNotFoundException, CorporateCustomerNotFoundException, CarAlreadyInMaintenanceException,
 			CarAlreadyInRentException, CityNotFoundException, AdditionalServiceNotFoundException,
@@ -161,11 +167,13 @@ public class PaymentManager implements PaymentService {
 		Payment payment = this.modelMapperService.forRequest().map(createPaymentRequest, Payment.class);
 
 		payment.setCustomer(this.customerService.getCustomerById(createPaymentRequest.getCustomer_CustomerId()));
-
+		
 		this.paymentDao.save(payment);
+		
 
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED,rollbackFor = BusinessException.class)
 	@Override
 	public Result makePaymentForDelayedReturn(MakePaymentForDelayedReturnModel makePaymentForDelayedReturnModel)
 			throws PaymentNotSuccessfullException, RentedCarNotFoundException, AdditionalServiceNotFoundException,
@@ -184,8 +192,8 @@ public class PaymentManager implements PaymentService {
 		return new SuccessResult(BusinessMessages.ADD_SUCCESSFULL);
 	}
 
-	@Transactional
-	private void runPaymentSuccessorForDelayedReturn(MakePaymentForDelayedReturnModel makePaymentForDelayedReturnModel)
+	@Transactional(propagation = Propagation.REQUIRED,rollbackFor = BusinessException.class)
+	public void runPaymentSuccessorForDelayedReturn(MakePaymentForDelayedReturnModel makePaymentForDelayedReturnModel)
 			throws RentedCarNotFoundException, AdditionalServiceNotFoundException, CarNotFoundException,
 			RentDetailsNotFoundException, InvoiceNotFoundException, CustomerNotFoundException,
 			RentUpdateNotRequiresPaymentException {

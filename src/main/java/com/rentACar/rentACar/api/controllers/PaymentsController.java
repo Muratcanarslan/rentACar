@@ -18,6 +18,7 @@ import com.rentACar.rentACar.business.abstracts.PaymentService;
 import com.rentACar.rentACar.business.dtos.paymentDtos.GetPaymentDto;
 import com.rentACar.rentACar.business.dtos.paymentDtos.PaymentListByCustomerDto;
 import com.rentACar.rentACar.business.dtos.paymentDtos.PaymentListDto;
+import com.rentACar.rentACar.core.utilities.exceptions.BusinessException;
 import com.rentACar.rentACar.core.utilities.exceptions.additionalServiceExceptions.AdditionalServiceNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.bankServiceExceptions.PaymentNotSuccessfullException;
 import com.rentACar.rentACar.core.utilities.exceptions.carExceptions.CarNotFoundException;
@@ -51,10 +52,7 @@ public class PaymentsController {
 	@PostMapping("/makePaymentForIndividualCustomer")
 	public Result makePaymentForIndividualCustomer(
 			@RequestBody @Valid MakePaymentForIndividualCustomerModel makePaymentForIndividualCustomerModel)
-			throws PaymentNotSuccessfullException, CarNotFoundException, CarAlreadyInRentException,
-			CarAlreadyInMaintenanceException, IndividualCustomerNotFoundException, CustomerNotFoundException,
-			AdditionalServiceNotFoundException, OrderedAdditionalServiceAlreadyExistsException,
-			RentedCarNotFoundException, RentDetailsNotFoundException, InvoiceNotFoundException, CityNotFoundException {
+			throws BusinessException {
 
 		return this.paymentService.makePaymentForIndividualCustomer(makePaymentForIndividualCustomerModel);
 	}

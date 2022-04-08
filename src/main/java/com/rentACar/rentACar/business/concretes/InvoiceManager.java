@@ -89,6 +89,8 @@ public class InvoiceManager implements InvoiceService {
 		invoice.setTotalPrice(calculateTotalPrice(rentedCar.getRentDate(), rentedCar.getConfirmedPaidedDate(),
 				rentedCar.getRentedCarId(), rentedCar.getCar().getCarId(), rentedCar.getHireCity().getCityId(),
 				rentedCar.getReturnCity().getCityId(), invoice.getTotalRentDays()));
+		
+	    invoice.setInvoiceId(0);
 
 		Invoice savedInvoice = this.invoiceDao.save(invoice);
 
