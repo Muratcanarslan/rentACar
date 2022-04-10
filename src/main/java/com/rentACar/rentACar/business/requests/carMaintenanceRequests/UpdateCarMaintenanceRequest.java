@@ -2,8 +2,8 @@ package com.rentACar.rentACar.business.requests.carMaintenanceRequests;
 
 import java.time.LocalDate;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class UpdateCarMaintenanceRequest {
 	
 	@NotNull
-	@Min(0)
+	@Positive
 	private int carMaintenanceId;
 	
 	@NotNull
@@ -26,6 +26,6 @@ public class UpdateCarMaintenanceRequest {
 	private LocalDate carMaintenanceReturnDate;
 	
 	@NotNull
-	@Min(0)
+	@Positive
 	private int carId;
 }

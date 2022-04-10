@@ -24,6 +24,7 @@ import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.CarAl
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentUpdateNotRequiresPaymentException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentedCarAlreadyReturnException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentedCarNotFoundException;
+import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.ReturnKilometreNotValidException;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
 
@@ -45,7 +46,7 @@ public interface PaymentService {
 	Result makePaymentForDelayedReturn(MakePaymentForDelayedReturnModel makePaymentForDelayedReturnModel)
 			throws PaymentNotSuccessfullException, RentedCarNotFoundException, AdditionalServiceNotFoundException,
 			CarNotFoundException, RentDetailsNotFoundException, InvoiceNotFoundException, CustomerNotFoundException,
-			RentUpdateNotRequiresPaymentException, RentedCarAlreadyReturnException;
+			RentUpdateNotRequiresPaymentException, RentedCarAlreadyReturnException, ReturnKilometreNotValidException;
 
 	DataResult<GetPaymentDto> getById(int paymentId) throws PaymentNotFoundException;
 

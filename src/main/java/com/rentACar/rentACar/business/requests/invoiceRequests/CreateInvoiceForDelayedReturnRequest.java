@@ -1,7 +1,9 @@
 package com.rentACar.rentACar.business.requests.invoiceRequests;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +15,8 @@ import lombok.NoArgsConstructor;
 public class CreateInvoiceForDelayedReturnRequest {
 	
 	@NotNull
-	@Min(0)
+	@Positive
+	@JsonProperty(value = "rentedCarId")
 	private int RentedCar_RentedCarId;
 	
 

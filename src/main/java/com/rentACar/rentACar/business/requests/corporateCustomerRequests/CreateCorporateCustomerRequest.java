@@ -2,6 +2,7 @@ package com.rentACar.rentACar.business.requests.corporateCustomerRequests;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +27,6 @@ public class CreateCorporateCustomerRequest {
 	private String companyName;
 	
 	@NotNull
-	@Size(min = 10,max=10)
+	@Pattern(regexp = "^[0-9]{10}")
 	private String taxNumber;
 }

@@ -21,6 +21,7 @@ import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentU
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentUpdateRequiresPaymentException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentedCarAlreadyReturnException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentedCarNotFoundException;
+import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.ReturnKilometreNotValidException;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
 import com.rentACar.rentACar.entities.concretes.RentedCar;
@@ -35,10 +36,14 @@ public interface RentedCarService {
 			throws CarNotFoundException, CorporateCustomerNotFoundException, CarAlreadyInMaintenanceException,
 			CarAlreadyInRentException, CityNotFoundException, CustomerNotFoundException;
 
-	Result updateForValidReturn(UpdateRentedCarRequest updateRentedCarRequest) throws RentUpdateRequiresPaymentException, RentedCarNotFoundException, CarNotFoundException;
+	Result updateForValidReturn(UpdateRentedCarRequest updateRentedCarRequest)
+			throws RentUpdateRequiresPaymentException, RentedCarNotFoundException, CarNotFoundException,
+			ReturnKilometreNotValidException;
 
 	Result updateRentedCarForDelayedReturn(
-			UpdateRentedCarForDelayedReturnRequest updateRentedCarForDelayedReturnRequest) throws RentedCarNotFoundException, CarNotFoundException, RentUpdateNotRequiresPaymentException;
+			UpdateRentedCarForDelayedReturnRequest updateRentedCarForDelayedReturnRequest)
+			throws RentedCarNotFoundException, CarNotFoundException, RentUpdateNotRequiresPaymentException,
+			ReturnKilometreNotValidException;
 
 	Result delete(DeleteRentedCarRequest deleteRentedCarRequest) throws RentedCarNotFoundException;
 

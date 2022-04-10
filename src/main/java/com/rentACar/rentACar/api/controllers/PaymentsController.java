@@ -26,7 +26,6 @@ import com.rentACar.rentACar.core.utilities.exceptions.carMaintenanceExceptions.
 import com.rentACar.rentACar.core.utilities.exceptions.cityExceptions.CityNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.corporateCustomerExceptions.CorporateCustomerNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.customerExceptions.CustomerNotFoundException;
-import com.rentACar.rentACar.core.utilities.exceptions.indiviualCustomerExceptions.IndividualCustomerNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.invoiceExceptions.InvoiceNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.orderedAdditionalServiceExceptions.OrderedAdditionalServiceAlreadyExistsException;
 import com.rentACar.rentACar.core.utilities.exceptions.paymentExceptions.PaymentNotFoundException;
@@ -35,6 +34,7 @@ import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.CarAl
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentUpdateNotRequiresPaymentException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentedCarAlreadyReturnException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentedCarNotFoundException;
+import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.ReturnKilometreNotValidException;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
 
@@ -75,7 +75,7 @@ public class PaymentsController {
 			@RequestBody @Valid MakePaymentForDelayedReturnModel makePaymentForDelayedReturnModel)
 			throws PaymentNotSuccessfullException, RentedCarNotFoundException, AdditionalServiceNotFoundException,
 			CarNotFoundException, RentDetailsNotFoundException, InvoiceNotFoundException, CustomerNotFoundException,
-			RentUpdateNotRequiresPaymentException, RentedCarAlreadyReturnException {
+			RentUpdateNotRequiresPaymentException, RentedCarAlreadyReturnException, ReturnKilometreNotValidException {
 
 		return this.paymentService.makePaymentForDelayedReturn(makePaymentForDelayedReturnModel);
 

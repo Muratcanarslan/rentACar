@@ -39,6 +39,7 @@ import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentU
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentUpdateRequiresPaymentException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentedCarAlreadyReturnException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentedCarNotFoundException;
+import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.ReturnKilometreNotValidException;
 import com.rentACar.rentACar.core.utilities.mapping.ModelMapperService;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
@@ -95,7 +96,7 @@ public class RentedCarManager implements RentedCarService {
 
 		rentedCar.setRentKilometre(
 				this.carService.getById(rentedCar.getCar().getCarId()).getData().getKilometreInformation());
-
+				
 		rentedCar.setRentedCarId(0);
 
 		RentedCar savedRentedCar = this.rentedCarDao.save(rentedCar);
@@ -136,18 +137,20 @@ public class RentedCarManager implements RentedCarService {
 
 	@Override
 	public Result updateForValidReturn(UpdateRentedCarRequest updateRentedCarRequest)
-			throws RentUpdateRequiresPaymentException, RentedCarNotFoundException, CarNotFoundException {
+			throws RentUpdateRequiresPaymentException, RentedCarNotFoundException, CarNotFoundException, ReturnKilometreNotValidException {
 
 		this.checkIfRentedCarIsExistsByRentedCarId(updateRentedCarRequest.getRentedCarId());
 
 		RentedCar rentedCar = this.rentedCarDao.getById(updateRentedCarRequest.getRentedCarId());
+		
+		checkIfReturnKilometreIsValid(rentedCar.getRentKilometre(),updateRentedCarRequest.getReturnKilometre());
 
 		checkIfReturnDateIsValidReturn(rentedCar.getConfirmedPaidedDate(), updateRentedCarRequest.getReturnDate());
 
 		rentedCar.setReturnDate(updateRentedCarRequest.getReturnDate());
 		rentedCar.setReturnKilometre(updateRentedCarRequest.getReturnKilometre());
 
-		this.carService.updateKilometreInformation(updateRentedCarRequest.getCar_CarId(),
+		this.carService.updateKilometreInformation(rentedCar.getCar().getCarId(),
 				updateRentedCarRequest.getReturnKilometre());
 
 		return new SuccessResult(BusinessMessages.UPDATE_SUCCESSFULL);
@@ -157,19 +160,23 @@ public class RentedCarManager implements RentedCarService {
 	@Override
 	public Result updateRentedCarForDelayedReturn(
 			UpdateRentedCarForDelayedReturnRequest updateRentedCarForDelayedReturnRequest)
-			throws RentedCarNotFoundException, CarNotFoundException, RentUpdateNotRequiresPaymentException {
+			throws RentedCarNotFoundException, CarNotFoundException, RentUpdateNotRequiresPaymentException, ReturnKilometreNotValidException {
 
 		this.checkIfRentedCarIsExistsByRentedCarId(updateRentedCarForDelayedReturnRequest.getRentedCarId());
 
 		RentedCar rentedCar = this.rentedCarDao.getById(updateRentedCarForDelayedReturnRequest.getRentedCarId());
 
+		checkIfReturnKilometreIsValid(rentedCar.getRentKilometre(),updateRentedCarForDelayedReturnRequest.getReturnKilometre());
+		
 		checkIfReturnDateIsDelayedReturn(rentedCar.getConfirmedPaidedDate(),
 				updateRentedCarForDelayedReturnRequest.getReturnDate());
 
 		rentedCar.setReturnDate(updateRentedCarForDelayedReturnRequest.getReturnDate());
+		
 		rentedCar.setReturnKilometre(updateRentedCarForDelayedReturnRequest.getReturnKilometre());
+		
 
-		this.carService.updateKilometreInformation(updateRentedCarForDelayedReturnRequest.getCar_CarId(),
+		this.carService.updateKilometreInformation(rentedCar.getCar().getCarId(),
 				updateRentedCarForDelayedReturnRequest.getReturnKilometre());
 
 		return new SuccessResult(BusinessMessages.UPDATE_SUCCESSFULL);
@@ -277,6 +284,15 @@ public class RentedCarManager implements RentedCarService {
 		if (this.rentedCarDao.getById(rentedCarId).getReturnDate() != null) {
 			throw new RentedCarAlreadyReturnException(BusinessMessages.RENTED_CAR_ALREADY_RETURN);
 		}
+	}
+	
+	private void checkIfReturnKilometreIsValid(double rentKilometre, double returnKilometre)
+			throws ReturnKilometreNotValidException {
+		
+		if(rentKilometre >= returnKilometre) {
+			throw new ReturnKilometreNotValidException(BusinessMessages.RETURN_KILOMETRE_NOT_VALID);
+		}
+		
 	}
 
 }

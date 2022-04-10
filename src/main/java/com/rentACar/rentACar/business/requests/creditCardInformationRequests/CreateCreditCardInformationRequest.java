@@ -1,8 +1,8 @@
 package com.rentACar.rentACar.business.requests.creditCardInformationRequests;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -16,17 +16,18 @@ import lombok.NoArgsConstructor;
 public class CreateCreditCardInformationRequest {
 
 	@NotNull
-	@Size(min = 16,max=16)
+	@Pattern(regexp = "^[0-9]{16}")
 	private String cardNumber;
 
 	@NotNull
-	@Size(min=3,max=3)
+	@Pattern(regexp = "^[0-9]{3}")
 	private String CVV;
 
 	@NotNull
 	private String cardExpireDate;
 
 	@NotNull
+	@Pattern(regexp = "^[a-zA-Z]{2,255}")
 	private String ownerName;
 
 	@NotNull

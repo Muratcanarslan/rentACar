@@ -2,6 +2,7 @@ package com.rentACar.rentACar.business.requests.individualCustomerDtos;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -23,13 +24,14 @@ public class CreateIndividualCustomerRequest {
 	
 	@NotNull
 	@Size(min = 2,max=255)
+	@Pattern(regexp = "^[a-zA-Z]+$")
 	private String firstName;
 	
 	@NotNull
-	@Size(min = 2,max=255)
+	@Pattern(regexp = "^[a-zA-Z]{2,255}")
 	private String lastName;
 	
 	@NotNull
-	@Size(min = 11,max=11)
+	@Pattern(regexp = "^[0-9]{11}")
 	private String nationalIdentity;
 }

@@ -25,6 +25,8 @@ public class BusinessMessages {
 	public static final String UPDATE_RENT_REQUIRES_PAYMENT = "This rent requires payment for return date you must use payment end point for rent";
 	public static final String UPDATE_RENT_NOT_REQUIRES_PAYMENT = "This rent not requires payment you must use rented car end point";
 	public static final String RENTED_CAR_ALREADY_RETURN = "Seems this car already return you cannot update return date";
+	public static final String RETURN_KILOMETRE_NOT_VALID = "Rent Kilometre can't greater than return kilometre";
+	
 	
 	public static final String INVOICE_NOT_FOUND_FOR_RENTED_CAR = "Invoice not found for this rented car id : ";
 	public static final String INVOICE_NOT_FOUND = "Invoice not found for this id : ";

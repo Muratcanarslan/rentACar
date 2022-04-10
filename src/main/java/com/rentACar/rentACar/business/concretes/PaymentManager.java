@@ -42,6 +42,7 @@ import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.CarAl
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentUpdateNotRequiresPaymentException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentedCarAlreadyReturnException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentedCarNotFoundException;
+import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.ReturnKilometreNotValidException;
 import com.rentACar.rentACar.core.utilities.mapping.ModelMapperService;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
@@ -118,8 +119,6 @@ public class PaymentManager implements PaymentService {
 	
 		this.paymentDao.save(payment);
 		
-		throw new CarAlreadyInRentException("");
-
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED,rollbackFor = BusinessException.class)
@@ -178,7 +177,7 @@ public class PaymentManager implements PaymentService {
 	public Result makePaymentForDelayedReturn(MakePaymentForDelayedReturnModel makePaymentForDelayedReturnModel)
 			throws PaymentNotSuccessfullException, RentedCarNotFoundException, AdditionalServiceNotFoundException,
 			CarNotFoundException, RentDetailsNotFoundException, InvoiceNotFoundException, CustomerNotFoundException,
-			RentUpdateNotRequiresPaymentException, RentedCarAlreadyReturnException {
+			RentUpdateNotRequiresPaymentException, RentedCarAlreadyReturnException, ReturnKilometreNotValidException {
 
 		this.rentedCarService.checkIfRentedCarIsExistsByRentedCarId(
 				makePaymentForDelayedReturnModel.getUpdateRentedCarForDelayedReturnRequest().getRentedCarId());
@@ -196,7 +195,7 @@ public class PaymentManager implements PaymentService {
 	public void runPaymentSuccessorForDelayedReturn(MakePaymentForDelayedReturnModel makePaymentForDelayedReturnModel)
 			throws RentedCarNotFoundException, AdditionalServiceNotFoundException, CarNotFoundException,
 			RentDetailsNotFoundException, InvoiceNotFoundException, CustomerNotFoundException,
-			RentUpdateNotRequiresPaymentException {
+			RentUpdateNotRequiresPaymentException, ReturnKilometreNotValidException {
 
 		this.rentedCarService.updateRentedCarForDelayedReturn(
 				makePaymentForDelayedReturnModel.getUpdateRentedCarForDelayedReturnRequest());
