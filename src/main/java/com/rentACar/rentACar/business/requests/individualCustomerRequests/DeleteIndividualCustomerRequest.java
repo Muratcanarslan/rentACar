@@ -1,4 +1,4 @@
-package com.rentACar.rentACar.business.requests.individualCustomerDtos;
+package com.rentACar.rentACar.business.requests.individualCustomerRequests;
 
 import javax.validation.constraints.NotNull;
 

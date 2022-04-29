@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class GetBrandDto {
 	
 	private int brandId;
+	
 	private String brandName;
 }

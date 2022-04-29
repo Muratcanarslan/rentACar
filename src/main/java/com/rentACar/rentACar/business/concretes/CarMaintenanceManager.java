@@ -88,7 +88,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 		CarMaintenance carMaintenance = this.carMaintenanceDao.getById(carMaintenanceId);
 		GetCarMaintenanceDto carMaintenanceDto = this.modelMapperService.forDto().map(carMaintenance,
 				GetCarMaintenanceDto.class);
-		carMaintenanceDto.setCarId(carMaintenance.getCar().getCarId());
+		carMaintenanceDto.setCar_CarId(carMaintenance.getCar().getCarId());
 		return new SuccessDataResult<GetCarMaintenanceDto>(carMaintenanceDto, BusinessMessages.GET_SUCCESSFUL);
 	}
 

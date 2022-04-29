@@ -22,7 +22,7 @@ public class CreateBankServiceRequest {
 	private String cvv;
 
 	@NotNull
-	@Pattern(regexp = "^[a-zA-Z]{2,255}")
+	@Pattern(regexp = "^[a-zA-ZİÖöĞğÜüÇç]{2,255}")
 	private String name;
 
 	@NotNull

@@ -1,7 +1,7 @@
 package com.rentACar.rentACar.business.requests.carCrashRequests;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ public class CreateCarCrashInformationRequest {
 	private String carCrashInformationDetails;
 	
 	@NotNull
-	@Min(0)
+	@Positive
 	private int carId;
 
 }

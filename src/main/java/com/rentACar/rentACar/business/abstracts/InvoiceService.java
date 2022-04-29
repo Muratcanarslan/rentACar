@@ -21,15 +21,14 @@ import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
 
 public interface InvoiceService {
-	
-	//TODO list dönen end pointlere pageable eklenmeli.
+
+	// TODO list dönen end pointlere pageable eklenmeli.
 
 	int add(CreateInvoiceRequest createInvoiceRequest) throws RentedCarNotFoundException,
 			AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException;
 
-	int addForDelayedReturn(int rentedCarId)
-			throws RentedCarNotFoundException, AdditionalServiceNotFoundException, CarNotFoundException,
-			RentDetailsNotFoundException;
+	int addForDelayedReturn(int rentedCarId) throws RentedCarNotFoundException, AdditionalServiceNotFoundException,
+			CarNotFoundException, RentDetailsNotFoundException;
 
 	Result delete(DeleteInvoiceRequest deleteInvoiceRequest) throws InvoiceNotFoundException;
 
@@ -46,9 +45,15 @@ public interface InvoiceService {
 
 	DataResult<List<InvoiceDateBetweenDto>> getInvoicesDateBetween(Date startDate, Date endDate);
 
-	DataResult<List<InvoiceListDto>> getAll(int pageNo,int pageSize);
-	
+	DataResult<List<InvoiceListDto>> getAll(int pageNo, int pageSize);
+
 	CreateInvoiceRequest getInvoiceRequestForMapping(int rentedCarId) throws RentedCarNotFoundException;
+
+	double calculateDeliveryPrice(int hireCityId, int returnCityId) throws RentDetailsNotFoundException;
+
+	double calculateTotalPriceForDelayedReturn(int rentedCarId, int carId, int totalRentDays)
+			throws AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException,
+			RentedCarNotFoundException;
 
 	void checkIfInvoiceExists(int invoiceId) throws InvoiceNotFoundException;
 

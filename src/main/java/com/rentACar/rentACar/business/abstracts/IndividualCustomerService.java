@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.rentACar.rentACar.business.dtos.individualCustomerDtos.GetIndividualCustomerDto;
 import com.rentACar.rentACar.business.dtos.individualCustomerDtos.IndividualCustomerListDto;
-import com.rentACar.rentACar.business.requests.individualCustomerDtos.CreateIndividualCustomerRequest;
-import com.rentACar.rentACar.business.requests.individualCustomerDtos.DeleteIndividualCustomerRequest;
-import com.rentACar.rentACar.business.requests.individualCustomerDtos.UpdateIndividualCustomerRequest;
+import com.rentACar.rentACar.business.requests.individualCustomerRequests.CreateIndividualCustomerRequest;
+import com.rentACar.rentACar.business.requests.individualCustomerRequests.DeleteIndividualCustomerRequest;
+import com.rentACar.rentACar.business.requests.individualCustomerRequests.UpdateIndividualCustomerRequest;
 import com.rentACar.rentACar.core.utilities.exceptions.indiviualCustomerExceptions.IndividualCustomerAlreadyExistsByNationalIdentityException;
 import com.rentACar.rentACar.core.utilities.exceptions.indiviualCustomerExceptions.IndividualCustomerNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.userExceptions.UserAlreadyExistsException;

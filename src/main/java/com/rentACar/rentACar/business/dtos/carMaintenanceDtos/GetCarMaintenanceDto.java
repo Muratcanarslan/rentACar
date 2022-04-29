@@ -2,6 +2,8 @@ package com.rentACar.rentACar.business.dtos.carMaintenanceDtos;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.NoArgsConstructor;
 
 import lombok.AllArgsConstructor;
@@ -21,5 +23,6 @@ public class GetCarMaintenanceDto {
 	
 	private LocalDate maintenanceDate;
 	
-	private int carId;
+	@JsonProperty(value = "carId")
+	private int Car_CarId;
 }

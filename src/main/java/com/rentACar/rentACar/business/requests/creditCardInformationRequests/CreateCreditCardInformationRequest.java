@@ -24,10 +24,11 @@ public class CreateCreditCardInformationRequest {
 	private String CVV;
 
 	@NotNull
+	@Pattern(regexp = "^[0-9]{4}")
 	private String cardExpireDate;
 
 	@NotNull
-	@Pattern(regexp = "^[a-zA-Z]{2,255}")
+	@Pattern(regexp = "^[a-zA-ZİÖöĞğÜüÇç]{2,255}")
 	private String ownerName;
 
 	@NotNull

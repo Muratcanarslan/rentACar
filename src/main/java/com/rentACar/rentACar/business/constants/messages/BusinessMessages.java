@@ -51,7 +51,7 @@ public class BusinessMessages {
 	public static final String PAYMENT_IS_NOT_SUCCESSFULL = "Payment is not successfull";
 	public static final String PAYMENT_NOT_FOUND = "Payment Not Found For This Id : ";
 	public static final String PAYMENT_ALREADY_EXISTS_BY_INVOICE_ID = "Payment already exists by this invoice id : ";
-
+	public static final String PAYMENT_VALUE_IS_NOT_CORRECT = "Payment price is not correct";
 	
 	public static final String CREDIT_CARD_NOT_FOUND = "Credit Card Not Found For This Id : ";
 	

@@ -2,7 +2,6 @@ package com.rentACar.rentACar.business.requests.rentedCarRequests;
 
 import java.time.LocalDate;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
@@ -16,18 +15,15 @@ import lombok.NoArgsConstructor;
 public class UpdateRentedCarForDelayedReturnRequest {
 
 	@NotNull
-	@Min(0)
+	@Positive
 	private int rentedCarId;
 
 	@NotNull
 	private LocalDate returnDate;
 
 	@NotNull
-	@Min(0)
+	@Positive
 	private double returnKilometre;
 
-	@Positive
-	@NotNull
-	private int customerId;
 
 }

@@ -2,6 +2,8 @@ package com.rentACar.rentACar.business.dtos.rentedCarDtos;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,5 +31,6 @@ public class RentedCarListDto {
 
 	private int returnCityId;
 
+	@JsonProperty(value = "customerId")
 	private int Customer_CustomerId;
 }

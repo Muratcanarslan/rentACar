@@ -1,9 +1,9 @@
 package com.rentACar.rentACar.business.requests.corporateCustomerRequests;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateCorporateCustomerRequest {
-	
+
 	@NotNull
-	@Min(0)
+	@Positive
 	private int corporateCustomerId;
 
 	@Email

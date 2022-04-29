@@ -1,8 +1,9 @@
-package com.rentACar.rentACar.business.requests.individualCustomerDtos;
+package com.rentACar.rentACar.business.requests.individualCustomerRequests;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -12,7 +13,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateIndividualCustomerRequest {
+public class UpdateIndividualCustomerRequest {
+	
+	@NotNull
+	@Positive
+	private int individualCustomerId;
 	
 	@Email
 	@NotNull

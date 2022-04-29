@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,7 +25,7 @@ public class UpdateRentedCarRequest {
 	private LocalDate returnDate;
 
 	@NotNull
-	@Min(0)
+	@Positive
 	private double returnKilometre;
 	
 	

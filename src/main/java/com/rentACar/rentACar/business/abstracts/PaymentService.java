@@ -19,6 +19,7 @@ import com.rentACar.rentACar.core.utilities.exceptions.indiviualCustomerExceptio
 import com.rentACar.rentACar.core.utilities.exceptions.invoiceExceptions.InvoiceNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.orderedAdditionalServiceExceptions.OrderedAdditionalServiceAlreadyExistsException;
 import com.rentACar.rentACar.core.utilities.exceptions.paymentExceptions.PaymentNotFoundException;
+import com.rentACar.rentACar.core.utilities.exceptions.paymentExceptions.PaymentValueIsNotCorrectException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentDetailsExceptions.RentDetailsNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.CarAlreadyInRentException;
 import com.rentACar.rentACar.core.utilities.exceptions.rentedCarExceptions.RentUpdateNotRequiresPaymentException;
@@ -34,19 +35,20 @@ public interface PaymentService {
 			throws PaymentNotSuccessfullException, CarNotFoundException, CarAlreadyInRentException,
 			CarAlreadyInMaintenanceException, IndividualCustomerNotFoundException, CustomerNotFoundException,
 			AdditionalServiceNotFoundException, OrderedAdditionalServiceAlreadyExistsException,
-			RentedCarNotFoundException, RentDetailsNotFoundException, InvoiceNotFoundException, CityNotFoundException;
+			RentedCarNotFoundException, RentDetailsNotFoundException, InvoiceNotFoundException, CityNotFoundException,
+			PaymentValueIsNotCorrectException;
 
 	Result makePaymentForCorporateCustomer(MakePaymentForCorporateCustomerModel makePaymentForCorporateCustomerModel)
 			throws PaymentNotSuccessfullException, CarNotFoundException, CorporateCustomerNotFoundException,
 			CarAlreadyInMaintenanceException, CarAlreadyInRentException, CityNotFoundException,
 			AdditionalServiceNotFoundException, OrderedAdditionalServiceAlreadyExistsException,
 			RentedCarNotFoundException, RentDetailsNotFoundException, CustomerNotFoundException,
-			InvoiceNotFoundException;
+			InvoiceNotFoundException, PaymentValueIsNotCorrectException;
 
 	Result makePaymentForDelayedReturn(MakePaymentForDelayedReturnModel makePaymentForDelayedReturnModel)
 			throws PaymentNotSuccessfullException, RentedCarNotFoundException, AdditionalServiceNotFoundException,
 			CarNotFoundException, RentDetailsNotFoundException, InvoiceNotFoundException, CustomerNotFoundException,
-			RentUpdateNotRequiresPaymentException, RentedCarAlreadyReturnException, ReturnKilometreNotValidException;
+			RentUpdateNotRequiresPaymentException, RentedCarAlreadyReturnException, ReturnKilometreNotValidException, PaymentValueIsNotCorrectException;
 
 	DataResult<GetPaymentDto> getById(int paymentId) throws PaymentNotFoundException;
 

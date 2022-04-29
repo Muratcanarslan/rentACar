@@ -1,7 +1,6 @@
 package com.rentACar.rentACar.business.concretes;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,6 +38,7 @@ import com.rentACar.rentACar.core.utilities.results.DataResult;
 import com.rentACar.rentACar.core.utilities.results.Result;
 import com.rentACar.rentACar.core.utilities.results.SuccessDataResult;
 import com.rentACar.rentACar.core.utilities.results.SuccessResult;
+import com.rentACar.rentACar.core.utilities.timeUtilities.TimeUtility;
 import com.rentACar.rentACar.dataAccess.abstracts.InvoiceDao;
 import com.rentACar.rentACar.entities.concretes.Invoice;
 import com.rentACar.rentACar.entities.concretes.OrderedAdditionalService;
@@ -84,13 +84,14 @@ public class InvoiceManager implements InvoiceService {
 
 		Invoice invoice = this.modelMapperService.forRequest().map(createInvoiceRequest, Invoice.class);
 
-		invoice.setTotalRentDays(calculateTotalRentDays(rentedCar.getRentDate(), rentedCar.getConfirmedPaidedDate()));
+		invoice.setTotalRentDays(
+				TimeUtility.calculateTotalRentDays(rentedCar.getRentDate(), rentedCar.getConfirmedPaidedDate()));
 
 		invoice.setTotalPrice(calculateTotalPrice(rentedCar.getRentDate(), rentedCar.getConfirmedPaidedDate(),
 				rentedCar.getRentedCarId(), rentedCar.getCar().getCarId(), rentedCar.getHireCity().getCityId(),
 				rentedCar.getReturnCity().getCityId(), invoice.getTotalRentDays()));
-		
-	    invoice.setInvoiceId(0);
+
+		invoice.setInvoiceId(0);
 
 		Invoice savedInvoice = this.invoiceDao.save(invoice);
 
@@ -110,11 +111,11 @@ public class InvoiceManager implements InvoiceService {
 
 		invoice.setRentedCar(this.rentedCarService.getRentedCarForBusiness(rentedCarId));
 
-		invoice.setTotalRentDays(calculateTotalRentDays(rentedCar.getConfirmedPaidedDate(), rentedCar.getReturnDate()));
+		invoice.setTotalRentDays(
+				TimeUtility.calculateTotalRentDays(rentedCar.getConfirmedPaidedDate(), rentedCar.getReturnDate()));
 
-		invoice.setTotalPrice(calculateTotalPrice(rentedCar.getConfirmedPaidedDate(), rentedCar.getReturnDate(),
-				rentedCar.getRentedCarId(), rentedCar.getCar().getCarId(), rentedCar.getHireCity().getCityId(),
-				rentedCar.getReturnCity().getCityId(), invoice.getTotalRentDays()));
+		invoice.setTotalPrice(calculateTotalPriceForDelayedReturn(rentedCar.getRentedCarId(),
+				rentedCar.getCar().getCarId(), invoice.getTotalRentDays()));
 
 		Invoice savedInvoice = this.invoiceDao.save(invoice);
 
@@ -134,7 +135,8 @@ public class InvoiceManager implements InvoiceService {
 		RentedCar rentedCar = this.rentedCarService
 				.getRentedCarForBusiness(updateInvoiceRequest.getRentedCar_RentedCarId());
 
-		invoice.setTotalRentDays(calculateTotalRentDays(rentedCar.getRentDate(), rentedCar.getConfirmedPaidedDate()));
+		invoice.setTotalRentDays(
+				TimeUtility.calculateTotalRentDays(rentedCar.getRentDate(), rentedCar.getConfirmedPaidedDate()));
 
 		invoice.setTotalPrice(calculateTotalPrice(rentedCar.getRentDate(), rentedCar.getConfirmedPaidedDate(),
 				rentedCar.getRentedCarId(), rentedCar.getCar().getCarId(), rentedCar.getHireCity().getCityId(),
@@ -244,6 +246,21 @@ public class InvoiceManager implements InvoiceService {
 
 	}
 
+	public double calculateTotalPriceForDelayedReturn(int rentedCarId, int carId, int totalRentDays)
+			throws AdditionalServiceNotFoundException, CarNotFoundException, RentDetailsNotFoundException,
+			RentedCarNotFoundException {
+
+		double carDailyPrice = this.carService.getById(carId).getData().getDailyPrice();
+
+		double additionalServicePrice = calculateOrderedAdditionalServicePrice(
+				this.orderedAdditionalServiceService.getByRentedCarIdForBusiness(rentedCarId), totalRentDays);
+
+		double carPrice = carDailyPrice * totalRentDays;
+
+		return carPrice + additionalServicePrice;
+
+	}
+
 	private double calculateOrderedAdditionalServicePrice(List<OrderedAdditionalService> orderedAdditionalServices,
 			int totalRentDays) throws AdditionalServiceNotFoundException {
 
@@ -257,7 +274,7 @@ public class InvoiceManager implements InvoiceService {
 		return price;
 	}
 
-	private double calculateDeliveryPrice(int hireCityId, int returnCityId) throws RentDetailsNotFoundException {
+	public double calculateDeliveryPrice(int hireCityId, int returnCityId) throws RentDetailsNotFoundException {
 
 		double price = 0;
 
@@ -266,10 +283,6 @@ public class InvoiceManager implements InvoiceService {
 		}
 
 		return price;
-	}
-
-	private int calculateTotalRentDays(LocalDate rentDate, LocalDate confirmedPaidDate) {
-		return (int) ChronoUnit.DAYS.between(rentDate, confirmedPaidDate);
 	}
 
 	@Override
