@@ -24,6 +24,10 @@ public class CreateBankServiceRequest {
 	@NotNull
 	@Pattern(regexp = "^[a-zA-ZİÖöĞğÜüÇç]{2,255}")
 	private String name;
+	
+	@NotNull
+	@Pattern(regexp = "^(0[1-9]|1[0-2])\\/?(([0-9]{4}|[0-9]{2})$)")
+	private String expiredDate;
 
 	@NotNull
 	@Positive

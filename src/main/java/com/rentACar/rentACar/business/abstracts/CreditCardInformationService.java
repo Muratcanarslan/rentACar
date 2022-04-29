@@ -6,6 +6,7 @@ import com.rentACar.rentACar.business.dtos.creditCardInformationDtos.CardInforma
 import com.rentACar.rentACar.business.dtos.creditCardInformationDtos.CreditCardInformationByCustomerDto;
 import com.rentACar.rentACar.business.requests.creditCardInformationRequests.CreateCreditCardInformationRequest;
 import com.rentACar.rentACar.business.requests.creditCardInformationRequests.DeleteCreditCardInformationRequest;
+import com.rentACar.rentACar.core.utilities.exceptions.creditCardException.CreditCardAlreadyExistsException;
 import com.rentACar.rentACar.core.utilities.exceptions.creditCardException.CreditCardNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.customerExceptions.CustomerNotFoundException;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
@@ -13,7 +14,7 @@ import com.rentACar.rentACar.core.utilities.results.Result;
 
 public interface CreditCardInformationService {
 
-	Result add(CreateCreditCardInformationRequest createCardInformationRequest) throws CustomerNotFoundException;
+	Result add(CreateCreditCardInformationRequest createCardInformationRequest) throws CustomerNotFoundException, CreditCardAlreadyExistsException;
 
 	Result delete(DeleteCreditCardInformationRequest deleteCreditCardInformationRequest)
 			throws CreditCardNotFoundException;

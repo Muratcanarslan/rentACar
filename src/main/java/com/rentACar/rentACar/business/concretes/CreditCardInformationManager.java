@@ -15,6 +15,7 @@ import com.rentACar.rentACar.business.dtos.creditCardInformationDtos.CardInforma
 import com.rentACar.rentACar.business.dtos.creditCardInformationDtos.CreditCardInformationByCustomerDto;
 import com.rentACar.rentACar.business.requests.creditCardInformationRequests.CreateCreditCardInformationRequest;
 import com.rentACar.rentACar.business.requests.creditCardInformationRequests.DeleteCreditCardInformationRequest;
+import com.rentACar.rentACar.core.utilities.exceptions.creditCardException.CreditCardAlreadyExistsException;
 import com.rentACar.rentACar.core.utilities.exceptions.creditCardException.CreditCardNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.customerExceptions.CustomerNotFoundException;
 import com.rentACar.rentACar.core.utilities.mapping.ModelMapperService;
@@ -44,8 +45,9 @@ public class CreditCardInformationManager implements CreditCardInformationServic
 
 	@Override
 	public Result add(CreateCreditCardInformationRequest createCardInformationRequest)
-			throws CustomerNotFoundException {
-
+			throws CustomerNotFoundException, CreditCardAlreadyExistsException {
+		
+		this.checkIfCreditCarAlreadyExists(createCardInformationRequest.getCardNumber());
 		this.customerService.checkIfCustomerExists(createCardInformationRequest.getCustomer_CustomerId());
 
 		CreditCardInformation cardInformation = this.modelMapperService.forRequest().map(createCardInformationRequest,
@@ -106,6 +108,12 @@ public class CreditCardInformationManager implements CreditCardInformationServic
 	private void checkIfCreditCardInformationExists(int creditCarId) throws CreditCardNotFoundException {
 		if (!this.cardInformationDao.existsById(creditCarId)) {
 			throw new CreditCardNotFoundException(BusinessMessages.CREDIT_CARD_NOT_FOUND + creditCarId);
+		}
+	}
+	
+	private void checkIfCreditCarAlreadyExists(String cardNumber) throws CreditCardAlreadyExistsException {
+		if(this.cardInformationDao.existsByCardNumber(cardNumber)) {
+			throw new CreditCardAlreadyExistsException(BusinessMessages.CREDIT_CARD_ALREADY_EXISTS);
 		}
 	}
 

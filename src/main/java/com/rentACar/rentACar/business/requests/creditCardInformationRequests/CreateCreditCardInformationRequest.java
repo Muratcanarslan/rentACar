@@ -24,7 +24,7 @@ public class CreateCreditCardInformationRequest {
 	private String CVV;
 
 	@NotNull
-	@Pattern(regexp = "^[0-9]{4}")
+	@Pattern(regexp = "^(0[1-9]|1[0-2])\\/?(([0-9]{4}|[0-9]{2})$)")
 	private String cardExpireDate;
 
 	@NotNull

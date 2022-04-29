@@ -16,6 +16,7 @@ import com.rentACar.rentACar.business.abstracts.CreditCardInformationService;
 import com.rentACar.rentACar.business.dtos.creditCardInformationDtos.CardInformationListDto;
 import com.rentACar.rentACar.business.requests.creditCardInformationRequests.CreateCreditCardInformationRequest;
 import com.rentACar.rentACar.business.requests.creditCardInformationRequests.DeleteCreditCardInformationRequest;
+import com.rentACar.rentACar.core.utilities.exceptions.creditCardException.CreditCardAlreadyExistsException;
 import com.rentACar.rentACar.core.utilities.exceptions.creditCardException.CreditCardNotFoundException;
 import com.rentACar.rentACar.core.utilities.exceptions.customerExceptions.CustomerNotFoundException;
 import com.rentACar.rentACar.core.utilities.results.DataResult;
@@ -33,8 +34,8 @@ public class CreditCardInformationsController {
 	}
 
 	@PostMapping("/add")
-	public Result add(@RequestBody CreateCreditCardInformationRequest createCardInformationRequest)
-			throws CustomerNotFoundException {
+	public Result add(@RequestBody @Valid CreateCreditCardInformationRequest createCardInformationRequest)
+			throws CustomerNotFoundException, CreditCardAlreadyExistsException {
 		return this.cardInformationService.add(createCardInformationRequest);
 	}
 

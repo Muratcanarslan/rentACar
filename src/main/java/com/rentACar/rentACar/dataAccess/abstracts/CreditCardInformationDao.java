@@ -11,5 +11,7 @@ import com.rentACar.rentACar.entities.concretes.CreditCardInformation;
 public interface CreditCardInformationDao extends JpaRepository<CreditCardInformation, Integer>{
 	
 	List<CreditCardInformation> getByCustomer_CustomerId(int customerId);
+	
+	boolean existsByCardNumber(String cardNumber);
 
 }
